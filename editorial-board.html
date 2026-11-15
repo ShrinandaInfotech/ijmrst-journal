@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editorial & Reviewer Board | IJMRST</title>
+  <meta name="description" content="Meet the Editorial Board and Peer Reviewers of IJMRST — International Journal of Multidisciplinary Research in Science and Technology." />
+  <style>
+    :root {
+      --bg-dark: #0A192F;
+      --bg-card: #112240;
+      --bg-light-navy: #1D2D50;
+      --accent-orange: #FF6B00;
+      --accent-orange-hover: #E65C00;
+      --text-white: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: rgba(255, 107, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Top Info Strip */
+    .top-bar {
+      background: #061020;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 5%;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .top-bar span strong {
+      color: var(--accent-orange);
+    }
+
+    .badge-pill {
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      padding: 2px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Navbar */
+    header {
+      background-color: rgba(10, 25, 47, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #0A192F;
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--text-white);
+      line-height: 1.1;
+    }
+
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-white);
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: var(--accent-orange);
+    }
+
+    .btn-login {
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange) !important;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--accent-orange);
+      color: #fff !important;
+    }
+
+    /* Page Banner */
+    .page-banner {
+      background: linear-gradient(135deg, #061020, #112240);
+      border-bottom: 1px solid var(--border-color);
+      padding: 50px 5%;
+      text-align: center;
+    }
+
+    .page-banner h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .page-banner h2 span {
+      color: var(--accent-orange);
+    }
+
+    .page-banner p {
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: auto;
+      font-size: 1rem;
+    }
+
+    /* Main Content */
+    .container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 50px 5%;
+    }
+
+    .group-title {
+      font-size: 1.4rem;
+      color: var(--accent-orange);
+      border-left: 4px solid var(--accent-orange);
+      padding-left: 14px;
+      margin-bottom: 24px;
+      margin-top: 15px;
+    }
+
+    /* Editor-in-Chief Highlight Card */
+    .eic-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 45px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .role-badge {
+      display: inline-block;
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .member-name {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 4px;
+    }
+
+    .member-qual {
+      color: var(--accent-orange);
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .member-affil {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .member-meta {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Board Grid */
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+      margin-bottom: 50px;
+    }
+
+    .board-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 24px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .board-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-orange);
+    }
+
+    .board-card h4 {
+      font-size: 1.15rem;
+      margin-bottom: 4px;
+    }
+
+    .domain-tag {
+      display: inline-block;
+      margin-top: 10px;
+      background: var(--bg-light-navy);
+      color: #CBD5E1;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    /* Join Board CTA */
+    .join-box {
+      background: linear-gradient(135deg, #112240, #1D2D50);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .join-box h3 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .join-box p {
+      color: var(--text-muted);
+      max-width: 680px;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--accent-orange);
+      color: #fff;
+      padding: 13px 26px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.98rem;
+      box-shadow: 0 4px 18px rgba(255, 107, 0, 0.35);
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-orange-hover);
+    }
+
+    /* Footer */
+    footer {
+      background: #061020;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 35px 5%;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span>Publisher: <strong>Shrinanda Infotech</strong> | Email: <strong>ijmrst@shrinandainfotech.com</strong></span>
+    <div>
+      <span class="badge-pill">Peer-Reviewed & Open Access</span>
+      <span class="badge-pill">ISSN: Applied</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon">IJ</div>
+        <div class="logo-text">
+          <h1>IJMRST</h1>
+          <p>International Journal of Multidisciplinary Research in Science & Technology</p>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#scope">Aim & Scope</a></li>
+          <li><a href="editorial-board.html" class="active">Editorial Board</a></li>
+          <li><a href="guidelines.html">Author Guidelines</a></li>
+          <li><a href="archives.html">Archives</a></li>
+          <li><a href="verify.html">Verify Certificate</a></li>
+          <li><a href="login.html" class="btn-login">Portal Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <h2>Editorial & <span>Peer-Review Board</span></h2>
+    <p>IJMRST is guided by experienced academicians, researchers, and industry technologists committed to rigorous double-blind peer review and ethical publishing.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- Editor-in-Chief -->
+    <h3 class="group-title">Editor-in-Chief</h3>
+    <div class="eic-card">
+      <div>
+        <span class="role-badge">Editor-in-Chief & Managing Publisher</span>
+        <div class="member-name">Prof. Vaibhav S. Walke</div>
+        <div class="member-qual">M.E. / Computer Engineering & IT Systems</div>
+        <div class="member-affil">Founder, Shrinanda Infotech & Polytechnic Educator, Nashik, Maharashtra, India</div>
+        <div class="member-meta">Email: editor@ijmrst.shrinandainfotech.com | Specialization: Software Engineering, Cloud & Data Systems</div>
+      </div>
+    </div>
+
+    <!-- Associate Editors -->
+    <h3 class="group-title">Associate & Section Editors</h3>
+    <div class="board-grid">
+      <div class="board-card">
+        <span class="role-badge">Associate Editor — Engineering</span>
+        <h4>Dr. / Prof. [Name Placeholder 1]</h4>
+        <div class="member-qual">Ph.D. / M.Tech (Computer Science & AI)</div>
+        <div class="member-affil">Department of Computer Engineering, [Institution Name], Maharashtra, India</div>
+        <span class="domain-tag">AI, Machine Learning & Data Science</span>
+      </div>
+
+      <div class="board-card">
+        <span class="role-badge">Associate Editor — Core Engineering</span>
+        <h4>Dr. / Prof. [Name Placeholder 2]</h4>
+        <div class="member-qual">Ph.D. / M.E. (Mechanical & Civil Systems)</div>
+        <div class="member-affil">Department of Mechanical Engineering, [Institution Name], India</div>
+        <span class="domain-tag">Thermal, Manufacturing & Structural Engg.</span>
+      </div>
+
+      <div class="board-card">
+        <span class="role-badge">Associate Editor — Science & Education</span>
+        <h4>Dr. / Prof. [Name Placeholder 3]</h4>
+        <div class="member-qual">Ph.D., M.Sc., M.Ed.</div>
+        <div class="member-affil">Faculty of Science & Education, [University / College Name], India</div>
+        <span class="domain-tag">Applied Sciences, Pedagogy & NEP 2020</span>
+      </div>
+    </div>
+
+    <!-- Peer Review Panel -->
+    <h3 class="group-title">Peer-Review Panel Members (1-Year Renewable Term)</h3>
+    <div class="board-grid">
+      <div class="board-card">
+        <h4>Prof. [Reviewer Name 1]</h4>
+        <div class="member-qual">M.E. (Information Technology)</div>
+        <div class="member-affil">[Polytechnic / Engineering College], Nashik, India</div>
+        <span class="domain-tag">Web Technologies & Cybersecurity</span>
+      </div>
+
+      <div class="board-card">
+        <h4>Dr. [Reviewer Name 2]</h4>
+        <div class="member-qual">Ph.D. (Commerce & Management)</div>
+        <div class="member-affil">[Management Institute], Pune, India</div>
+        <span class="domain-tag">Finance, MSMEs & Entrepreneurship</span>
+      </div>
+
+      <div class="board-card">
+        <h4>Dr. [Reviewer Name 3]</h4>
+        <div class="member-qual">Ph.D. (Pharmaceutical & Life Sciences)</div>
+        <div class="member-affil">[College of Pharmacy], Maharashtra, India</div>
+        <span class="domain-tag">Biotechnology & Public Health</span>
+      </div>
+    </div>
+
+    <!-- Join Board CTA -->
+    <div class="join-box">
+      <div>
+        <h3>Join Our Editorial or Peer-Review Board</h3>
+        <p>We invite Assistant Professors, Associate Professors, Ph.D. holders, and experienced Polytechnic/Engineering faculty members to join our double-blind review board (1-year renewable term with official Appointment Letter & Reviewer Certificates).</p>
+      </div>
+      <a href="join-reviewer.html" class="btn-primary">Apply as Reviewer</a>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech, Nashik.</p>
+  </footer>
+
+</body>
+</html>
