@@ -178,6 +178,7 @@
 
   <script>
     let verifiedEmail = '';
+    let isPasswordCheckInProgress = false;
 
     function showAlert(msg, isError = true) {
       const box = document.getElementById('alertBox');
@@ -192,26 +193,46 @@
       document.getElementById('alertBox').classList.add('hidden');
     }
 
+    async function redirectToDashboard(email) {
+      showAlert('2FA Verified! Opening your dashboard...', false);
+      const { data: roleData } = await supabaseClient
+        .from('user_roles')
+        .select('role, is_active')
+        .eq('email', email)
+        .single();
+
+      if (roleData && roleData.is_active) {
+        window.location.href = roleData.role === 'campus_partner' ? 'partner-dashboard.html' : 'admin.html';
+      } else {
+        showAlert('Access Denied: No active role found for ' + email);
+      }
+    }
+
+    // Listen for Email Verification Link (Works in BOTH new tab and existing tab!)
     supabaseClient.auth.onAuthStateChange(async (event, session) => {
       if (event === 'PASSWORD_RECOVERY') {
         document.getElementById('step1Form').classList.add('hidden');
         document.getElementById('step2Box').classList.add('hidden');
         document.getElementById('forgotForm').classList.add('hidden');
         document.getElementById('updatePasswordForm').classList.remove('hidden');
-      } else if (event === 'SIGNED_IN' && session && window.location.hash.includes('access_token')) {
-        const email = session.user.email;
-        const { data: roleData } = await supabaseClient
-          .from('user_roles')
-          .select('role, is_active')
-          .eq('email', email)
-          .single();
+      } else if (event === 'SIGNED_IN' && session && !isPasswordCheckInProgress) {
+        await redirectToDashboard(session.user.email);
+      }
+    });
 
-        if (roleData && roleData.is_active) {
-          window.location.href = roleData.role === 'campus_partner' ? 'partner-dashboard.html' : 'admin.html';
+    // Also check if URL already contains ?code= or #access_token on page load
+    window.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('code') || window.location.hash.includes('access_token')) {
+        showAlert('Verifying email link, please wait...', false);
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) {
+          await redirectToDashboard(session.user.email);
         }
       }
     });
 
+    // STEP 1: Verify Password -> Sign Out Temp Session -> Send 2FA Email Link
     document.getElementById('step1Form').addEventListener('submit', async (e) => {
       e.preventDefault();
       hideAlert();
@@ -221,10 +242,12 @@
 
       btn.disabled = true;
       btn.textContent = 'Verifying Password...';
+      isPasswordCheckInProgress = true;
 
       const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
       if (error) {
+        isPasswordCheckInProgress = false;
         btn.disabled = false;
         btn.textContent = 'Verify Password & Send OTP Link →';
         return showAlert('Invalid Email ID or Password.');
@@ -238,12 +261,16 @@
 
       if (roleError || !roleData || !roleData.is_active) {
         await supabaseClient.auth.signOut();
+        isPasswordCheckInProgress = false;
         btn.disabled = false;
         btn.textContent = 'Verify Password & Send OTP Link →';
         return showAlert('Access Denied: No active portal role is assigned to this email.');
       }
 
+      // Sign out temporary password session before sending 2FA link
       await supabaseClient.auth.signOut();
+      isPasswordCheckInProgress = false;
+
       const { error: otpError } = await supabaseClient.auth.signInWithOtp({
         email: email,
         options: {
