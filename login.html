@@ -201,12 +201,23 @@
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      gap: 10px;
       font-size: 0.84rem;
       color: var(--text-muted);
     }
 
+    .extra-links a {
+      transition: color 0.2s;
+    }
+
     .extra-links a:hover {
       color: var(--accent-orange);
+    }
+
+    .dynamic-cta {
+      color: var(--accent-orange);
+      font-weight: 600;
     }
 
     #loginAlert {
@@ -249,32 +260,32 @@
   <div class="login-wrapper">
     <div class="login-card">
       <h2>IJMRST <span>Portal Login</span></h2>
-      <p class="sub">Sign in to access your role-based workspace</p>
+      <p class="sub" id="roleSubtext">Sign in to Editorial & Publishing Admin Workspace</p>
 
       <div class="role-tabs">
-        <div class="role-tab active" onclick="selectRole(this, 'Editorial / Admin')">Admin / Editor</div>
-        <div class="role-tab" onclick="selectRole(this, 'Peer Reviewer')">Reviewer</div>
-        <div class="role-tab" onclick="selectRole(this, 'Campus Partner')">Partner</div>
+        <div class="role-tab active" onclick="selectRole(this, 'admin')">Admin / Editor</div>
+        <div class="role-tab" onclick="selectRole(this, 'reviewer')">Reviewer</div>
+        <div class="role-tab" onclick="selectRole(this, 'partner')">Partner</div>
       </div>
 
       <form id="portalLoginForm">
         <input type="hidden" id="selectedRole" value="Editorial / Admin" />
         <div class="form-group">
           <label>Registered Email Address</label>
-          <input type="email" id="loginEmail" placeholder="name@shrinandainfotech.com" required />
+          <input type="email" id="loginEmail" placeholder="editor@ijmrst.shrinandainfotech.com" required />
         </div>
         <div class="form-group">
           <label>Password</label>
           <input type="password" id="loginPassword" placeholder="••••••••" required />
         </div>
-        <button type="submit" class="btn-login-submit">Sign In to Dashboard</button>
+        <button type="submit" class="btn-login-submit" id="loginBtnText">Sign In as Admin / Editor</button>
       </form>
 
       <div id="loginAlert"></div>
 
       <div class="extra-links">
         <a href="track-paper.html">Author Paper Tracking</a>
-        <a href="editorial-board.html">Join as Reviewer</a>
+        <a href="guidelines.html" id="dynamicRoleLink" class="dynamic-cta">Editorial Policies →</a>
       </div>
     </div>
   </div>
@@ -284,10 +295,48 @@
   </footer>
 
   <script>
-    function selectRole(el, roleName) {
+    const roleConfig = {
+      admin: {
+        roleName: 'Editorial / Admin',
+        subtext: 'Sign in to Editorial & Publishing Admin Workspace',
+        placeholder: 'editor@ijmrst.shrinandainfotech.com',
+        btnText: 'Sign In as Admin / Editor',
+        linkText: 'Editorial Policies →',
+        linkHref: 'guidelines.html'
+      },
+      reviewer: {
+        roleName: 'Peer Reviewer',
+        subtext: 'Sign in to Double-Blind Peer Review Workspace',
+        placeholder: 'reviewer@college.edu.in',
+        btnText: 'Sign In as Peer Reviewer',
+        linkText: 'Apply as Reviewer →',
+        linkHref: 'join-reviewer.html'
+      },
+      partner: {
+        roleName: 'Campus Partner',
+        subtext: 'Sign in to Campus Partner Referral & Earnings Dashboard',
+        placeholder: 'partner@college.edu.in',
+        btnText: 'Sign In as Campus Partner',
+        linkText: 'Register as Partner →',
+        linkHref: 'partner-signup.html'
+      }
+    };
+
+    function selectRole(el, key) {
       document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
       el.classList.add('active');
-      document.getElementById('selectedRole').value = roleName;
+
+      const cfg = roleConfig[key];
+      document.getElementById('selectedRole').value = cfg.roleName;
+      document.getElementById('roleSubtext').textContent = cfg.subtext;
+      document.getElementById('loginEmail').placeholder = cfg.placeholder;
+      document.getElementById('loginBtnText').textContent = cfg.btnText;
+
+      const dynLink = document.getElementById('dynamicRoleLink');
+      dynLink.textContent = cfg.linkText;
+      dynLink.href = cfg.linkHref;
+
+      document.getElementById('loginAlert').style.display = 'none';
     }
 
     document.getElementById('portalLoginForm').addEventListener('submit', function(e) {
