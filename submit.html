@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit Manuscript Online | IJMRST</title>
+  <meta name="description" content="Submit your research paper online to IJMRST for double-blind peer review." />
+  <style>
+    :root {
+      --bg-dark: #0A192F;
+      --bg-card: #112240;
+      --bg-light-navy: #1D2D50;
+      --accent-orange: #FF6B00;
+      --accent-orange-hover: #E65C00;
+      --text-white: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: rgba(255, 107, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: #061020;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 5%;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .top-bar span strong {
+      color: var(--accent-orange);
+    }
+
+    .badge-pill {
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      padding: 2px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Navbar */
+    header {
+      background-color: rgba(10, 25, 47, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #0A192F;
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--text-white);
+      line-height: 1.1;
+    }
+
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-white);
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover {
+      color: var(--accent-orange);
+    }
+
+    .btn-login {
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange) !important;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--accent-orange);
+      color: #fff !important;
+    }
+
+    /* Page Banner */
+    .page-banner {
+      background: linear-gradient(135deg, #061020, #112240);
+      border-bottom: 1px solid var(--border-color);
+      padding: 45px 5%;
+      text-align: center;
+    }
+
+    .page-banner h2 {
+      font-size: 2.1rem;
+      margin-bottom: 8px;
+    }
+
+    .page-banner h2 span {
+      color: var(--accent-orange);
+    }
+
+    .page-banner p {
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: auto;
+      font-size: 0.98rem;
+    }
+
+    /* Referral Active Banner */
+    #partnerBanner {
+      display: none;
+      max-width: 920px;
+      margin: 22px auto 0;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #4ADE80;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* Form Container */
+    .container {
+      max-width: 920px;
+      margin: auto;
+      padding: 35px 5% 50px;
+    }
+
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 35px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-header {
+      color: var(--accent-orange);
+      font-size: 1.2rem;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #E2E8F0;
+    }
+
+    .form-group label span.req {
+      color: var(--accent-orange);
+    }
+
+    .helper-text {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg-light-navy);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: var(--text-white);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent-orange);
+    }
+
+    .author-box {
+      background: rgba(6, 16, 32, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .author-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-weight: 700;
+      color: var(--accent-orange);
+      font-size: 0.95rem;
+    }
+
+    .btn-add {
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      border: 1px solid var(--accent-orange);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-add:hover {
+      background: var(--accent-orange);
+      color: #fff;
+    }
+
+    .btn-remove {
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 22px 0;
+      font-size: 0.9rem;
+      color: #CBD5E1;
+    }
+
+    .checkbox-row input {
+      margin-top: 4px;
+      accent-color: var(--accent-orange);
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--accent-orange);
+      color: #fff;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255, 107, 0, 0.35);
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: var(--accent-orange-hover);
+    }
+
+    /* Success Banner */
+    #successBox {
+      display: none;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid #22C55E;
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    #successBox h3 {
+      color: #4ADE80;
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    .paper-id-badge {
+      display: inline-block;
+      background: #061020;
+      border: 1px dashed var(--accent-orange);
+      color: var(--accent-orange);
+      font-size: 1.3rem;
+      font-weight: 800;
+      padding: 10px 22px;
+      border-radius: 8px;
+      margin: 12px 0;
+      letter-spacing: 1px;
+    }
+
+    footer {
+      background: #061020;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 35px 5%;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span>Publisher: <strong>Shrinanda Infotech</strong> | Email: <strong>ijmrst@shrinandainfotech.com</strong></span>
+    <div>
+      <span class="badge-pill">Free Submission (₹0)</span>
+      <span class="badge-pill">24–48 Hr Double-Blind Review</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon">IJ</div>
+        <div class="logo-text">
+          <h1>IJMRST</h1>
+          <p>International Journal of Multidisciplinary Research in Science & Technology</p>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#scope">Aim & Scope</a></li>
+          <li><a href="editorial-board.html">Editorial Board</a></li>
+          <li><a href="guidelines.html">Author Guidelines</a></li>
+          <li><a href="archives.html">Archives</a></li>
+          <li><a href="verify.html">Verify Certificate</a></li>
+          <li><a href="login.html" class="btn-login">Portal Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <h2>Online <span>Manuscript Submission</span></h2>
+    <p>Upload your complete research paper in a single file. Our system automatically masks author identities before assigning your paper for Double-Blind Peer Review.</p>
+  </div>
+
+  <!-- Auto-Detected Campus Partner Referral Strip -->
+  <div id="partnerBanner"></div>
+
+  <div class="container">
+    <div class="form-card">
+      <form id="submissionForm">
+        <!-- Hidden field auto-populated from ?ref= URL parameter -->
+        <input type="hidden" id="campusPartnerRef" name="campusPartnerRef" value="DIRECT" />
+
+        <!-- Step 1: Manuscript Details -->
+        <div class="section-header">
+          <span>1. Manuscript Details</span>
+        </div>
+
+        <div class="form-group">
+          <label>Manuscript Title <span class="req">*</span></label>
+          <input type="text" id="paperTitle" placeholder="Enter the full title of your research paper" required />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Subject Area / Track <span class="req">*</span></label>
+            <select id="subjectTrack" required>
+              <option value="">-- Select Discipline --</option>
+              <option value="Engineering & Polytechnic">Engineering & Polytechnic</option>
+              <option value="Computer Science, AI & Data Science">Computer Science, AI & Data Science</option>
+              <option value="Pure & Applied Sciences">Pure & Applied Sciences</option>
+              <option value="Education (B.Ed & M.Ed)">Education (B.Ed & M.Ed)</option>
+              <option value="Commerce & Management">Commerce & Management</option>
+              <option value="Arts & Humanities">Arts & Humanities</option>
+              <option value="Medical & Pharmacy">Medical & Pharmacy</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Article Type <span class="req">*</span></label>
+            <select id="articleType" required>
+              <option value="Original Research Article">Original Research Article</option>
+              <option value="Review Paper">Review Paper</option>
+              <option value="Capstone / Diploma Project Paper">Capstone / Diploma Project Paper</option>
+              <option value="Case Study">Case Study</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Abstract (150–250 words) <span class="req">*</span></label>
+          <textarea id="abstract" rows="4" placeholder="Paste your paper abstract here..." required></textarea>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Keywords (Comma separated) <span class="req">*</span></label>
+            <input type="text" id="keywords" placeholder="e.g., Machine Learning, IoT, Cloud Security" required />
+          </div>
+
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Upload Complete Manuscript (.doc, .docx, .pdf) <span class="req">*</span></label>
+            <input type="file" id="manuscriptFile" accept=".doc,.docx,.pdf" required />
+            <span class="helper-text">Upload one complete file. Author names & affiliations are automatically masked for reviewers.</span>
+          </div>
+        </div>
+
+        <!-- Step 2: Authors Details (Max 5) -->
+        <div class="section-header" style="margin-top: 32px;">
+          <span>2. Author Details (Maximum 5 Authors Included in Standard APC)</span>
+          <button type="button" class="btn-add" id="addAuthorBtn">+ Add Co-Author</button>
+        </div>
+
+        <div id="authorsContainer">
+          <!-- Primary / Corresponding Author -->
+          <div class="author-box">
+            <div class="author-box-header">
+              <span>Author 1 (Corresponding Author)</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-group" style="margin-bottom:0;">
+                <label>Full Name (As required on Certificate) <span class="req">*</span></label>
+                <input type="text" name="authorName[]" placeholder="e.g., Rahul S. Patil" required />
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label>Designation / Role <span class="req">*</span></label>
+                <input type="text" name="authorRole[]" placeholder="e.g., Final Year Student / Assistant Professor" required />
+              </div>
+            </div>
+            <div class="form-grid" style="margin-top:14px; margin-bottom:0;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label>College / Organization Name <span class="req">*</span></label>
+                <input type="text" name="authorOrg[]" placeholder="e.g., Guru Gobind Singh Polytechnic, Nashik" required />
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label>Email Address <span class="req">*</span></label>
+                <input type="email" name="authorEmail[]" placeholder="author@college.edu.in" required />
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:14px; margin-bottom:0;">
+              <label>WhatsApp / Mobile Number (For Review & Acceptance Updates) <span class="req">*</span></label>
+              <input type="tel" name="authorPhone[]" placeholder="+91 98XXXXXXXX" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="ethicsAgree" required />
+          <label for="ethicsAgree">
+            I confirm that this manuscript is original, unpublished, has similarity below 15%, and all listed co-authors approve this submission under IJMRST's CC BY 4.0 Open Access Policy.
+          </label>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit Manuscript for Free Peer Review</button>
+      </form>
+
+      <!-- Confirmation Output -->
+      <div id="successBox">
+        <h3>✓ Manuscript Submitted Successfully!</h3>
+        <p style="color:#E2E8F0;">Your paper has been queued for Double-Blind Peer Review (author details will be masked automatically before reviewer assignment). Please save your unique Paper Tracking ID:</p>
+        <div class="paper-id-badge" id="generatedPaperId">IJMRST-2026-1001</div>
+        <p id="refConfirmText" style="color:#4ADE80; font-size:0.88rem; font-weight:600;"></p>
+        <p style="color:#94A3B8; font-size:0.9rem; margin-top:8px;">
+          Our editorial team will complete the screening and peer review within <strong>24 to 48 hours</strong> and notify the corresponding author via email/WhatsApp.
+        </p>
+        <div style="margin-top:18px;">
+          <a href="track-paper.html" class="btn-add">Track Paper Status →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
+  </footer>
+
+  <script>
+    // 1. Auto-capture Campus Partner Referral from URL (?ref=PARTNER_CODE)
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    if (refCode && refCode.trim() !== '') {
+      const cleanRef = refCode.trim().toUpperCase();
+      document.getElementById('campusPartnerRef').value = cleanRef;
+      const banner = document.getElementById('partnerBanner');
+      banner.style.display = 'block';
+      banner.textContent = `✓ Official Campus Partner Referral Link Active (${cleanRef})`;
+    }
+
+    // 2. Dynamic Co-Authors (Max 5)
+    const authorsContainer = document.getElementById('authorsContainer');
+    const addAuthorBtn = document.getElementById('addAuthorBtn');
+    let authorCount = 1;
+    const maxAuthors = 5;
+
+    addAuthorBtn.addEventListener('click', () => {
+      if (authorCount >= maxAuthors) {
+        alert('Maximum 5 authors are permitted per manuscript under the standard publication tier.');
+        return;
+      }
+      authorCount++;
+      const div = document.createElement('div');
+      div.className = 'author-box';
+      div.innerHTML = `
+        <div class="author-box-header">
+          <span>Author ${authorCount} (Co-Author / Project Guide)</span>
+          <button type="button" class="btn-remove" onclick="removeAuthor(this)">Remove</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Full Name (As required on Certificate) <span class="req">*</span></label>
+            <input type="text" name="authorName[]" placeholder="Enter full name" required />
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Designation / Role <span class="req">*</span></label>
+            <input type="text" name="authorRole[]" placeholder="e.g., Student / Project Guide" required />
+          </div>
+        </div>
+        <div class="form-grid" style="margin-top:14px; margin-bottom:0;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>College / Organization Name <span class="req">*</span></label>
+            <input type="text" name="authorOrg[]" placeholder="Enter institution name" required />
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Email Address <span class="req">*</span></label>
+            <input type="email" name="authorEmail[]" placeholder="coauthor@college.edu.in" required />
+          </div>
+        </div>
+      `;
+      authorsContainer.appendChild(div);
+      if (authorCount === maxAuthors) {
+        addAuthorBtn.style.display = 'none';
+      }
+    });
+
+    function removeAuthor(btn) {
+      btn.closest('.author-box').remove();
+      authorCount--;
+      addAuthorBtn.style.display = 'inline-block';
+      const boxes = authorsContainer.querySelectorAll('.author-box');
+      boxes.forEach((box, idx) => {
+        if (idx > 0) {
+          box.querySelector('.author-box-header span').textContent = `Author ${idx + 1} (Co-Author / Project Guide)`;
+        }
+      });
+    }
+
+    // 3. Handle Submission Preview
+    document.getElementById('submissionForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const paperId = `IJMRST-2026-${randomNum}`;
+      const activeRef = document.getElementById('campusPartnerRef').value;
+
+      document.getElementById('generatedPaperId').textContent = paperId;
+      if (activeRef !== 'DIRECT') {
+        document.getElementById('refConfirmText').textContent = `Linked to Campus Partner Code: ${activeRef}`;
+      }
+      document.getElementById('submissionForm').style.display = 'none';
+      document.getElementById('successBox').style.display = 'block';
+      window.scrollTo({ top: 150, behavior: 'smooth' });
+    });
+  </script>
+
+</body>
+</html>
