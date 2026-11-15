@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify QR Certificate | IJMRST</title>
+  <meta name="description" content="Verify the authenticity of IJMRST author, reviewer, and publication certificates online." />
+  <style>
+    :root {
+      --bg-dark: #0A192F;
+      --bg-card: #112240;
+      --bg-light-navy: #1D2D50;
+      --accent-orange: #FF6B00;
+      --accent-orange-hover: #E65C00;
+      --text-white: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: rgba(255, 107, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: #061020;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 5%;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .top-bar span strong {
+      color: var(--accent-orange);
+    }
+
+    .badge-pill {
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      padding: 2px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Navbar */
+    header {
+      background-color: rgba(10, 25, 47, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #0A192F;
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--text-white);
+      line-height: 1.1;
+    }
+
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-white);
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: var(--accent-orange);
+    }
+
+    .btn-login {
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange) !important;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--accent-orange);
+      color: #fff !important;
+    }
+
+    /* Page Banner */
+    .page-banner {
+      background: linear-gradient(135deg, #061020, #112240);
+      border-bottom: 1px solid var(--border-color);
+      padding: 45px 5%;
+      text-align: center;
+    }
+
+    .page-banner h2 {
+      font-size: 2.1rem;
+      margin-bottom: 8px;
+    }
+
+    .page-banner h2 span {
+      color: var(--accent-orange);
+    }
+
+    .page-banner p {
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: auto;
+      font-size: 0.98rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 820px;
+      margin: auto;
+      padding: 45px 5%;
+    }
+
+    .verify-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      min-width: 240px;
+      padding: 13px 16px;
+      background: var(--bg-light-navy);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: var(--text-white);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent-orange);
+    }
+
+    .btn-verify {
+      background: var(--accent-orange);
+      color: #fff;
+      border: none;
+      padding: 13px 28px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(255, 107, 0, 0.35);
+      transition: background 0.2s;
+    }
+
+    .btn-verify:hover {
+      background: var(--accent-orange-hover);
+    }
+
+    /* Verified Output Card */
+    #certResult {
+      display: none;
+      margin-top: 28px;
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid #22C55E;
+      border-radius: 14px;
+      padding: 28px;
+    }
+
+    .verified-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.25);
+    }
+
+    .check-circle {
+      width: 36px;
+      height: 36px;
+      background: #22C55E;
+      color: #061020;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+    }
+
+    .cert-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .cert-table td {
+      padding: 10px 8px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+      font-size: 0.94rem;
+    }
+
+    .cert-table td:first-child {
+      color: var(--text-muted);
+      width: 38%;
+    }
+
+    .cert-table td:last-child {
+      font-weight: 600;
+      color: var(--text-white);
+    }
+
+    footer {
+      background: #061020;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 35px 5%;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span>Publisher: <strong>Shrinanda Infotech</strong> | Email: <strong>ijmrst@shrinandainfotech.com</strong></span>
+    <div>
+      <span class="badge-pill">QR Authentication System</span>
+      <span class="badge-pill">100% Tamper-Proof</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon">IJ</div>
+        <div class="logo-text">
+          <h1>IJMRST</h1>
+          <p>International Journal of Multidisciplinary Research in Science & Technology</p>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#scope">Aim & Scope</a></li>
+          <li><a href="editorial-board.html">Editorial Board</a></li>
+          <li><a href="guidelines.html">Author Guidelines</a></li>
+          <li><a href="archives.html">Archives</a></li>
+          <li><a href="verify.html" class="active">Verify Certificate</a></li>
+          <li><a href="login.html" class="btn-login">Portal Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <h2>Certificate <span>Verification Portal</span></h2>
+    <p>Scan the QR code printed on any IJMRST certificate or enter the Certificate ID below to verify its authenticity.</p>
+  </div>
+
+  <div class="container">
+    <div class="verify-card">
+      <form id="verifyForm">
+        <label style="display:block; font-weight:600; margin-bottom:8px;">Certificate ID *</label>
+        <div class="input-row">
+          <input type="text" id="certIdInput" placeholder="e.g., IJMRST-CERT-2026-001" required />
+          <button type="submit" class="btn-verify">Verify Now</button>
+        </div>
+      </form>
+
+      <div id="certResult">
+        <div class="verified-header">
+          <div class="check-circle">✓</div>
+          <div>
+            <h3 style="color:#4ADE80; font-size:1.25rem;">Authentic IJMRST Certificate Verified</h3>
+            <p style="font-size:0.85rem; color:#CBD5E1;">Digitally issued by Shrinanda Infotech, Nashik</p>
+          </div>
+        </div>
+        <table class="cert-table">
+          <tr>
+            <td>Certificate ID:</td>
+            <td id="outCertId" style="color:var(--accent-orange);">IJMRST-CERT-2026-001</td>
+          </tr>
+          <tr>
+            <td>Certificate Type:</td>
+            <td>Research Paper Publication Certificate</td>
+          </tr>
+          <tr>
+            <td>Issue / Volume:</td>
+            <td>Volume 1, Issue 1 (November 2026)</td>
+          </tr>
+          <tr>
+            <td>Issuing Authority:</td>
+            <td>IJMRST Editorial Office & Shrinanda Infotech</td>
+          </tr>
+          <tr>
+            <td>Verification Status:</td>
+            <td style="color:#4ADE80;">ACTIVE & VALID</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
+  </footer>
+
+  <script>
+    function showVerification(id) {
+      const cleanId = id.trim().toUpperCase();
+      document.getElementById('certIdInput').value = cleanId;
+      document.getElementById('outCertId').textContent = cleanId;
+      document.getElementById('certResult').style.display = 'block';
+    }
+
+    // Auto-verify if opened via QR code link (?cert=IJMRST-CERT-2026-001)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('cert')) {
+      showVerification(params.get('cert'));
+    }
+
+    document.getElementById('verifyForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      showVerification(document.getElementById('certIdInput').value);
+    });
+  </script>
+
+</body>
+</html>
