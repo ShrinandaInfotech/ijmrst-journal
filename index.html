@@ -1,19 +1,693 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IJMRST | Shrinanda Infotech</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IJMRST | International Journal of Multidisciplinary Research in Science and Technology</title>
+  <meta name="description" content="IJMRST is an international peer-reviewed, open-access multidisciplinary journal published by Shrinanda Infotech. Fast 24-hour review, affordable ₹600 APC, and live QR-verified certificates." />
   <style>
-    body { background: #0A192F; color: #FFFFFF; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; }
-    h1 { color: #FF6B00; margin-bottom: 10px; }
+    :root {
+      --bg-dark: #0A192F;
+      --bg-card: #112240;
+      --bg-light-navy: #1D2D50;
+      --accent-orange: #FF6B00;
+      --accent-orange-hover: #E65C00;
+      --text-white: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: rgba(255, 107, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Top Announcement Bar */
+    .top-bar {
+      background: #061020;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 5%;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .top-bar span strong {
+      color: var(--accent-orange);
+    }
+
+    .top-badges {
+      display: flex;
+      gap: 15px;
+      font-weight: 600;
+    }
+
+    .badge-pill {
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      padding: 2px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 0.8rem;
+    }
+
+    /* Main Header & Navbar */
+    header {
+      background-color: rgba(10, 25, 47, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #0A192F;
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--text-white);
+      line-height: 1.1;
+    }
+
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-white);
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover {
+      color: var(--accent-orange);
+    }
+
+    .btn-login {
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange) !important;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--accent-orange);
+      color: #fff !important;
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1250px;
+      margin: auto;
+      padding: 70px 5% 60px;
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255, 107, 0, 0.12);
+      color: var(--accent-orange);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      line-height: 1.25;
+      margin-bottom: 18px;
+    }
+
+    .hero h2 span {
+      color: var(--accent-orange);
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 28px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--accent-orange);
+      color: #fff;
+      padding: 13px 26px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 4px 20px rgba(255, 107, 0, 0.35);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-orange-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-white);
+      padding: 13px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: border-color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-orange);
+    }
+
+    /* Call for Papers Card */
+    .cfp-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .cfp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .cfp-header h3 {
+      color: var(--accent-orange);
+      font-size: 1.2rem;
+    }
+
+    .live-dot {
+      height: 10px;
+      width: 10px;
+      background-color: #22C55E;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      box-shadow: 0 0 8px #22C55E;
+    }
+
+    .cfp-list {
+      list-style: none;
+    }
+
+    .cfp-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+      font-size: 0.95rem;
+    }
+
+    .cfp-list li span:first-child {
+      color: var(--text-muted);
+    }
+
+    .cfp-list li strong {
+      color: var(--text-white);
+    }
+
+    /* Stats Strip */
+    .stats-strip {
+      background: var(--bg-card);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 30px 5%;
+    }
+
+    .stats-grid {
+      max-width: 1250px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      text-align: center;
+    }
+
+    .stat-item h4 {
+      font-size: 1.8rem;
+      color: var(--accent-orange);
+    }
+
+    .stat-item p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Sections General */
+    section {
+      max-width: 1250px;
+      margin: auto;
+      padding: 65px 5%;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 45px;
+    }
+
+    .section-title h3 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .section-title h3 span {
+      color: var(--accent-orange);
+    }
+
+    .section-title p {
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: auto;
+    }
+
+    /* Aim & Scope Cards */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      padding: 26px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-orange);
+    }
+
+    .card h4 {
+      font-size: 1.2rem;
+      color: var(--accent-orange);
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.93rem;
+    }
+
+    /* Publication Process Steps */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .step-box {
+      background: var(--bg-light-navy);
+      padding: 24px;
+      border-radius: 12px;
+      border-left: 4px solid var(--accent-orange);
+    }
+
+    .step-num {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-orange);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .step-box h4 {
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .step-box p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    /* Partner CTA Banner */
+    .partner-banner {
+      background: linear-gradient(135deg, #112240, #1D2D50);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 25px;
+    }
+
+    .partner-banner h3 {
+      font-size: 1.7rem;
+      margin-bottom: 8px;
+    }
+
+    .partner-banner p {
+      color: var(--text-muted);
+      max-width: 650px;
+    }
+
+    /* Footer */
+    footer {
+      background: #061020;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 50px 5% 25px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-grid {
+      max-width: 1250px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 30px;
+      margin-bottom: 35px;
+    }
+
+    .footer-grid h4 {
+      color: var(--text-white);
+      margin-bottom: 14px;
+      font-size: 1.05rem;
+    }
+
+    .footer-grid ul {
+      list-style: none;
+    }
+
+    .footer-grid ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-grid ul li a:hover {
+      color: var(--accent-orange);
+    }
+
+    .copyright {
+      max-width: 1250px;
+      margin: auto;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 40px;
+      }
+      .hero h2 {
+        font-size: 2rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <div>
-    <h1>IJMRST</h1>
-    <p>International Journal of Multidisciplinary Research in Science and Technology</p>
-    <p style="color: #94A3B8; font-size: 14px;">A Publication by Shrinanda Infotech | Launching Soon</p>
+
+  <!-- Top Info Strip -->
+  <div class="top-bar">
+    <span>Publisher: <strong>Shrinanda Infotech</strong> | Email: <strong>ijmrst@shrinandainfotech.com</strong></span>
+    <div class="top-badges">
+      <span class="badge-pill">Peer-Reviewed & Open Access</span>
+      <span class="badge-pill">ISSN: Applied</span>
+      <span class="badge-pill">Monthly Frequency</span>
+    </div>
   </div>
+
+  <!-- Navigation Header -->
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon">IJ</div>
+        <div class="logo-text">
+          <h1>IJMRST</h1>
+          <p>International Journal of Multidisciplinary Research in Science & Technology</p>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#scope">Aim & Scope</a></li>
+          <li><a href="editorial-board.html">Editorial Board</a></li>
+          <li><a href="guidelines.html">Author Guidelines</a></li>
+          <li><a href="archives.html">Archives</a></li>
+          <li><a href="verify.html">Verify Certificate</a></li>
+          <li><a href="login.html" class="btn-login">Portal Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div>
+      <span class="hero-tag">Open Access • Double-Blind Peer Review • Rapid Publication</span>
+      <h2>Publish Your Research with <span>Global Visibility</span> & Verified Integrity</h2>
+      <p>
+        <strong>IJMRST</strong> provides an international scholarly platform for researchers, faculty members, diploma/engineering students, and educators across Science, Technology, Education, and Humanities.
+      </p>
+      <div class="hero-buttons">
+        <a href="submit.html" class="btn-primary">Submit Paper Online (₹0 Fee)</a>
+        <a href="track-paper.html" class="btn-secondary">Track Paper Status</a>
+      </div>
+    </div>
+
+    <!-- Call for Papers Box -->
+    <div class="cfp-card">
+      <div class="cfp-header">
+        <h3>Call for Papers</h3>
+        <span style="font-size: 0.85rem; color: #22C55E; font-weight: 600;">
+          <span class="live-dot"></span>Submissions Open
+        </span>
+      </div>
+      <ul class="cfp-list">
+        <li><span>Current Issue:</span> <strong>Volume 1, Issue 1 (Nov 2026)</strong></li>
+        <li><span>Submission Fee:</span> <strong>₹0 (Free Submission)</strong></li>
+        <li><span>Review Turnaround:</span> <strong>24 to 48 Hours</strong></li>
+        <li><span>Publication Fee (APC):</span> <strong>₹600 (Only After Acceptance)</strong></li>
+        <li><span>Certificates:</span> <strong>Instant QR-Verified PDF</strong></li>
+        <li><span>Indexing:</span> <strong>Google Scholar, Crossref (In Process)</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Key Metrics Strip -->
+  <div class="stats-strip">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <h4>24 Hrs</h4>
+        <p>Fast Double-Blind Peer Review</p>
+      </div>
+      <div class="stat-item">
+        <h4>₹600</h4>
+        <p>Affordable Single-Tier APC</p>
+      </div>
+      <div class="stat-item">
+        <h4>100%</h4>
+        <p>Live QR Code Certificate Verification</p>
+      </div>
+      <div class="stat-item">
+        <h4>CC BY 4.0</h4>
+        <p>Full Open-Access Author Rights</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aim & Scope Section -->
+  <section id="scope">
+    <div class="section-title">
+      <h3>Multidisciplinary <span>Aim & Scope</span></h3>
+      <p>We welcome original research articles, review papers, case studies, and capstone project papers across diverse academic disciplines.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h4>Engineering & Polytechnic</h4>
+        <p>Computer Engineering, AI & ML, Data Science, Mechanical, Civil, Electrical, Electronics, and Diploma Capstone Projects.</p>
+      </div>
+      <div class="card">
+        <h4>Pure & Applied Sciences</h4>
+        <p>Physics, Chemistry, Mathematics, Environmental Science, Biotechnology, Microbiology, and Agricultural Sciences.</p>
+      </div>
+      <div class="card">
+        <h4>Education (B.Ed & M.Ed)</h4>
+        <p>Pedagogical Innovations, Curriculum Development, Educational Psychology, EdTech Integration, and NEP 2020 Studies.</p>
+      </div>
+      <div class="card">
+        <h4>Commerce & Management</h4>
+        <p>Finance, Entrepreneurship, Digital Marketing, Supply Chain, Human Resource Management, and MSME Economics.</p>
+      </div>
+      <div class="card">
+        <h4>Arts & Humanities</h4>
+        <p>Literature, Sociology, History, Psychology, Public Administration, and Regional Language Studies.</p>
+      </div>
+      <div class="card">
+        <h4>Medical & Pharmacy</h4>
+        <p>Pharmaceutical Sciences, Public Health, Clinical Research, Physiotherapy, and Healthcare Informatics.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Simple 4-Step Workflow -->
+  <section style="padding-top: 10px;">
+    <div class="section-title">
+      <h3>Transparent <span>4-Step Publication</span> Process</h3>
+      <p>Pay zero upfront fees. You only pay the ₹600 processing charge once our expert reviewers accept your manuscript.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-box">
+        <div class="step-num">Step 01</div>
+        <h4>Free Online Submission</h4>
+        <p>Upload your manuscript in IJMRST format without any upfront registration or submission fee.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-num">Step 02</div>
+        <h4>Double-Blind Review</h4>
+        <p>Subject experts evaluate originality, formatting, and plagiarism within 24–48 hours.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-num">Step 03</div>
+        <h4>Acceptance & ₹600 APC</h4>
+        <p>Receive your official Acceptance Letter and complete the ₹600 publication fee within 7 days.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-num">Step 04</div>
+        <h4>Publish & QR Certificate</h4>
+        <p>Your paper goes live in the Archives with automatic IEEE/APA citations and individual QR certificates.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Academic Partner / Reviewer CTA -->
+  <section style="padding-top: 10px;">
+    <div class="partner-banner">
+      <div>
+        <h3>Join as an Academic Reviewer or Campus Partner</h3>
+        <p>Faculty members and Ph.D. scholars can join our Peer-Review Board, while educators and student coordinators can refer quality research papers and earn honorariums.</p>
+      </div>
+      <div class="hero-buttons">
+        <a href="join-reviewer.html" class="btn-primary">Apply as Reviewer</a>
+        <a href="partner-signup.html" class="btn-secondary">Become a Campus Partner</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>About IJMRST</h4>
+        <p>International Journal of Multidisciplinary Research in Science and Technology (IJMRST) is a monthly peer-reviewed, open-access academic journal dedicated to ethical and accessible research publishing.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="submit.html">Submit Manuscript</a></li>
+          <li><a href="archives.html">Current & Past Issues</a></li>
+          <li><a href="editorial-board.html">Editorial & Reviewer Board</a></li>
+          <li><a href="verify.html">Verify QR Certificate</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Policies & Guidelines</h4>
+        <ul>
+          <li><a href="guidelines.html#template">Paper Template (.docx)</a></li>
+          <li><a href="guidelines.html#plagiarism">Plagiarism & Ethics Policy</a></li>
+          <li><a href="guidelines.html#openaccess">Open Access & Copyright</a></li>
+          <li><a href="guidelines.html#apc">Article Processing Charges (₹600)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Publisher & Contact</h4>
+        <p><strong>Shrinanda Infotech</strong><br />Nashik, Maharashtra, India</p>
+        <p style="margin-top: 8px;">Email: ijmrst@shrinandainfotech.com<br />Web: ijmrst.shrinandainfotech.com</p>
+      </div>
+    </div>
+    <div class="copyright">
+      <span>© 2026 IJMRST — Published by Shrinanda Infotech. All Rights Reserved.</span>
+      <span>Licensed under Creative Commons Attribution 4.0 (CC BY 4.0)</span>
+    </div>
+  </footer>
+
 </body>
 </html>
