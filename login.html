@@ -55,186 +55,112 @@
     </div>
   </header>
 
-  <!-- Main Portal Section -->
-  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-
-      <!-- Left Column: Role Portals & Sign-Up Options (7 Cols) -->
-      <div class="lg:col-span-7 space-y-6">
+  <!-- Centered Clean Login Box -->
+  <main class="flex-grow flex items-center justify-center px-4 py-12">
+    <div class="max-w-md w-full bg-[#0F1A34] rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
+      <div class="p-6 border-b border-slate-800 flex items-center justify-between">
         <div>
-          <span class="inline-block px-3.5 py-1 rounded-full bg-orange-500/15 border border-orange-500/30 text-orange-400 text-xs font-semibold mb-3">
-            2-Step Protected Portal (Password + Email Verification)
-          </span>
-          <h1 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
-            One Secure Login for <span class="text-orange-500">Admin, Editors, Reviewers & Partners</span>
-          </h1>
-          <p class="text-sm text-slate-400 mt-3 leading-relaxed">
-            Verify your Email ID & Password first. Once verified, a one-time security link is sent to your email inbox to unlock your role-based dashboard.
-          </p>
+          <h1 class="text-lg font-bold text-orange-400">2-Step Portal Sign In</h1>
+          <p class="text-xs text-slate-400 mt-0.5">Admin • Editors • Reviewers • Partners</p>
         </div>
-
-        <!-- 4 Role & Sign-Up Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Card 1: Editorial & Super Admin -->
-          <div class="p-5 rounded-xl bg-[#0F1A34] border border-slate-800 shadow-lg">
-            <div class="flex items-center justify-between mb-2">
-              <span class="px-2.5 py-0.5 rounded bg-orange-500 text-slate-950 text-[11px] font-extrabold">ADMIN & EDITORS</span>
-              <span class="text-emerald-400 text-xs font-semibold">2FA Locked</span>
-            </div>
-            <h3 class="font-bold text-white text-base">Super Admin / Chief / Associate Editor</h3>
-            <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Protected access to assigned subject tracks, peer-review screening & certificate issuance.</p>
-          </div>
-
-          <!-- Card 2: Peer Reviewer -->
-          <div class="p-5 rounded-xl bg-[#0F1A34] border border-slate-800 shadow-lg">
-            <div class="flex items-center justify-between mb-2">
-              <span class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold">PEER REVIEWER</span>
-              <a href="join-reviewer.html" class="text-orange-400 hover:underline text-xs font-bold">New Sign-Up →</a>
-            </div>
-            <h3 class="font-bold text-white text-base">Reviewer Portal</h3>
-            <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Faculty/PhD holders can apply via Join Reviewer. Approved reviewers sign in directly here.</p>
-          </div>
-
-          <!-- Card 3: Campus Partner -->
-          <div class="p-5 rounded-xl bg-[#0F1A34] border border-slate-800 shadow-lg">
-            <div class="flex items-center justify-between mb-2">
-              <span class="px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-bold">CAMPUS PARTNER</span>
-              <a href="partner-signup.html" class="text-orange-400 hover:underline text-xs font-bold">Partner Sign-Up →</a>
-            </div>
-            <h3 class="font-bold text-white text-base">Campus Partner Portal</h3>
-            <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Create a free partner account to get your referral code & track UPI commissions.</p>
-          </div>
-
-          <!-- Card 4: Author Public Tracking -->
-          <a href="track-paper.html"
-            class="block p-5 rounded-xl bg-[#0F1A34] border border-slate-800 hover:border-orange-500/60 shadow-lg transition">
-            <div class="flex items-center justify-between mb-2">
-              <span class="px-2.5 py-0.5 rounded bg-slate-800 text-slate-300 text-[11px] font-bold">AUTHORS (NO SIGN-UP)</span>
-              <span class="text-orange-400 text-xs font-bold">Track Now →</span>
-            </div>
-            <h3 class="font-bold text-white text-base">Track Manuscript Status</h3>
-            <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Authors don't need an account—check review progress directly with your Paper ID.</p>
-          </a>
-        </div>
-
-        <!-- Bottom Action Buttons -->
-        <div class="flex flex-wrap gap-3 pt-2">
-          <a href="submit.html" class="bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold text-sm px-5 py-2.5 rounded-lg transition shadow">
-            Submit Paper Online (₹0 Fee)
-          </a>
-          <a href="partner-signup.html" class="bg-[#0F1A34] hover:bg-slate-800 text-orange-400 border border-orange-500/40 font-semibold text-sm px-5 py-2.5 rounded-lg transition">
-            Register as Campus Partner
-          </a>
-        </div>
+        <span class="inline-flex items-center text-xs text-emerald-400 font-semibold shrink-0">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span> 2FA Active
+        </span>
       </div>
 
-      <!-- Right Column: 2-Step Login Box (5 Cols) -->
-      <div class="lg:col-span-5 bg-[#0F1A34] rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
-        <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+      <div class="p-6">
+        <!-- Status Alert Box -->
+        <div id="alertBox" class="hidden mb-4 p-3 rounded-lg text-xs font-medium leading-relaxed"></div>
+
+        <!-- STEP 1: Email & Password Form -->
+        <form id="step1Form" class="space-y-4">
           <div>
-            <h2 class="text-lg font-bold text-orange-400">2-Step Portal Sign In</h2>
-            <p class="text-xs text-slate-400 mt-0.5">Step 1: Password • Step 2: Email Verification</p>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Registered Email ID</label>
+            <input type="email" id="emailInput" required placeholder="name@ijmrst.com"
+              class="w-full px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none text-sm placeholder-slate-500" />
           </div>
-          <span class="inline-flex items-center text-xs text-emerald-400 font-semibold shrink-0">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span> 2FA Active
-          </span>
+
+          <div>
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Password</label>
+              <button type="button" onclick="showForgotPassword()" class="text-xs font-semibold text-orange-400 hover:underline">
+                Forgot Password?
+              </button>
+            </div>
+            <input type="password" id="passwordInput" required placeholder="••••••••••••"
+              class="w-full px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none text-sm placeholder-slate-500" />
+          </div>
+
+          <button type="submit" id="step1Btn"
+            class="w-full bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold py-3 rounded-lg transition shadow-lg text-sm">
+            Verify Password & Send OTP Link →
+          </button>
+        </form>
+
+        <!-- STEP 2: Email Verification Link Screen -->
+        <div id="step2Box" class="hidden space-y-4 text-center py-2">
+          <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="text-base font-bold text-white">Step 2: Check Your Email Inbox</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Password verified! A one-time verification link has been sent to <span id="otpEmailDisplay" class="font-bold text-orange-400"></span>. Click <strong class="text-white">"Sign in"</strong> in that email to open your dashboard.
+          </p>
+
+          <div class="flex justify-between items-center pt-4 border-t border-slate-800 text-xs">
+            <button type="button" onclick="resendLink()" class="text-orange-400 font-semibold hover:underline">Resend Email</button>
+            <button type="button" onclick="resetToStep1()" class="text-slate-400 hover:underline">← Back to Login</button>
+          </div>
         </div>
 
-        <div class="p-6">
-          <!-- Status Alert Box -->
-          <div id="alertBox" class="hidden mb-4 p-3 rounded-lg text-xs font-medium leading-relaxed"></div>
-
-          <!-- STEP 1: Email & Password Form -->
-          <form id="step1Form" class="space-y-4">
-            <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Registered Email ID</label>
-              <input type="email" id="emailInput" required placeholder="name@ijmrst.com"
-                class="w-full px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none text-sm placeholder-slate-500" />
-            </div>
-
-            <div>
-              <div class="flex justify-between items-center mb-1.5">
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Password</label>
-                <button type="button" onclick="showForgotPassword()" class="text-xs font-semibold text-orange-400 hover:underline">
-                  Forgot Password?
-                </button>
-              </div>
-              <input type="password" id="passwordInput" required placeholder="••••••••••••"
-                class="w-full px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none text-sm placeholder-slate-500" />
-            </div>
-
-            <button type="submit" id="step1Btn"
-              class="w-full bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold py-3 rounded-lg transition shadow-lg text-sm">
-              Verify Password & Send OTP Link →
-            </button>
-          </form>
-
-          <!-- STEP 2: Email Verification Link Screen -->
-          <div id="step2Box" class="hidden space-y-4 text-center py-2">
-            <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h3 class="text-base font-bold text-white">Step 2: Check Your Email Inbox</h3>
-            <p class="text-xs text-slate-300 leading-relaxed">
-              Password verified! A one-time verification link has been sent to <span id="otpEmailDisplay" class="font-bold text-orange-400"></span>. Click <strong class="text-white">"Sign in"</strong> in that email to open your dashboard.
-            </p>
-
-            <div class="flex justify-between items-center pt-4 border-t border-slate-800 text-xs">
-              <button type="button" onclick="resendLink()" class="text-orange-400 font-semibold hover:underline">Resend Email</button>
-              <button type="button" onclick="resetToStep1()" class="text-slate-400 hover:underline">← Back to Login</button>
-            </div>
+        <!-- FORGOT PASSWORD FORM -->
+        <form id="forgotForm" class="hidden space-y-4">
+          <p class="text-xs text-slate-400">Enter your registered email address. We will send you a secure password reset link.</p>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Registered Email ID</label>
+            <input type="email" id="resetEmailInput" required placeholder="name@ijmrst.com"
+              class="w-full px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg focus:ring-2 focus:ring-orange-500 outline-none text-sm placeholder-slate-500" />
           </div>
 
-          <!-- FORGOT PASSWORD FORM -->
-          <form id="forgotForm" class="hidden space-y-4">
-            <p class="text-xs text-slate-400">Enter your registered email address. We will send you a secure password reset link.</p>
-            <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Registered Email ID</label>
-              <input type="email" id="resetEmailInput" required placeholder="name@ijmrst.com"
-                class="w-full px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg focus:ring-2 focus:ring-orange-500 outline-none text-sm placeholder-slate-500" />
-            </div>
+          <button type="submit" id="resetBtn"
+            class="w-full bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold py-2.5 rounded-lg transition text-sm">
+            Send Password Reset Link
+          </button>
 
-            <button type="submit" id="resetBtn"
-              class="w-full bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold py-2.5 rounded-lg transition text-sm">
-              Send Password Reset Link
-            </button>
+          <button type="button" onclick="resetToStep1()" class="w-full text-center text-xs text-slate-400 hover:underline pt-1">
+            ← Back to Login
+          </button>
+        </form>
 
-            <button type="button" onclick="resetToStep1()" class="w-full text-center text-xs text-slate-400 hover:underline pt-1">
-              ← Back to Login
-            </button>
-          </form>
+        <!-- SET NEW PASSWORD FORM -->
+        <form id="updatePasswordForm" class="hidden space-y-4">
+          <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 text-xs text-blue-300">
+            Create a strong new password (minimum 8 characters).
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">New Password</label>
+            <input type="password" id="newPasswordInput" minlength="8" required placeholder="Enter new strong password"
+              class="w-full px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg focus:ring-2 focus:ring-orange-500 outline-none text-sm placeholder-slate-500" />
+          </div>
 
-          <!-- SET NEW PASSWORD FORM -->
-          <form id="updatePasswordForm" class="hidden space-y-4">
-            <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 text-xs text-blue-300">
-              Create a strong new password (minimum 8 characters).
-            </div>
-            <div>
-              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">New Password</label>
-              <input type="password" id="newPasswordInput" minlength="8" required placeholder="Enter new strong password"
-                class="w-full px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg focus:ring-2 focus:ring-orange-500 outline-none text-sm placeholder-slate-500" />
-            </div>
+          <button type="submit" id="updatePassBtn"
+            class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-lg transition text-sm">
+            Save New Password & Login
+          </button>
+        </form>
 
-            <button type="submit" id="updatePassBtn"
-              class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-lg transition text-sm">
-              Save New Password & Login
-            </button>
-          </form>
-
-          <!-- New User Sign-Up Links -->
-          <div class="mt-6 pt-4 border-t border-slate-800 space-y-2 text-center">
-            <p class="text-[11px] text-slate-400">New Partner or Reviewer?</p>
-            <div class="flex justify-center gap-4 text-xs">
-              <a href="partner-signup.html" class="text-orange-400 hover:underline font-semibold">Partner Sign-Up</a>
-              <span class="text-slate-600">|</span>
-              <a href="join-reviewer.html" class="text-emerald-400 hover:underline font-semibold">Apply as Reviewer</a>
-            </div>
+        <!-- New User Sign-Up Links -->
+        <div class="mt-6 pt-4 border-t border-slate-800 space-y-2 text-center">
+          <p class="text-[11px] text-slate-400">New Partner or Reviewer?</p>
+          <div class="flex justify-center gap-4 text-xs">
+            <a href="partner-signup.html" class="text-orange-400 hover:underline font-semibold">Partner Sign-Up</a>
+            <span class="text-slate-600">|</span>
+            <a href="join-reviewer.html" class="text-emerald-400 hover:underline font-semibold">Apply as Reviewer</a>
           </div>
         </div>
       </div>
-
     </div>
   </main>
 
@@ -266,7 +192,6 @@
       document.getElementById('alertBox').classList.add('hidden');
     }
 
-    // Handle Password Reset OR 2FA Email Link Callback
     supabaseClient.auth.onAuthStateChange(async (event, session) => {
       if (event === 'PASSWORD_RECOVERY') {
         document.getElementById('step1Form').classList.add('hidden');
@@ -287,7 +212,6 @@
       }
     });
 
-    // STEP 1: Verify Password -> Sign Out Temp Session -> Trigger 2FA Email Verification
     document.getElementById('step1Form').addEventListener('submit', async (e) => {
       e.preventDefault();
       hideAlert();
@@ -298,7 +222,6 @@
       btn.disabled = true;
       btn.textContent = 'Verifying Password...';
 
-      // 1. Check Email + Password
       const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
       if (error) {
@@ -307,7 +230,6 @@
         return showAlert('Invalid Email ID or Password.');
       }
 
-      // 2. Verify Active Role
       const { data: roleData, error: roleError } = await supabaseClient
         .from('user_roles')
         .select('role, is_active')
@@ -321,7 +243,6 @@
         return showAlert('Access Denied: No active portal role is assigned to this email.');
       }
 
-      // 3. Sign out partial session & send 2FA Email Link
       await supabaseClient.auth.signOut();
       const { error: otpError } = await supabaseClient.auth.signInWithOtp({
         email: email,
