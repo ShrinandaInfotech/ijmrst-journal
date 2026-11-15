@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Manuscript Status | IJMRST</title>
+  <meta name="description" content="Track the live peer-review and publication status of your submitted manuscript on IJMRST." />
+  <style>
+    :root {
+      --bg-dark: #0A192F;
+      --bg-card: #112240;
+      --bg-light-navy: #1D2D50;
+      --accent-orange: #FF6B00;
+      --accent-orange-hover: #E65C00;
+      --text-white: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: rgba(255, 107, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: #061020;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 5%;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .top-bar span strong {
+      color: var(--accent-orange);
+    }
+
+    .badge-pill {
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      padding: 2px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Navbar */
+    header {
+      background-color: rgba(10, 25, 47, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #0A192F;
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--text-white);
+      line-height: 1.1;
+    }
+
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-white);
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover {
+      color: var(--accent-orange);
+    }
+
+    .btn-login {
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange) !important;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--accent-orange);
+      color: #fff !important;
+    }
+
+    /* Page Banner */
+    .page-banner {
+      background: linear-gradient(135deg, #061020, #112240);
+      border-bottom: 1px solid var(--border-color);
+      padding: 45px 5%;
+      text-align: center;
+    }
+
+    .page-banner h2 {
+      font-size: 2.1rem;
+      margin-bottom: 8px;
+    }
+
+    .page-banner h2 span {
+      color: var(--accent-orange);
+    }
+
+    .page-banner p {
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: auto;
+      font-size: 0.98rem;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 850px;
+      margin: auto;
+      padding: 45px 5%;
+    }
+
+    .search-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #E2E8F0;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg-light-navy);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: var(--text-white);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent-orange);
+    }
+
+    .btn-track {
+      width: 100%;
+      background: var(--accent-orange);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(255, 107, 0, 0.35);
+      transition: background 0.2s;
+    }
+
+    .btn-track:hover {
+      background: var(--accent-orange-hover);
+    }
+
+    /* Status Result Card */
+    #statusResult {
+      display: none;
+      margin-top: 30px;
+      background: #061020;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 28px;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+
+    .status-badge {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ADE80;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    /* Progress Timeline */
+    .timeline {
+      list-style: none;
+      border-left: 2px solid var(--accent-orange);
+      margin-left: 12px;
+      padding-left: 22px;
+    }
+
+    .timeline li {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .timeline li::before {
+      content: "";
+      position: absolute;
+      left: -29px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-orange);
+      box-shadow: 0 0 8px var(--accent-orange);
+    }
+
+    .timeline li.pending {
+      opacity: 0.5;
+    }
+
+    .timeline li.pending::before {
+      background: #64748B;
+      box-shadow: none;
+    }
+
+    .timeline h4 {
+      font-size: 1rem;
+      color: var(--text-white);
+    }
+
+    .timeline p {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .demo-hint {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    footer {
+      background: #061020;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 35px 5%;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    @media (max-width: 650px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span>Publisher: <strong>Shrinanda Infotech</strong> | Email: <strong>ijmrst@shrinandainfotech.com</strong></span>
+    <div>
+      <span class="badge-pill">24–48 Hr Review</span>
+      <span class="badge-pill">Live Tracking</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon">IJ</div>
+        <div class="logo-text">
+          <h1>IJMRST</h1>
+          <p>International Journal of Multidisciplinary Research in Science & Technology</p>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#scope">Aim & Scope</a></li>
+          <li><a href="editorial-board.html">Editorial Board</a></li>
+          <li><a href="guidelines.html">Author Guidelines</a></li>
+          <li><a href="archives.html">Archives</a></li>
+          <li><a href="verify.html">Verify Certificate</a></li>
+          <li><a href="login.html" class="btn-login">Portal Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <h2>Track <span>Manuscript Status</span></h2>
+    <p>Enter your Paper Tracking ID and Corresponding Author Email to view real-time editorial and peer-review progress.</p>
+  </div>
+
+  <div class="container">
+    <div class="search-card">
+      <form id="trackForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Paper Tracking ID *</label>
+            <input type="text" id="trackPaperId" placeholder="e.g., IJMRST-2026-1001" required />
+          </div>
+          <div class="form-group">
+            <label>Corresponding Author Email *</label>
+            <input type="email" id="trackEmail" placeholder="author@college.edu.in" required />
+          </div>
+        </div>
+        <button type="submit" class="btn-track">Check Live Status</button>
+        <p class="demo-hint">Preview Tip: Enter any ID like <strong>IJMRST-2026-1001</strong> and email to preview the live status timeline.</p>
+      </form>
+
+      <!-- Live Status Output -->
+      <div id="statusResult">
+        <div class="result-header">
+          <div>
+            <div style="font-size:0.82rem; color:var(--text-muted);">Tracking ID</div>
+            <h3 id="resPaperId" style="color:var(--accent-orange);">IJMRST-2026-1001</h3>
+          </div>
+          <span class="status-badge">Under Double-Blind Peer Review</span>
+        </div>
+
+        <ul class="timeline">
+          <li>
+            <h4>1. Manuscript Received & Logged</h4>
+            <p>Original file securely archived; author details masked for double-blind review.</p>
+          </li>
+          <li>
+            <h4>2. Plagiarism & Formatting Screening Passed</h4>
+            <p>Similarity index verified below 15% threshold.</p>
+          </li>
+          <li>
+            <h4>3. Assigned to Subject Peer Reviewer (In Progress)</h4>
+            <p>Expected editorial decision within 24–48 hours of submission.</p>
+          </li>
+          <li class="pending">
+            <h4>4. Acceptance Letter & APC Settlement (₹600)</h4>
+            <p>Unlocks automatically once peer reviewer recommends acceptance.</p>
+          </li>
+          <li class="pending">
+            <h4>5. Final Publication & QR-Verified Certificates</h4>
+            <p>Published in current issue with individual downloadable PDF certificates.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
+  </footer>
+
+  <script>
+    document.getElementById('trackForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const pid = document.getElementById('trackPaperId').value.trim().toUpperCase();
+      document.getElementById('resPaperId').textContent = pid;
+      document.getElementById('statusResult').style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
