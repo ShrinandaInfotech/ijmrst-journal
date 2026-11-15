@@ -3,350 +3,310 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portal Login | IJMRST</title>
-  <meta name="description" content="Unified login portal for IJMRST Editorial Admin, Peer Reviewers, Campus Partners, and Authors." />
+  <title>Secure Portal Login | IJMRST</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-dark: #0A192F;
-      --bg-card: #112240;
-      --bg-light-navy: #1D2D50;
-      --accent-orange: #FF6B00;
-      --accent-orange-hover: #E65C00;
-      --text-white: #F8FAFC;
-      --text-muted: #94A3B8;
-      --border-color: rgba(255, 107, 0, 0.25);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-white);
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    /* Navbar */
-    header {
-      background-color: rgba(10, 25, 47, 0.95);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .nav-container {
-      max-width: 1250px;
-      margin: auto;
-      padding: 15px 5%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo-icon {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 1.2rem;
-      color: #0A192F;
-      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
-    }
-
-    .logo-text h1 {
-      font-size: 1.5rem;
-      letter-spacing: 1px;
-      color: var(--text-white);
-      line-height: 1.1;
-    }
-
-    .logo-text p {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    /* Login Card */
-    .login-wrapper {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 5%;
-    }
-
-    .login-card {
-      width: 100%;
-      max-width: 440px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 36px 32px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    .login-card h2 {
-      font-size: 1.7rem;
-      margin-bottom: 6px;
-      text-align: center;
-    }
-
-    .login-card h2 span {
-      color: var(--accent-orange);
-    }
-
-    .login-card p.sub {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 24px;
-    }
-
-    .role-tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 22px;
-    }
-
-    .role-tab {
-      background: var(--bg-light-navy);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-muted);
-      padding: 9px 6px;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    .role-tab.active {
-      background: rgba(255, 107, 0, 0.18);
-      border-color: var(--accent-orange);
-      color: var(--accent-orange);
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.88rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #E2E8F0;
-    }
-
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 12px 14px;
-      background: var(--bg-light-navy);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      color: var(--text-white);
-      font-size: 0.95rem;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: var(--accent-orange);
-    }
-
-    .btn-login-submit {
-      width: 100%;
-      background: var(--accent-orange);
-      color: #fff;
-      border: none;
-      padding: 13px;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 18px rgba(255, 107, 0, 0.35);
-      transition: background 0.2s;
-    }
-
-    .btn-login-submit:hover {
-      background: var(--accent-orange-hover);
-    }
-
-    .extra-links {
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.84rem;
-      color: var(--text-muted);
-    }
-
-    .extra-links a {
-      transition: color 0.2s;
-    }
-
-    .extra-links a:hover {
-      color: var(--accent-orange);
-    }
-
-    .dynamic-cta {
-      color: var(--accent-orange);
-      font-weight: 600;
-    }
-
-    #loginAlert {
-      display: none;
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 8px;
-      background: rgba(255, 107, 0, 0.15);
-      border: 1px solid var(--accent-orange);
-      color: #FDBA74;
-      font-size: 0.86rem;
-      text-align: center;
-    }
-
-    footer {
-      background: #061020;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 22px 5%;
-      color: var(--text-muted);
-      font-size: 0.82rem;
-      text-align: center;
-    }
+    body { font-family: 'Inter', sans-serif; }
   </style>
 </head>
-<body>
+<body class="bg-slate-900 min-h-screen flex items-center justify-center p-4">
 
-  <header>
-    <div class="nav-container">
-      <a href="index.html" class="logo-area">
-        <div class="logo-icon">IJ</div>
-        <div class="logo-text">
-          <h1>IJMRST</h1>
-          <p>International Journal of Multidisciplinary Research in Science & Technology</p>
-        </div>
-      </a>
-      <a href="index.html" style="font-size:0.9rem; color:var(--accent-orange); font-weight:600;">← Back to Home</a>
-    </div>
-  </header>
-
-  <div class="login-wrapper">
-    <div class="login-card">
-      <h2>IJMRST <span>Portal Login</span></h2>
-      <p class="sub" id="roleSubtext">Sign in to Editorial & Publishing Admin Workspace</p>
-
-      <div class="role-tabs">
-        <div class="role-tab active" onclick="selectRole(this, 'admin')">Admin / Editor</div>
-        <div class="role-tab" onclick="selectRole(this, 'reviewer')">Reviewer</div>
-        <div class="role-tab" onclick="selectRole(this, 'partner')">Partner</div>
+  <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
+    <!-- Top Header -->
+    <div class="bg-gradient-to-r from-indigo-900 to-blue-900 p-6 text-center text-white">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/10 mb-3">
+        <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
       </div>
+      <h1 class="text-xl font-bold tracking-tight">IJMRST Editorial & Admin Portal</h1>
+      <p class="text-xs text-blue-200 mt-1">2-Step Protected Access (Password + Email OTP)</p>
+    </div>
 
-      <form id="portalLoginForm">
-        <input type="hidden" id="selectedRole" value="Editorial / Admin" />
-        <div class="form-group">
-          <label>Registered Email Address</label>
-          <input type="email" id="loginEmail" placeholder="editor@ijmrst.shrinandainfotech.com" required />
+    <div class="p-6 sm:p-8">
+      <!-- Status Alert Box -->
+      <div id="alertBox" class="hidden mb-4 p-3 rounded-lg text-sm font-medium"></div>
+
+      <!-- STEP 1: Email & Password Form -->
+      <form id="step1Form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">Registered Email ID</label>
+          <input type="email" id="emailInput" required placeholder="name@ijmrst.com"
+            class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none text-sm" />
         </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" required />
+
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="block text-sm font-semibold text-slate-700">Password</label>
+            <button type="button" onclick="showForgotPassword()" class="text-xs font-semibold text-indigo-600 hover:underline">
+              Forgot Password?
+            </button>
+          </div>
+          <input type="password" id="passwordInput" required placeholder="••••••••••••"
+            class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none text-sm" />
         </div>
-        <button type="submit" class="btn-login-submit" id="loginBtnText">Sign In as Admin / Editor</button>
+
+        <button type="submit" id="step1Btn"
+          class="w-full bg-indigo-900 hover:bg-indigo-800 text-white font-semibold py-2.5 rounded-lg transition shadow-md text-sm">
+          Verify Password & Send OTP →
+        </button>
       </form>
 
-      <div id="loginAlert"></div>
+      <!-- STEP 2: 6-Digit Email OTP Verification Form -->
+      <form id="step2Form" class="hidden space-y-4">
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900">
+          Security Check: A 6-digit verification code has been sent to <span id="otpEmailDisplay" class="font-bold"></span>.
+        </div>
 
-      <div class="extra-links">
-        <a href="track-paper.html">Author Paper Tracking</a>
-        <a href="guidelines.html" id="dynamicRoleLink" class="dynamic-cta">Editorial Policies →</a>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">Enter 6-Digit OTP</label>
+          <input type="text" id="otpInput" maxlength="6" pattern="\d{6}" required placeholder="123456"
+            class="w-full px-4 py-3 border border-slate-300 rounded-lg text-center text-xl tracking-[0.5em] font-bold focus:ring-2 focus:ring-indigo-600 outline-none" />
+        </div>
+
+        <button type="submit" id="step2Btn"
+          class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-semibold py-2.5 rounded-lg transition shadow-md text-sm">
+          Verify OTP & Enter Dashboard
+        </button>
+
+        <div class="flex justify-between items-center pt-2 text-xs">
+          <button type="button" onclick="resendOtp()" class="text-indigo-600 font-semibold hover:underline">Resend OTP</button>
+          <button type="button" onclick="resetToStep1()" class="text-slate-500 hover:underline">← Back to Login</button>
+        </div>
+      </form>
+
+      <!-- FORGOT PASSWORD FORM -->
+      <form id="forgotForm" class="hidden space-y-4">
+        <p class="text-xs text-slate-600">Enter your registered email address. We will send you a secure link to reset your password.</p>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">Registered Email ID</label>
+          <input type="email" id="resetEmailInput" required placeholder="name@ijmrst.com"
+            class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none text-sm" />
+        </div>
+
+        <button type="submit" id="resetBtn"
+          class="w-full bg-indigo-900 hover:bg-indigo-800 text-white font-semibold py-2.5 rounded-lg transition text-sm">
+          Send Password Reset Link
+        </button>
+
+        <button type="button" onclick="resetToStep1()" class="w-full text-center text-xs text-slate-500 hover:underline pt-1">
+          ← Back to Login
+        </button>
+      </form>
+
+      <!-- SET NEW PASSWORD FORM (Triggered via Reset Email Link) -->
+      <form id="updatePasswordForm" class="hidden space-y-4">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-900">
+          Create a strong new password (minimum 8 characters).
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">New Password</label>
+          <input type="password" id="newPasswordInput" minlength="8" required placeholder="Enter new strong password"
+            class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none text-sm" />
+        </div>
+
+        <button type="submit" id="updatePassBtn"
+          class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-semibold py-2.5 rounded-lg transition text-sm">
+          Save New Password & Login
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 text-center">
+        <a href="index.html" class="text-xs text-slate-500 hover:text-indigo-700">← Return to IJMRST Home</a>
       </div>
     </div>
   </div>
 
-  <footer>
-    <p>© 2026 IJMRST — Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
-  </footer>
-
   <script>
-    const roleConfig = {
-      admin: {
-        roleName: 'Editorial / Admin',
-        subtext: 'Sign in to Editorial & Publishing Admin Workspace',
-        placeholder: 'editor@ijmrst.shrinandainfotech.com',
-        btnText: 'Sign In as Admin / Editor',
-        linkText: 'Editorial Policies →',
-        linkHref: 'guidelines.html'
-      },
-      reviewer: {
-        roleName: 'Peer Reviewer',
-        subtext: 'Sign in to Double-Blind Peer Review Workspace',
-        placeholder: 'reviewer@college.edu.in',
-        btnText: 'Sign In as Peer Reviewer',
-        linkText: 'Apply as Reviewer →',
-        linkHref: 'join-reviewer.html'
-      },
-      partner: {
-        roleName: 'Campus Partner',
-        subtext: 'Sign in to Campus Partner Referral & Earnings Dashboard',
-        placeholder: 'partner@college.edu.in',
-        btnText: 'Sign In as Campus Partner',
-        linkText: 'Register as Partner →',
-        linkHref: 'partner-signup.html'
-      }
-    };
+    let verifiedEmail = '';
 
-    function selectRole(el, key) {
-      document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
-
-      const cfg = roleConfig[key];
-      document.getElementById('selectedRole').value = cfg.roleName;
-      document.getElementById('roleSubtext').textContent = cfg.subtext;
-      document.getElementById('loginEmail').placeholder = cfg.placeholder;
-      document.getElementById('loginBtnText').textContent = cfg.btnText;
-
-      const dynLink = document.getElementById('dynamicRoleLink');
-      dynLink.textContent = cfg.linkText;
-      dynLink.href = cfg.linkHref;
-
-      document.getElementById('loginAlert').style.display = 'none';
+    function showAlert(msg, isError = true) {
+      const box = document.getElementById('alertBox');
+      box.textContent = msg;
+      box.className = `mb-4 p-3 rounded-lg text-sm font-medium ${
+        isError ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+      }`;
+      box.classList.remove('hidden');
     }
 
-    document.getElementById('portalLoginForm').addEventListener('submit', function(e) {
+    function hideAlert() {
+      document.getElementById('alertBox').classList.add('hidden');
+    }
+
+    // Check if user landed from Password Recovery Email Link
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        document.getElementById('step1Form').classList.add('hidden');
+        document.getElementById('step2Form').classList.add('hidden');
+        document.getElementById('forgotForm').classList.add('hidden');
+        document.getElementById('updatePasswordForm').classList.remove('hidden');
+      }
+    });
+
+    // STEP 1: Verify Password -> Sign Out Temp Session -> Trigger 6-Digit Email OTP
+    document.getElementById('step1Form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const role = document.getElementById('selectedRole').value;
-      const alertBox = document.getElementById('loginAlert');
-      alertBox.style.display = 'block';
-      alertBox.textContent = `Authenticating ${role} workspace... Backend API connection (Supabase Auth) is ready to be linked in the next phase.`;
+      hideAlert();
+      const btn = document.getElementById('step1Btn');
+      const email = document.getElementById('emailInput').value.trim();
+      const password = document.getElementById('passwordInput').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Verifying Credentials...';
+
+      // 1. Check Email + Password
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        btn.disabled = false;
+        btn.textContent = 'Verify Password & Send OTP →';
+        return showAlert('Invalid Email ID or Password.');
+      }
+
+      // 2. Check if user has an active authorized role
+      const { data: roleData, error: roleError } = await supabaseClient
+        .from('user_roles')
+        .select('role, is_active')
+        .eq('email', email)
+        .single();
+
+      if (roleError || !roleData || !roleData.is_active) {
+        await supabaseClient.auth.signOut();
+        btn.disabled = false;
+        btn.textContent = 'Verify Password & Send OTP →';
+        return showAlert('Access Denied: Your account is not assigned an active portal role.');
+      }
+
+      // 3. Sign out partial session and force 2FA Email OTP
+      await supabaseClient.auth.signOut();
+      const { error: otpError } = await supabaseClient.auth.signInWithOtp({
+        email: email,
+        options: { shouldCreateUser: false }
+      });
+
+      btn.disabled = false;
+      btn.textContent = 'Verify Password & Send OTP →';
+
+      if (otpError) {
+        return showAlert('Password verified, but failed to send OTP: ' + otpError.message);
+      }
+
+      verifiedEmail = email;
+      document.getElementById('otpEmailDisplay').textContent = email;
+      document.getElementById('step1Form').classList.add('hidden');
+      document.getElementById('step2Form').classList.remove('hidden');
+      showAlert('Password verified! Enter the 6-digit OTP sent to your email.', false);
+    });
+
+    // STEP 2: Verify 6-Digit OTP & Route Based on Role
+    document.getElementById('step2Form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+      const btn = document.getElementById('step2Btn');
+      const token = document.getElementById('otpInput').value.trim();
+
+      btn.disabled = true;
+      btn.textContent = 'Verifying OTP...';
+
+      const { data, error } = await supabaseClient.auth.verifyOtp({
+        email: verifiedEmail,
+        token: token,
+        type: 'email'
+      });
+
+      if (error) {
+        btn.disabled = false;
+        btn.textContent = 'Verify OTP & Enter Dashboard';
+        return showAlert('Invalid or expired OTP. Please try again.');
+      }
+
+      // Fetch role and redirect appropriately
+      const { data: roleData } = await supabaseClient
+        .from('user_roles')
+        .select('role')
+        .eq('email', verifiedEmail)
+        .single();
+
+      showAlert('2FA Verified! Redirecting to your secure dashboard...', false);
+
+      setTimeout(() => {
+        if (roleData.role === 'campus_partner') {
+          window.location.href = 'partner-dashboard.html';
+        } else {
+          // Super Admin, Chief Editor, Associate Editor, Peer Reviewer all route to admin.html (which locks UI per role)
+          window.location.href = 'admin.html';
+        }
+      }, 800);
+    });
+
+    async function resendOtp() {
+      hideAlert();
+      const { error } = await supabaseClient.auth.signInWithOtp({
+        email: verifiedEmail,
+        options: { shouldCreateUser: false }
+      });
+      if (error) showAlert(error.message);
+      else showAlert('A fresh 6-digit OTP has been sent to your email.', false);
+    }
+
+    function showForgotPassword() {
+      hideAlert();
+      document.getElementById('step1Form').classList.add('hidden');
+      document.getElementById('forgotForm').classList.remove('hidden');
+    }
+
+    function resetToStep1() {
+      hideAlert();
+      document.getElementById('step2Form').classList.add('hidden');
+      document.getElementById('forgotForm').classList.add('hidden');
+      document.getElementById('updatePasswordForm').classList.add('hidden');
+      document.getElementById('step1Form').classList.remove('hidden');
+    }
+
+    // FORGOT PASSWORD SUBMIT
+    document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+      const btn = document.getElementById('resetBtn');
+      const email = document.getElementById('resetEmailInput').value.trim();
+
+      btn.disabled = true;
+      btn.textContent = 'Sending Link...';
+
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/login.html'
+      });
+
+      btn.disabled = false;
+      btn.textContent = 'Send Password Reset Link';
+
+      if (error) return showAlert(error.message);
+      showAlert('If this email is registered, a password reset link has been sent.', false);
+    });
+
+    // SAVE NEW PASSWORD
+    document.getElementById('updatePasswordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+      const btn = document.getElementById('updatePassBtn');
+      const newPassword = document.getElementById('newPasswordInput').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Updating Password...';
+
+      const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+
+      btn.disabled = false;
+      btn.textContent = 'Save New Password & Login';
+
+      if (error) return showAlert(error.message);
+      await supabaseClient.auth.signOut();
+      resetToStep1();
+      showAlert('Password updated successfully! Please sign in with your new password and OTP.', false);
     });
   </script>
-
 </body>
 </html>
