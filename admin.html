@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editorial & Admin Dashboard | IJMRST</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+
+  <!-- Top Navigation Bar -->
+  <nav class="bg-indigo-950 text-white shadow-lg sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="text-lg font-bold tracking-tight">IJMRST Portal</span>
+        <span id="roleBadge" class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30">
+          Verifying...
+        </span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span id="userNameDisplay" class="hidden sm:inline text-xs text-slate-300"></span>
+        <button onclick="logoutUser()" class="bg-red-600 hover:bg-red-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition">
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Loading Overlay -->
+  <div id="loadingScreen" class="max-w-7xl mx-auto p-12 text-center">
+    <p class="text-slate-600 font-medium">Authenticating session & loading role permissions...</p>
+  </div>
+
+  <!-- Main Dashboard Content (Hidden until verified) -->
+  <main id="dashboardContainer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Role Notice Banner -->
+    <div id="trackBanner" class="hidden mb-6 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-900 flex items-center justify-between">
+      <span><strong>Assigned Scope:</strong> <span id="trackScopeText"></span></span>
+      <span class="text-xs text-blue-700">Database Row-Level Security Active</span>
+    </div>
+
+    <!-- Navigation Tabs (Dynamically shown based on role) -->
+    <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3 mb-6" id="tabButtons">
+      <button onclick="switchTab('manuscripts')" id="tab-manuscripts"
+        class="tab-btn bg-indigo-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Manuscripts & Review
+      </button>
+
+      <!-- Super Admin Only Tabs -->
+      <button onclick="switchTab('team')" id="tab-team"
+        class="tab-btn super-admin-only hidden bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Editorial Team & Logins
+      </button>
+
+      <button onclick="switchTab('partners')" id="tab-partners"
+        class="tab-btn super-admin-only hidden bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Campus Partners & Payouts
+      </button>
+
+      <button onclick="switchTab('reviewers')" id="tab-reviewers"
+        class="tab-btn super-admin-only hidden bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Reviewer Applications
+      </button>
+
+      <button onclick="switchTab('certificates')" id="tab-certificates"
+        class="tab-btn super-admin-only hidden bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Issue QR Certificates
+      </button>
+    </div>
+
+    <!-- TAB 1: MANUSCRIPTS (Visible to Super Admin, Chief Editor, Associate Editor, Peer Reviewer) -->
+    <section id="section-manuscripts" class="tab-section space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h2 class="text-lg font-bold text-slate-900">Submitted Research Manuscripts</h2>
+        <button onclick="loadManuscripts()" class="text-xs bg-white border border-slate-300 hover:bg-slate-50 px-3 py-1.5 rounded-lg font-semibold">
+          ↻ Refresh List
+        </button>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-100 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <th class="p-3.5">Paper ID & Track</th>
+              <th class="p-3.5">Title & Authors</th>
+              <th class="p-3.5">Status</th>
+              <th class="p-3.5">Editorial / Review Notes</th>
+              <th class="p-3.5 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="manuscriptsTableBody" class="divide-y divide-slate-200 text-sm">
+            <tr><td colspan="5" class="p-6 text-center text-slate-500">Loading manuscripts...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 2: EDITORIAL TEAM & ROLES (SUPER ADMIN ONLY) -->
+    <section id="section-team" class="tab-section hidden space-y-6">
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <h3 class="text-base font-bold text-slate-900 mb-1">Assign Role to Editor / Reviewer / Partner</h3>
+        <p class="text-xs text-slate-500 mb-4">Note: Also create their login password in Supabase Authentication → Users with the exact same email.</p>
+
+        <form id="addRoleForm" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <input type="text" id="newRoleName" required placeholder="Full Name (e.g. Dr. A. Patil)"
+            class="px-3 py-2 border border-slate-300 rounded-lg text-sm" />
+          <input type="email" id="newRoleEmail" required placeholder="Email ID"
+            class="px-3 py-2 border border-slate-300 rounded-lg text-sm" />
+          <select id="newRoleType" class="px-3 py-2 border border-slate-300 rounded-lg text-sm">
+            <option value="chief_editor">Chief Editor</option>
+            <option value="associate_editor">Associate Editor</option>
+            <option value="peer_reviewer">Peer Reviewer</option>
+            <option value="campus_partner">Campus Partner</option>
+          </select>
+          <input type="text" id="newRoleTrack" placeholder="Track (or ALL)" value="ALL"
+            class="px-3 py-2 border border-slate-300 rounded-lg text-sm" />
+          <button type="submit" class="sm:col-span-4 bg-indigo-900 hover:bg-indigo-800 text-white font-semibold py-2 rounded-lg text-sm">
+            + Save User Role Permission
+          </button>
+        </form>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-100 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <th class="p-3.5">Name</th>
+              <th class="p-3.5">Email</th>
+              <th class="p-3.5">Role</th>
+              <th class="p-3.5">Assigned Track</th>
+              <th class="p-3.5">Status</th>
+            </tr>
+          </thead>
+          <tbody id="rolesTableBody" class="divide-y divide-slate-200 text-sm"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 3: CAMPUS PARTNERS (SUPER ADMIN ONLY) -->
+    <section id="section-partners" class="tab-section hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-100 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <th class="p-3.5">Partner Code</th>
+              <th class="p-3.5">Name & College</th>
+              <th class="p-3.5">Phone & UPI ID</th>
+              <th class="p-3.5">Status</th>
+            </tr>
+          </thead>
+          <tbody id="partnersTableBody" class="divide-y divide-slate-200 text-sm"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 4: PEER REVIEWER APPLICATIONS (SUPER ADMIN ONLY) -->
+    <section id="section-reviewers" class="tab-section hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-100 text-slate-600 text-xs uppercase border-b border-slate-200">
+              <th class="p-3.5">Applicant</th>
+              <th class="p-3.5">Qualification & Domain</th>
+              <th class="p-3.5">Contact</th>
+              <th class="p-3.5">Status</th>
+            </tr>
+          </thead>
+          <tbody id="reviewersTableBody" class="divide-y divide-slate-200 text-sm"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 5: ISSUE CERTIFICATES (SUPER ADMIN ONLY) -->
+    <section id="section-certificates" class="tab-section hidden space-y-6">
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <h3 class="text-base font-bold text-slate-900 mb-3">Generate Verified Publication Certificate</h3>
+        <form id="issueCertForm" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input type="text" id="certIdInput" required placeholder="Cert ID (e.g. IJMRST-CERT-2026-01)"
+            class="px-3 py-2 border border-slate-300 rounded-lg text-sm" />
+          <input type="text" id="certPaperIdInput" required placeholder="Paper ID (e.g. IJMRST-2026-4821)"
+            class="px-3 py-2 border border-slate-300 rounded-lg text-sm" />
+          <input type="text" id="certAuthorInput" required placeholder="Author Full Name"
+            class="px-3 py-2 border border-slate-300 rounded-lg text-sm" />
+          <input type="text" id="certTitleInput" required placeholder="Paper Title"
+            class="sm:col-span-2 px-3 py-2 border border-slate-300 rounded-lg text-sm" />
+          <input type="text" id="certIssueInput" required placeholder="Vol 1, Issue 1 (Nov 2026)"
+            class="px-3 py-2 border border-slate-300 rounded-lg text-sm" />
+          <button type="submit" class="sm:col-span-3 bg-emerald-700 hover:bg-emerald-600 text-white font-semibold py-2 rounded-lg text-sm">
+            Issue & Publish Verification Record
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let currentUserRole = null;
+
+    // 1. Verify Session & Load Role on Page Open
+    async function initDashboard() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const email = session.user.email;
+      const { data: roleData, error } = await supabaseClient
+        .from('user_roles')
+        .select('*')
+        .eq('email', email)
+        .single();
+
+      if (error || !roleData || !roleData.is_active) {
+        await supabaseClient.auth.signOut();
+        window.location.href = 'login.html';
+        return;
+      }
+
+      currentUserRole = roleData;
+      document.getElementById('userNameDisplay').textContent = `${roleData.full_name} (${email})`;
+      document.getElementById('roleBadge').textContent = roleData.role.replace('_', ' ').toUpperCase();
+
+      // Show Track Scope Banner
+      document.getElementById('trackBanner').classList.remove('hidden');
+      document.getElementById('trackScopeText').textContent =
+        roleData.role === 'super_admin' ? 'Full Administrative Control (All Tracks, Payments, Team & Certificates)' :
+        roleData.role === 'chief_editor' ? 'All Subject Tracks (Academic Review & Final Recommendation Only)' :
+        `Restricted to Track: ${roleData.assigned_track}`;
+
+      // Unlock Super Admin Only Tabs
+      if (roleData.role === 'super_admin') {
+        document.querySelectorAll('.super-admin-only').forEach(el => el.classList.remove('hidden'));
+        loadRoles();
+        loadPartners();
+        loadReviewers();
+      }
+
+      document.getElementById('loadingScreen').classList.add('hidden');
+      document.getElementById('dashboardContainer').classList.remove('hidden');
+      loadManuscripts();
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById(`section-${tabName}`).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = 'tab-btn bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-lg text-sm font-semibold transition';
+      });
+      const activeBtn = document.getElementById(`tab-${tabName}`);
+      activeBtn.className = 'tab-btn bg-indigo-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition';
+    }
+
+    // Load Manuscripts (Automatically filtered by Supabase RLS based on user's role & track!)
+    async function loadManuscripts() {
+      const tbody = document.getElementById('manuscriptsTableBody');
+      const { data, error } = await supabaseClient
+        .from('manuscripts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-red-600">Error: ${error.message}</td></tr>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">No manuscripts found in your assigned scope.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.map(m => {
+        // Hide author identity from Peer Reviewers (Double-Blind)
+        const authorInfo = currentUserRole.role === 'peer_reviewer'
+          ? '<span class="italic text-slate-400">Hidden (Double-Blind Review)</span>'
+          : `<span class="text-xs text-slate-600">${m.corresponding_email}</span>`;
+
+        // Status options depend on role
+        const statusOptions = currentUserRole.role === 'super_admin'
+          ? ['Submitted - Under Screening', 'Under Peer Review', 'Revision Required', 'Accepted', 'Published', 'Rejected']
+          : currentUserRole.role === 'chief_editor'
+          ? ['Under Peer Review', 'Recommended for Acceptance', 'Revision Required', 'Recommended for Rejection']
+          : ['Initial Screening Passed', 'Sent to Reviewer', 'Revision Required'];
+
+        return `
+          <tr class="hover:bg-slate-50">
+            <td class="p-3.5 align-top">
+              <div class="font-bold text-indigo-900">${m.paper_id}</div>
+              <div class="text-xs text-slate-500 mt-0.5">${m.subject_track}</div>
+            </td>
+            <td class="p-3.5 align-top max-w-xs">
+              <div class="font-semibold text-slate-900">${m.title}</div>
+              <div class="mt-1">${authorInfo}</div>
+              ${m.file_url ? `<a href="${m.file_url}" target="_blank" class="inline-block mt-1 text-xs text-blue-600 underline">View Manuscript File</a>` : ''}
+            </td>
+            <td class="p-3.5 align-top">
+              <select id="status-${m.id}" class="border border-slate-300 rounded-lg px-2 py-1 text-xs font-medium bg-white">
+                <option value="${m.status}" selected>${m.status}</option>
+                ${statusOptions.filter(s => s !== m.status).map(s => `<option value="${s}">${s}</option>`).join('')}
+              </select>
+            </td>
+            <td class="p-3.5 align-top">
+              <textarea id="notes-${m.id}" rows="2" placeholder="Add review/screening remarks..."
+                class="w-full border border-slate-300 rounded-lg p-1.5 text-xs">${m.review_notes || ''}</textarea>
+            </td>
+            <td class="p-3.5 align-top text-right space-y-1">
+              <button onclick="updateManuscript('${m.id}')"
+                class="bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg">
+                Save Update
+              </button>
+              ${currentUserRole.role === 'super_admin' ? `
+                <button onclick="deleteManuscript('${m.id}')"
+                  class="block w-full bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-lg mt-1">
+                  Delete
+                </button>` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function updateManuscript(id) {
+      const status = document.getElementById(`status-${id}`).value;
+      const review_notes = document.getElementById(`notes-${id}`).value;
+
+      const { error } = await supabaseClient
+        .from('manuscripts')
+        .update({ status, review_notes })
+        .eq('id', id);
+
+      if (error) alert('Update failed: ' + error.message);
+      else alert('Manuscript status & notes saved!');
+    }
+
+    async function deleteManuscript(id) {
+      if (!confirm('Are you sure you want to permanently delete this manuscript?')) return;
+      const { error } = await supabaseClient.from('manuscripts').delete().eq('id', id);
+      if (error) alert(error.message);
+      else loadManuscripts();
+    }
+
+    // SUPER ADMIN FUNCTIONS
+    async function loadRoles() {
+      const { data } = await supabaseClient.from('user_roles').select('*').order('created_at', { ascending: false });
+      if (!data) return;
+      document.getElementById('rolesTableBody').innerHTML = data.map(r => `
+        <tr>
+          <td class="p-3.5 font-medium">${r.full_name}</td>
+          <td class="p-3.5 text-slate-600">${r.email}</td>
+          <td class="p-3.5"><span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-800 text-xs font-semibold">${r.role}</span></td>
+          <td class="p-3.5 text-xs">${r.assigned_track}</td>
+          <td class="p-3.5 text-xs">${r.is_active ? 'Active' : 'Disabled'}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('addRoleForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const full_name = document.getElementById('newRoleName').value.trim();
+      const email = document.getElementById('newRoleEmail').value.trim();
+      const role = document.getElementById('newRoleType').value;
+      const assigned_track = document.getElementById('newRoleTrack').value.trim() || 'ALL';
+
+      const { error } = await supabaseClient.from('user_roles').insert([{ full_name, email, role, assigned_track }]);
+      if (error) alert(error.message);
+      else {
+        alert('Role assigned! Remember to also create their password in Supabase Authentication → Users.');
+        e.target.reset();
+        loadRoles();
+      }
+    });
+
+    async function loadPartners() {
+      const { data } = await supabaseClient.from('campus_partners').select('*').order('created_at', { ascending: false });
+      if (!data) return;
+      document.getElementById('partnersTableBody').innerHTML = data.map(p => `
+        <tr>
+          <td class="p-3.5 font-bold text-indigo-900">${p.partner_code}</td>
+          <td class="p-3.5">${p.full_name}<div class="text-xs text-slate-500">${p.college}</div></td>
+          <td class="p-3.5 text-xs">${p.phone}<div class="text-emerald-700 font-semibold">UPI: ${p.upi_id}</div></td>
+          <td class="p-3.5 text-xs">${p.status || 'Active'}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadReviewers() {
+      const { data } = await supabaseClient.from('peer_reviewers').select('*').order('created_at', { ascending: false });
+      if (!data) return;
+      document.getElementById('reviewersTableBody').innerHTML = data.map(r => `
+        <tr>
+          <td class="p-3.5 font-medium">${r.full_name}<div class="text-xs text-slate-500">${r.institution}</div></td>
+          <td class="p-3.5 text-xs">${r.qualification} - ${r.specialization}</td>
+          <td class="p-3.5 text-xs">${r.email}<br/>${r.phone}</td>
+          <td class="p-3.5 text-xs font-semibold">${r.status || 'Pending'}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('issueCertForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        cert_id: document.getElementById('certIdInput').value.trim().toUpperCase(),
+        paper_id: document.getElementById('certPaperIdInput').value.trim().toUpperCase(),
+        author_name: document.getElementById('certAuthorInput').value.trim(),
+        paper_title: document.getElementById('certTitleInput').value.trim(),
+        issue_details: document.getElementById('certIssueInput').value.trim()
+      };
+      const { error } = await supabaseClient.from('certificates').insert([payload]);
+      if (error) alert(error.message);
+      else {
+        alert('Certificate published! It can now be verified live on verify.html.');
+        e.target.reset();
+      }
+    });
+
+    async function logoutUser() {
+      await supabaseClient.auth.signOut();
+      window.location.href = 'login.html';
+    }
+
+    initDashboard();
+  </script>
+</body>
+</html>
