@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Author Guidelines & Policies | IJMRST</title>
+  <meta name="description" content="Author Guidelines, Manuscript Formatting, Plagiarism Policy, Open Access Copyright (CC BY 4.0), and APC details for IJMRST." />
+  <style>
+    :root {
+      --bg-dark: #0A192F;
+      --bg-card: #112240;
+      --bg-light-navy: #1D2D50;
+      --accent-orange: #FF6B00;
+      --accent-orange-hover: #E65C00;
+      --text-white: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: rgba(255, 107, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      line-height: 1.65;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: #061020;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 5%;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .top-bar span strong {
+      color: var(--accent-orange);
+    }
+
+    .badge-pill {
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      padding: 2px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Navbar */
+    header {
+      background-color: rgba(10, 25, 47, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #0A192F;
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--text-white);
+      line-height: 1.1;
+    }
+
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-white);
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: var(--accent-orange);
+    }
+
+    .btn-login {
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange) !important;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--accent-orange);
+      color: #fff !important;
+    }
+
+    /* Page Banner */
+    .page-banner {
+      background: linear-gradient(135deg, #061020, #112240);
+      border-bottom: 1px solid var(--border-color);
+      padding: 50px 5%;
+      text-align: center;
+    }
+
+    .page-banner h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .page-banner h2 span {
+      color: var(--accent-orange);
+    }
+
+    .page-banner p {
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: auto;
+      font-size: 1rem;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 50px 5%;
+    }
+
+    .policy-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 30px;
+      margin-bottom: 28px;
+    }
+
+    .policy-card h3 {
+      color: var(--accent-orange);
+      font-size: 1.35rem;
+      margin-bottom: 14px;
+      border-left: 4px solid var(--accent-orange);
+      padding-left: 12px;
+    }
+
+    .policy-card p {
+      color: #CBD5E1;
+      margin-bottom: 12px;
+      font-size: 0.96rem;
+    }
+
+    .policy-card ul {
+      margin-left: 22px;
+      color: #CBD5E1;
+      font-size: 0.95rem;
+    }
+
+    .policy-card ul li {
+      margin-bottom: 8px;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      background: var(--bg-light-navy);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.94rem;
+    }
+
+    th {
+      background: rgba(255, 107, 0, 0.18);
+      color: var(--accent-orange);
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent-orange);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-top: 10px;
+      box-shadow: 0 4px 18px rgba(255, 107, 0, 0.35);
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-orange-hover);
+    }
+
+    footer {
+      background: #061020;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 35px 5%;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span>Publisher: <strong>Shrinanda Infotech</strong> | Email: <strong>ijmrst@shrinandainfotech.com</strong></span>
+    <div>
+      <span class="badge-pill">Peer-Reviewed & Open Access</span>
+      <span class="badge-pill">ISSN: Applied</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon">IJ</div>
+        <div class="logo-text">
+          <h1>IJMRST</h1>
+          <p>International Journal of Multidisciplinary Research in Science & Technology</p>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#scope">Aim & Scope</a></li>
+          <li><a href="editorial-board.html">Editorial Board</a></li>
+          <li><a href="guidelines.html" class="active">Author Guidelines</a></li>
+          <li><a href="archives.html">Archives</a></li>
+          <li><a href="verify.html">Verify Certificate</a></li>
+          <li><a href="login.html" class="btn-login">Portal Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <h2>Author <span>Guidelines & Policies</span></h2>
+    <p>Everything you need to prepare, format, and publish your manuscript ethically in IJMRST.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- 1. Manuscript Formatting -->
+    <div class="policy-card" id="template">
+      <h3>1. Manuscript Preparation & Formatting</h3>
+      <p>Authors must submit original, unpublished manuscripts written in clear English (or verified regional scholarly abstracts where applicable) in <strong>.doc / .docx</strong> format.</p>
+      <ul>
+        <li><strong>Layout & Font:</strong> A4 page size, Double-Column format, Times New Roman font (Title: 16pt Bold, Headings: 11pt Bold, Body Text: 10pt Regular).</li>
+        <li><strong>Structure:</strong> Title, Author Details (Name, Designation, Department, Institution, Email), Abstract (150–250 words), 4–6 Keywords, Introduction, Methodology, Results & Discussion, Conclusion, and References (IEEE / APA format).</li>
+        <li><strong>Page Limit:</strong> Standard papers should be between 4 to 12 pages, including high-resolution figures and tables.</li>
+      </ul>
+      <a href="submit.html" class="btn-primary">Proceed to Online Submission</a>
+    </div>
+
+    <!-- 2. Plagiarism & Publication Ethics -->
+    <div class="policy-card" id="plagiarism">
+      <h3>2. Plagiarism & Publication Ethics (COPE Aligned)</h3>
+      <p>IJMRST enforces a strict zero-tolerance policy against plagiarism, data fabrication, and duplicate submissions.</p>
+      <ul>
+        <li>Every submitted manuscript undergoes automated similarity screening before peer review.</li>
+        <li><strong>Maximum Acceptable Similarity:</strong> Below <strong>15%</strong> (excluding bibliography and standard quotes). Papers exceeding 15% similarity are returned for revision or rejected.</li>
+        <li><strong>Double-Blind Peer Review:</strong> Author identities are concealed from reviewers and vice versa to ensure unbiased academic evaluation.</li>
+      </ul>
+    </div>
+
+    <!-- 3. Open Access & Copyright -->
+    <div class="policy-card" id="openaccess">
+      <h3>3. Open Access & Copyright Policy</h3>
+      <p>IJMRST is a 100% Open Access journal. All published articles are freely accessible worldwide without subscription barriers.</p>
+      <ul>
+        <li>Published articles are licensed under the <strong>Creative Commons Attribution 4.0 International License (CC BY 4.0)</strong>.</li>
+        <li>Authors retain full copyright of their work while granting IJMRST the right of first publication and global archival distribution.</li>
+      </ul>
+    </div>
+
+    <!-- 4. Article Processing Charges -->
+    <div class="policy-card" id="apc">
+      <h3>4. Article Processing Charges (APC)</h3>
+      <p>We believe financial barriers should never stop genuine student and faculty research. Submitting a manuscript for peer review is completely <strong>FREE (₹0)</strong>.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Stage / Category</th>
+            <th>Fee (Indian Authors)</th>
+            <th>What Is Included</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Manuscript Submission & Peer Review</td>
+            <td><strong>₹0 (Free)</strong></td>
+            <td>Plagiarism Check, Double-Blind Peer Review & Editorial Decision</td>
+          </tr>
+          <tr>
+            <td>Publication Fee (Only After Acceptance)</td>
+            <td><strong>₹600 (Flat per Paper)</strong></td>
+            <td>Typesetting, Online Hosting, Permanent Archive, Indexing & Individual QR-Verified PDF Certificates for all Co-Authors (up to 4 authors)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
+  </footer>
+
+</body>
+</html>
