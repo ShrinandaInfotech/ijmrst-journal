@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Editorial & Reviewer Board | IJMRST</title>
-  <meta name="description" content="Meet the Editorial Board and Peer Reviewers of IJMRST — International Journal of Multidisciplinary Research in Science and Technology." />
+  <meta name="description" content="Meet the Managing Publisher, Editor-in-Chief, Editorial Board, and Peer Reviewers of IJMRST — International Journal of Multidisciplinary Research in Science and Technology." />
   <style>
     :root {
       --bg-dark: #0A192F;
@@ -190,18 +190,19 @@
       margin-top: 15px;
     }
 
-    /* Editor-in-Chief Highlight Card */
-    .eic-card {
+    /* Leadership Grid (Publisher & Editor-in-Chief) */
+    .leadership-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      margin-bottom: 45px;
+    }
+
+    .leader-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 14px;
       padding: 28px;
-      margin-bottom: 45px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
     }
 
@@ -213,7 +214,7 @@
       font-weight: 700;
       padding: 4px 12px;
       border-radius: 20px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -364,20 +365,28 @@
 
   <div class="page-banner">
     <h2>Editorial & <span>Peer-Review Board</span></h2>
-    <p>IJMRST is guided by experienced academicians, researchers, and industry technologists committed to rigorous double-blind peer review and ethical publishing.</p>
+    <p>IJMRST is published by Shrinanda Infotech and guided by experienced academicians, researchers, and technologists committed to ethical peer review.</p>
   </div>
 
   <div class="container">
 
-    <!-- Editor-in-Chief -->
-    <h3 class="group-title">Editor-in-Chief</h3>
-    <div class="eic-card">
-      <div>
-        <span class="role-badge">Editor-in-Chief & Managing Publisher</span>
-        <div class="member-name">Prof. Vaibhav S. Walke</div>
-        <div class="member-qual">M.E. / Computer Engineering & IT Systems</div>
-        <div class="member-affil">Founder, Shrinanda Infotech & Polytechnic Educator, Nashik, Maharashtra, India</div>
-        <div class="member-meta">Email: editor@ijmrst.shrinandainfotech.com | Specialization: Software Engineering, Cloud & Data Systems</div>
+    <!-- Publisher & Editor-in-Chief -->
+    <h3 class="group-title">Journal Leadership & Publisher</h3>
+    <div class="leadership-grid">
+      <div class="leader-card">
+        <span class="role-badge">Managing Publisher & Founder</span>
+        <div class="member-name">Mrs. Shital Vaibhav Walke</div>
+        <div class="member-qual">Founder & Owner, Shrinanda Infotech</div>
+        <div class="member-affil">Publishing House: Shrinanda Infotech, Nashik, Maharashtra, India</div>
+        <div class="member-meta">Email: publisher@shrinandainfotech.com | Role: Publication Operations, Ethics Governance & Institutional Relations</div>
+      </div>
+
+      <div class="leader-card">
+        <span class="role-badge">Editor-in-Chief</span>
+        <div class="member-name">Dr. / Prof. [Editor-in-Chief Name]</div>
+        <div class="member-qual">[Highest Qualification, e.g., Ph.D. / M.E. / M.Tech]</div>
+        <div class="member-affil">[Department & Institution Name], Maharashtra, India</div>
+        <div class="member-meta">Email: editor@ijmrst.shrinandainfotech.com | Specialization: [Primary Research Domain]</div>
       </div>
     </div>
 
@@ -446,7 +455,7 @@
   </div>
 
   <footer>
-    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech, Nashik.</p>
+    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
   </footer>
 
 </body>
