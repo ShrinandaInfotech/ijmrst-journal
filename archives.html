@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Archives | Published Issues — IJMRST</title>
+  <meta name="description" content="Browse open-access research articles published in IJMRST (International Journal of Multidisciplinary Research in Science and Technology)." />
+  <style>
+    :root {
+      --bg-dark: #0A192F;
+      --bg-card: #112240;
+      --bg-light-navy: #1D2D50;
+      --accent-orange: #FF6B00;
+      --accent-orange-hover: #E65C00;
+      --text-white: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: rgba(255, 107, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: #061020;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 5%;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .top-bar span strong {
+      color: var(--accent-orange);
+    }
+
+    .badge-pill {
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      padding: 2px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Navbar */
+    header {
+      background-color: rgba(10, 25, 47, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #0A192F;
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--text-white);
+      line-height: 1.1;
+    }
+
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-white);
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: var(--accent-orange);
+    }
+
+    .btn-login {
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange) !important;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--accent-orange);
+      color: #fff !important;
+    }
+
+    /* Page Banner */
+    .page-banner {
+      background: linear-gradient(135deg, #061020, #112240);
+      border-bottom: 1px solid var(--border-color);
+      padding: 45px 5%;
+      text-align: center;
+    }
+
+    .page-banner h2 {
+      font-size: 2.1rem;
+      margin-bottom: 8px;
+    }
+
+    .page-banner h2 span {
+      color: var(--accent-orange);
+    }
+
+    .page-banner p {
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: auto;
+      font-size: 0.98rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 45px 5%;
+    }
+
+    .issue-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .issue-header h3 {
+      font-size: 1.4rem;
+      color: var(--accent-orange);
+    }
+
+    .paper-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 26px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .paper-card:hover {
+      border-color: var(--accent-orange);
+    }
+
+    .paper-meta-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .paper-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 8px;
+    }
+
+    .paper-authors {
+      color: #CBD5E1;
+      font-size: 0.92rem;
+      margin-bottom: 14px;
+    }
+
+    .paper-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-sm-primary {
+      background: var(--accent-orange);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-sm-outline {
+      background: var(--bg-light-navy);
+      color: var(--text-white);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-sm-outline:hover {
+      border-color: var(--accent-orange);
+      color: var(--accent-orange);
+    }
+
+    footer {
+      background: #061020;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 35px 5%;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span>Publisher: <strong>Shrinanda Infotech</strong> | Email: <strong>ijmrst@shrinandainfotech.com</strong></span>
+    <div>
+      <span class="badge-pill">Open Access Archive</span>
+      <span class="badge-pill">CC BY 4.0</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon">IJ</div>
+        <div class="logo-text">
+          <h1>IJMRST</h1>
+          <p>International Journal of Multidisciplinary Research in Science & Technology</p>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#scope">Aim & Scope</a></li>
+          <li><a href="editorial-board.html">Editorial Board</a></li>
+          <li><a href="guidelines.html">Author Guidelines</a></li>
+          <li><a href="archives.html" class="active">Archives</a></li>
+          <li><a href="verify.html">Verify Certificate</a></li>
+          <li><a href="login.html" class="btn-login">Portal Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <h2>Journal <span>Archives & Issues</span></h2>
+    <p>Explore peer-reviewed, open-access research articles published across all volumes and monthly issues of IJMRST.</p>
+  </div>
+
+  <div class="container">
+    <div class="issue-header">
+      <div>
+        <h3>Volume 1, Issue 1 — November 2026 (Inaugural Issue)</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Submissions currently open for Volume 1, Issue 1. Accepted papers appear here immediately upon publication.</p>
+      </div>
+      <a href="submit.html" class="btn-sm-primary">+ Submit Your Paper</a>
+    </div>
+
+    <!-- Sample / Inaugural Editorial Note Card -->
+    <div class="paper-card">
+      <div class="paper-meta-top">
+        <span><strong>Article ID:</strong> IJMRST-V1I1-001 | <strong>Pages:</strong> 01–04</span>
+        <span class="badge-pill">Editorial Inaugural Note</span>
+      </div>
+      <div class="paper-title">Advancing Multidisciplinary Open-Access Research and Ethical Peer Review for Emerging Scholars</div>
+      <div class="paper-authors"><strong>Authors:</strong> IJMRST Editorial Board, Shrinanda Infotech, Nashik, Maharashtra, India</div>
+      <div class="paper-actions">
+        <a href="guidelines.html" class="btn-sm-primary">Read Guidelines</a>
+        <button type="button" class="btn-sm-outline" onclick="copyCitation('IJMRST Editorial Board, "Advancing Multidisciplinary Open-Access Research and Ethical Peer Review for Emerging Scholars," IJMRST, vol. 1, no. 1, pp. 1-4, Nov. 2026.')">Copy IEEE Citation</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
+  </footer>
+
+  <script>
+    function copyCitation(text) {
+      navigator.clipboard.writeText(text);
+      alert('Citation copied to clipboard:\n\n' + text);
+    }
+  </script>
+
+</body>
+</html>
