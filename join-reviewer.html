@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply as Peer Reviewer | IJMRST</title>
+  <meta name="description" content="Join the IJMRST Editorial and Double-Blind Peer-Review Board for a 1-year renewable term." />
+  <style>
+    :root {
+      --bg-dark: #0A192F;
+      --bg-card: #112240;
+      --bg-light-navy: #1D2D50;
+      --accent-orange: #FF6B00;
+      --accent-orange-hover: #E65C00;
+      --text-white: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border-color: rgba(255, 107, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: #061020;
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 5%;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .top-bar span strong {
+      color: var(--accent-orange);
+    }
+
+    .badge-pill {
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      padding: 2px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Navbar */
+    header {
+      background-color: rgba(10, 25, 47, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 15px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      color: #0A192F;
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: var(--text-white);
+      line-height: 1.1;
+    }
+
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-white);
+      transition: color 0.2s;
+    }
+
+    nav ul li a:hover {
+      color: var(--accent-orange);
+    }
+
+    .btn-login {
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange) !important;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--accent-orange);
+      color: #fff !important;
+    }
+
+    /* Banner */
+    .page-banner {
+      background: linear-gradient(135deg, #061020, #112240);
+      border-bottom: 1px solid var(--border-color);
+      padding: 45px 5%;
+      text-align: center;
+    }
+
+    .page-banner h2 {
+      font-size: 2.1rem;
+      margin-bottom: 8px;
+    }
+
+    .page-banner h2 span {
+      color: var(--accent-orange);
+    }
+
+    .page-banner p {
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: auto;
+      font-size: 0.98rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 880px;
+      margin: auto;
+      padding: 45px 5%;
+    }
+
+    .benefits-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .benefit-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 0.88rem;
+    }
+
+    .benefit-item strong {
+      display: block;
+      color: var(--accent-orange);
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 34px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #E2E8F0;
+    }
+
+    .req {
+      color: var(--accent-orange);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    input[type="file"] {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg-light-navy);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: var(--text-white);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--accent-orange);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--accent-orange);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1.02rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(255, 107, 0, 0.35);
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: var(--accent-orange-hover);
+    }
+
+    #revSuccess {
+      display: none;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid #22C55E;
+      border-radius: 12px;
+      padding: 26px;
+      text-align: center;
+    }
+
+    #revSuccess h3 {
+      color: #4ADE80;
+      margin-bottom: 8px;
+    }
+
+    footer {
+      background: #061020;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 35px 5%;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    @media (max-width: 680px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span>Publisher: <strong>Shrinanda Infotech</strong> | Email: <strong>ijmrst@shrinandainfotech.com</strong></span>
+    <div>
+      <span class="badge-pill">Academic Peer-Review Board</span>
+      <span class="badge-pill">1-Year Renewable Term</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo-area">
+        <div class="logo-icon">IJ</div>
+        <div class="logo-text">
+          <h1>IJMRST</h1>
+          <p>International Journal of Multidisciplinary Research in Science & Technology</p>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#scope">Aim & Scope</a></li>
+          <li><a href="editorial-board.html">Editorial Board</a></li>
+          <li><a href="guidelines.html">Author Guidelines</a></li>
+          <li><a href="archives.html">Archives</a></li>
+          <li><a href="verify.html">Verify Certificate</a></li>
+          <li><a href="login.html" class="btn-login">Portal Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page-banner">
+    <h2>Join Our <span>Peer-Review Board</span></h2>
+    <p>We invite experienced academicians, Ph.D. scholars, and Polytechnic/Engineering faculty members to uphold scholarly quality at IJMRST.</p>
+  </div>
+
+  <div class="container">
+    <div class="benefits-strip">
+      <div class="benefit-item">
+        <strong>Official Appointment</strong>
+        Receive a digitally signed 1-year Editorial / Reviewer Appointment Letter for academic appraisal.
+      </div>
+      <div class="benefit-item">
+        <strong>QR Reviewer Certificates</strong>
+        Earn verified Peer-Reviewer Certificates for every manuscript evaluated.
+      </div>
+      <div class="benefit-item">
+        <strong>Double-Blind Workflow</strong>
+        Review anonymized manuscripts conveniently online within 24–48 hours.
+      </div>
+    </div>
+
+    <div class="form-card">
+      <form id="reviewerForm">
+        <div class="form-grid">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Full Name (With Title: Dr. / Prof.) <span class="req">*</span></label>
+            <input type="text" placeholder="e.g., Dr. Amit K. Deshmukh" required />
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Highest Qualification <span class="req">*</span></label>
+            <select required>
+              <option value="">-- Select Qualification --</option>
+              <option value="Ph.D.">Ph.D. / Post-Doctoral</option>
+              <option value="M.E. / M.Tech">M.E. / M.Tech</option>
+              <option value="M.Sc. / M.Ed. / M.Pharm">M.Sc. / M.Ed. / M.Pharm / MBA</option>
+              <option value="B.E. / B.Tech (Min 5 Yrs Exp)">B.E. / B.Tech (Min. 5 Years Teaching Exp.)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Current Designation <span class="req">*</span></label>
+            <input type="text" placeholder="e.g., Assistant Professor / Lecturer / HOD" required />
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Teaching / Research Experience (Years) <span class="req">*</span></label>
+            <input type="number" min="1" max="50" placeholder="e.g., 6" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>College / University / Institution Name <span class="req">*</span></label>
+          <input type="text" placeholder="Enter full institution name and city" required />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Primary Review Domain <span class="req">*</span></label>
+            <select required>
+              <option value="">-- Select Domain --</option>
+              <option value="Computer Science, AI & IT">Computer Science, AI & IT</option>
+              <option value="Core Engineering (Mech/Civil/Elec)">Core Engineering (Mech / Civil / Electrical)</option>
+              <option value="Pure & Applied Sciences">Pure & Applied Sciences</option>
+              <option value="Education (B.Ed & M.Ed)">Education (B.Ed & M.Ed)</option>
+              <option value="Commerce & Management">Commerce & Management</option>
+              <option value="Medical & Pharmacy">Medical & Pharmacy</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Upload Brief CV / Resume (.pdf) <span class="req">*</span></label>
+            <input type="file" accept=".pdf,.doc,.docx" required />
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Official / Personal Email <span class="req">*</span></label>
+            <input type="email" placeholder="professor@college.edu.in" required />
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>WhatsApp / Mobile Number <span class="req">*</span></label>
+            <input type="tel" placeholder="+91 98XXXXXXXX" required />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit Reviewer Application</button>
+      </form>
+
+      <div id="revSuccess">
+        <h3>✓ Reviewer Application Received!</h3>
+        <p style="color:#E2E8F0;">Thank you for applying to the IJMRST Peer-Review Board. Our Editorial Office will verify your credentials and issue your Appointment Letter & Reviewer Portal login within 48 hours.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
+  </footer>
+
+  <script>
+    document.getElementById('reviewerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('reviewerForm').style.display = 'none';
+      document.getElementById('revSuccess').style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
