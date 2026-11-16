@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Partner Dashboard | IJMRST - International Journal of Multidisciplinary Research in Science & Technology</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #091124; color: #f8fafc; }
+  </style>
+</head>
+<body class="bg-[#091124] min-h-screen text-slate-200 flex flex-col">
+
+  <!-- Top Utility Bar -->
+  <div class="bg-[#060B19] border-b border-slate-800/80 text-xs py-2 px-4">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="text-slate-300">
+        Publisher: <span class="text-orange-400 font-semibold">Shrinanda Infotech</span> | Email: <a href="mailto:ijmrst@shrinandainfotech.com" class="text-orange-400 hover:underline">ijmrst@shrinandainfotech.com</a>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="px-2.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30 font-medium">Peer-Reviewed & Open Access</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30 font-medium">ISSN: Applied</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30 font-medium">Monthly Frequency</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Header Navigation -->
+  <header class="bg-[#091124]/95 border-b border-slate-800/80 sticky top-0 z-40 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col xl:flex-row items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center text-slate-950 font-extrabold text-lg shadow-md">
+          IJ
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-extrabold text-white tracking-tight leading-none">IJMRST</span>
+            <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30">
+              CAMPUS PARTNER
+            </span>
+          </div>
+          <span class="block text-[11px] text-slate-400 mt-1">International Journal of Multidisciplinary Research in Science & Technology</span>
+        </div>
+      </a>
+
+      <nav class="flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-slate-300">
+        <a href="index.html" class="hover:text-orange-400 transition">Home</a>
+        <a href="index.html#aim-scope" class="hover:text-orange-400 transition">Aim & Scope</a>
+        <a href="editorial-board.html" class="hover:text-orange-400 transition">Editorial Board</a>
+        <a href="guidelines.html" class="hover:text-orange-400 transition">Author Guidelines</a>
+        <a href="archives.html" class="hover:text-orange-400 transition">Archives</a>
+        <a href="verify.html" class="hover:text-orange-400 transition">Verify Certificate</a>
+        <a href="partner-dashboard.html" class="px-3.5 py-1.5 rounded-lg border border-orange-500 text-orange-400 bg-orange-500/10 font-semibold">
+          Dashboard
+        </a>
+        <button onclick="logoutUser()" class="bg-red-600/90 hover:bg-red-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition shadow">
+          Sign Out
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Loading Overlay -->
+  <div id="loadingScreen" class="max-w-7xl mx-auto p-12 text-center">
+    <div class="inline-block w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+    <p class="text-slate-400 text-sm font-medium">Loading your Campus Partner dashboard...</p>
+  </div>
+
+  <!-- Main Dashboard Content -->
+  <main id="dashboardContainer" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow space-y-6">
+
+    <!-- Partner Welcome & Referral Code Card -->
+    <div class="bg-[#0F1A34] border border-orange-500/30 rounded-2xl p-6 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div class="space-y-1.5">
+        <span class="text-xs font-bold uppercase tracking-wider text-orange-400">Partner Portal</span>
+        <h1 id="partnerNameDisplay" class="text-2xl font-extrabold text-white">Welcome, Partner</h1>
+        <p id="partnerCollegeDisplay" class="text-sm text-slate-400"></p>
+        <p class="text-xs text-emerald-400 font-medium pt-1">Registered UPI for Payouts: <span id="partnerUpiDisplay" class="font-bold"></span></p>
+      </div>
+
+      <div class="bg-[#091124] border border-slate-700 rounded-xl p-4 flex flex-col sm:flex-row items-center gap-4">
+        <div>
+          <span class="block text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Your Referral Partner Code</span>
+          <span id="partnerCodeDisplay" class="text-xl font-extrabold text-orange-400 tracking-wider">IJMRST-P---</span>
+        </div>
+        <button onclick="copyPartnerCode()" id="copyCodeBtn"
+          class="bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-lg transition shadow shrink-0">
+          Copy Code
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-[#0F1A34] border border-slate-800 rounded-xl p-5 shadow-lg">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Referred Papers</span>
+        <div id="statTotalPapers" class="text-3xl font-extrabold text-white mt-2">0</div>
+        <p class="text-xs text-slate-400 mt-1">Submitted using your code</p>
+      </div>
+
+      <div class="bg-[#0F1A34] border border-slate-800 rounded-xl p-5 shadow-lg">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Accepted / Published</span>
+        <div id="statPublishedPapers" class="text-3xl font-extrabold text-emerald-400 mt-2">0</div>
+        <p class="text-xs text-slate-400 mt-1">Eligible for partner incentive</p>
+      </div>
+
+      <div class="bg-[#0F1A34] border border-slate-800 rounded-xl p-5 shadow-lg">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Account Status</span>
+        <div id="statAccountStatus" class="text-xl font-extrabold text-orange-400 mt-2.5">Active</div>
+        <p class="text-xs text-slate-400 mt-1.5">Verified IJMRST Campus Partner</p>
+      </div>
+    </div>
+
+    <!-- Referred Manuscripts Table -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-bold text-white">Manuscripts Referred by You</h2>
+        <button onclick="loadReferredManuscripts()" class="text-xs bg-[#0F1A34] border border-slate-700 text-slate-200 hover:border-orange-500 hover:text-orange-400 px-3.5 py-2 rounded-lg font-semibold transition">
+          ↻ Refresh
+        </button>
+      </div>
+
+      <div class="bg-[#0F1A34] rounded-xl shadow-xl border border-slate-800 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-[#060B19] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+              <th class="p-4">Paper ID</th>
+              <th class="p-4">Paper Title & Track</th>
+              <th class="p-4">Submission Date</th>
+              <th class="p-4">Current Status</th>
+            </tr>
+          </thead>
+          <tbody id="referredTableBody" class="divide-y divide-slate-800/80 text-sm">
+            <tr><td colspan="4" class="p-8 text-center text-slate-400">Loading referred manuscripts...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#060B19] text-slate-400 text-xs py-6 px-4 border-t border-slate-800/80 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+      <p>© 2026 IJMRST | Published by <span class="text-orange-400 font-semibold">Shrinanda Infotech</span>. All Rights Reserved.</p>
+      <div class="flex space-x-4">
+        <a href="guidelines.html" class="hover:text-orange-400">Author Guidelines</a>
+        <a href="verify.html" class="hover:text-orange-400">Certificate Verification</a>
+        <a href="index.html" class="hover:text-orange-400">Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let partnerCode = '';
+
+    async function initPartnerDashboard() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const email = session.user.email;
+      const { data: partnerData, error } = await supabaseClient
+        .from('campus_partners')
+        .select('*')
+        .eq('email', email)
+        .single();
+
+      if (error || !partnerData) {
+        // Fallback to user_roles if not yet in campus_partners
+        const { data: roleData } = await supabaseClient
+          .from('user_roles')
+          .select('*')
+          .eq('email', email)
+          .single();
+
+        if (!roleData || !roleData.is_active) {
+          await logoutUser();
+          return;
+        }
+        document.getElementById('partnerNameDisplay').textContent = `Welcome, ${roleData.full_name}`;
+        document.getElementById('partnerCollegeDisplay').textContent = email;
+        document.getElementById('partnerUpiDisplay').textContent = 'Pending Profile Setup';
+      } else {
+        partnerCode = partnerData.partner_code || '';
+        document.getElementById('partnerNameDisplay').textContent = `Welcome, ${partnerData.full_name}`;
+        document.getElementById('partnerCollegeDisplay').textContent = `${partnerData.college || ''} • ${email}`;
+        document.getElementById('partnerUpiDisplay').textContent = partnerData.upi_id || 'Not Provided';
+        document.getElementById('partnerCodeDisplay').textContent = partnerCode || 'PENDING';
+        document.getElementById('statAccountStatus').textContent = partnerData.status || 'Active';
+      }
+
+      document.getElementById('loadingScreen').classList.add('hidden');
+      document.getElementById('dashboardContainer').classList.remove('hidden');
+      loadReferredManuscripts();
+    }
+
+    async function loadReferredManuscripts() {
+      const tbody = document.getElementById('referredTableBody');
+      if (!partnerCode) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">No referral code assigned yet.</td></tr>`;
+        return;
+      }
+
+      const { data, error } = await supabaseClient
+        .from('manuscripts')
+        .select('paper_id, title, subject_track, status, created_at')
+        .eq('referral_code', partnerCode)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400">Unable to load referrals right now.</td></tr>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        document.getElementById('statTotalPapers').textContent = '0';
+        document.getElementById('statPublishedPapers').textContent = '0';
+        tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">No manuscripts submitted with your code (${partnerCode}) yet. Share your code with researchers to start earning!</td></tr>`;
+        return;
+      }
+
+      document.getElementById('statTotalPapers').textContent = data.length;
+      const publishedCount = data.filter(m => m.status === 'Accepted' || m.status === 'Published').length;
+      document.getElementById('statPublishedPapers').textContent = publishedCount;
+
+      tbody.innerHTML = data.map(m => {
+        const dateStr = new Date(m.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        return `
+          <tr class="hover:bg-[#142242]/60 transition">
+            <td class="p-4 font-bold text-orange-400">${m.paper_id}</td>
+            <td class="p-4">
+              <div class="font-semibold text-white">${m.title}</div>
+              <div class="text-xs text-slate-400 mt-0.5">${m.subject_track}</div>
+            </td>
+            <td class="p-4 text-xs text-slate-300">${dateStr}</td>
+            <td class="p-4">
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-500/15 text-orange-300 border border-orange-500/30">
+                ${m.status}
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function copyPartnerCode() {
+      if (!partnerCode) return;
+      navigator.clipboard.writeText(partnerCode);
+      const btn = document.getElementById('copyCodeBtn');
+      btn.textContent = 'Copied! ✓';
+      setTimeout(() => { btn.textContent = 'Copy Code'; }, 2000);
+    }
+
+    async function logoutUser() {
+      localStorage.removeItem('ijmrst_user_role');
+      await supabaseClient.auth.signOut();
+      window.location.href = 'login.html';
+    }
+
+    initPartnerDashboard();
+  </script>
+</body>
+</html>
