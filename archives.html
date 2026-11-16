@@ -351,6 +351,18 @@
       alert('Citation copied to clipboard:\n\n' + text);
     }
   </script>
-
+<script>
+    // युजर आधीच लॉगिन असल्यास "Portal Login" बटण थेट "Dashboard" मध्ये बदला
+    document.addEventListener('DOMContentLoaded', () => {
+      const cachedRole = localStorage.getItem('ijmrst_user_role');
+      if (cachedRole) {
+        const targetUrl = cachedRole === 'campus_partner' ? 'partner-dashboard.html' : 'admin.html';
+        document.querySelectorAll('a[href="login.html"]').forEach(link => {
+          link.href = targetUrl;
+          link.textContent = 'Dashboard →';
+        });
+      }
+    });
+  </script>
 </body>
 </html>
