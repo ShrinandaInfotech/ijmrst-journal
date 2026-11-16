@@ -2,8 +2,14 @@
 const SUPABASE_URL = 'https://hhflmdnwrtjpzyxdpdew.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_sTmGhApqvQrV0rOPw7t3YQ_zSnuyK7l';
 
-// Initialize Supabase Client
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Initialize Supabase Client with Persistent Session
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  }
+});
 
 // Helper: Generate Unique Paper ID (e.g., IJMRST-2026-4821)
 function generatePaperId() {
