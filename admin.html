@@ -472,6 +472,7 @@
     });
 
     async function logoutUser() {
+      localStorage.removeItem('ijmrst_user_role');
       await supabaseClient.auth.signOut();
       window.location.href = 'login.html';
     }
