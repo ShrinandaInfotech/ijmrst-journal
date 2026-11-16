@@ -442,6 +442,12 @@
       resetToStep1();
       showAlert('Password updated successfully! Please sign in with your new password.', false);
     });
+    window.addEventListener('DOMContentLoaded', async () => {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session && !isPasswordCheckInProgress) {
+        await redirectToDashboard(session.user.email);
+      }
+    });
   </script>
 </body>
 </html>
