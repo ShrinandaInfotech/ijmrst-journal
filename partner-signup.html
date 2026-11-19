@@ -6,6 +6,7 @@
   <title>Campus Partner Registration | IJMRST</title>
   <meta name="description" content="Become an official IJMRST Campus Partner or Faculty Coordinator and generate your auto-referral submission link." />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <style>
     :root {
       --bg-dark: #0A192F;
@@ -309,7 +310,7 @@
     }
 
     input[readonly] {
-      opacity: 0.8;
+      opacity: 0.85;
       cursor: not-allowed;
       border-color: rgba(34, 197, 94, 0.4);
     }
@@ -538,7 +539,7 @@
         <p style="color:#E2E8F0;">Share your personal submission link below with students and faculty groups. Any paper submitted through this link is automatically credited to your Partner ID (<strong id="outPartnerCode">CP-NASHIK-101</strong>):</p>
         <div class="ref-link-box" id="outPartnerLink">https://ijmrst.shrinandainfotech.com/submit.html?ref=CP-NASHIK-101</div>
         <button type="button" class="btn-copy" onclick="copyPartnerLink()">Copy Referral Link</button>
-        <a href="login.html" class="btn-dashboard">Open Partner Dashboard →</a>
+        <a href="partner-dashboard.html" class="btn-dashboard">Open Partner Dashboard →</a>
       </div>
     </div>
   </div>
@@ -548,10 +549,6 @@
   </footer>
 
   <script>
-    const SUPABASE_URL = 'https://hhflmdnwrtjpzyxpdew.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // <-- तुमची login.html मधील anon key इथे पेस्ट करा
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     let currentUser = null;
 
     async function initAuth() {
@@ -584,6 +581,7 @@
         .maybeSingle();
 
       if (existingPartner && existingPartner.partner_code) {
+        localStorage.setItem('ijmrst_user_role', 'campus_partner');
         showSuccessBox(existingPartner.partner_code);
         return;
       }
@@ -608,6 +606,7 @@
     }
 
     async function switchGoogleAccount() {
+      localStorage.removeItem('ijmrst_user_role');
       await supabaseClient.auth.signOut();
       window.location.reload();
     }
@@ -635,7 +634,7 @@
       const rand = Math.floor(100 + Math.random() * 900);
       const code = `CP-${cityRaw}-${rand}`;
 
-      const { error } = await supabaseClient
+      const { error: partnerError } = await supabaseClient
         .from('campus_partners')
         .upsert({
           user_id: currentUser.id,
@@ -649,14 +648,24 @@
           partner_code: code
         }, { onConflict: 'email' });
 
-      if (error) {
-        console.error('Supabase insert error:', error);
-        alert('Error saving details: ' + error.message);
+      if (partnerError) {
+        console.error('Supabase partner error:', partnerError);
+        alert('Error saving partner details: ' + partnerError.message);
         btn.disabled = false;
         btn.textContent = 'Generate My Campus Partner Link';
         return;
       }
 
+      // user_roles टेबलमध्येही role नोंदवा जेणेकरून login.html थेट डॅशबोर्डवर नेईल
+      await supabaseClient
+        .from('user_roles')
+        .upsert({
+          email: email,
+          role: 'campus_partner',
+          is_active: true
+        }, { onConflict: 'email' });
+
+      localStorage.setItem('ijmrst_user_role', 'campus_partner');
       showSuccessBox(code);
     });
 
