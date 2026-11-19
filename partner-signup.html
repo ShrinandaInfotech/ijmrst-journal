@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Campus Partner Registration | IJMRST</title>
   <meta name="description" content="Become an official IJMRST Campus Partner or Faculty Coordinator and generate your auto-referral submission link." />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg-dark: #0A192F;
@@ -210,6 +211,66 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
+    /* Google Sign-In Box */
+    .google-auth-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 22px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .btn-google {
+      width: 100%;
+      max-width: 360px;
+      margin: 12px auto 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: #FFFFFF;
+      color: #1F2937;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      transition: transform 0.15s, background 0.2s;
+    }
+
+    .btn-google:hover {
+      background: #F1F5F9;
+      transform: translateY(-1px);
+    }
+
+    .verified-badge {
+      display: none;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #4ADE80;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-switch-acc {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #E2E8F0;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -247,6 +308,12 @@
       outline: none;
     }
 
+    input[readonly] {
+      opacity: 0.8;
+      cursor: not-allowed;
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+
     input:focus,
     select:focus {
       border-color: var(--accent-orange);
@@ -268,6 +335,11 @@
 
     .btn-submit:hover {
       background: var(--accent-orange-hover);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     /* Success Referral Box */
@@ -307,6 +379,19 @@
       font-weight: 700;
       cursor: pointer;
       font-size: 0.92rem;
+      margin-right: 8px;
+    }
+
+    .btn-dashboard {
+      background: var(--bg-light-navy);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.92rem;
+      display: inline-block;
     }
 
     footer {
@@ -380,7 +465,29 @@
     </div>
 
     <div class="form-card">
-      <form id="partnerForm">
+      <!-- Step 1: Google OAuth Verification -->
+      <div id="googleStepBox" class="google-auth-box">
+        <p style="color:#E2E8F0; font-weight:600; font-size:1.05rem;">Step 1: Verify your Google Account to register</p>
+        <p style="color:var(--text-muted); font-size:0.88rem; margin-top:4px;">Instant one-click verification — no OTP or password setup required.</p>
+        <button type="button" class="btn-google" onclick="signInWithGoogle()">
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          Continue with Google
+        </button>
+      </div>
+
+      <!-- Verified Google User Banner -->
+      <div id="verifiedUserBanner" class="verified-badge">
+        <span>✓ Signed in with Google as <strong id="verifiedEmailText"></strong></span>
+        <button type="button" class="btn-switch-acc" onclick="switchGoogleAccount()">Switch Account</button>
+      </div>
+
+      <!-- Step 2: Partner Details Form -->
+      <form id="partnerForm" style="display:none;">
         <div class="form-grid">
           <div class="form-group" style="margin-bottom:0;">
             <label>Full Name <span class="req">*</span></label>
@@ -409,8 +516,8 @@
 
         <div class="form-grid">
           <div class="form-group" style="margin-bottom:0;">
-            <label>Email Address <span class="req">*</span></label>
-            <input type="email" id="partnerEmail" placeholder="coordinator@college.edu.in" required />
+            <label>Verified Google Email <span class="req">*</span></label>
+            <input type="email" id="partnerEmail" readonly required />
           </div>
           <div class="form-group" style="margin-bottom:0;">
             <label>WhatsApp / Mobile Number <span class="req">*</span></label>
@@ -423,14 +530,15 @@
           <input type="text" id="partnerUpi" placeholder="e.g., yourname@okicici or 98XXXXXXXX@upi" required />
         </div>
 
-        <button type="submit" class="btn-submit">Generate My Campus Partner Link</button>
+        <button type="submit" id="submitBtn" class="btn-submit">Generate My Campus Partner Link</button>
       </form>
 
       <div id="partnerSuccess">
-        <h3>✓ Campus Partner Account Created!</h3>
+        <h3>✓ Campus Partner Account Active!</h3>
         <p style="color:#E2E8F0;">Share your personal submission link below with students and faculty groups. Any paper submitted through this link is automatically credited to your Partner ID (<strong id="outPartnerCode">CP-NASHIK-101</strong>):</p>
         <div class="ref-link-box" id="outPartnerLink">https://ijmrst.shrinandainfotech.com/submit.html?ref=CP-NASHIK-101</div>
         <button type="button" class="btn-copy" onclick="copyPartnerLink()">Copy Referral Link</button>
+        <a href="login.html" class="btn-dashboard">Open Partner Dashboard →</a>
       </div>
     </div>
   </div>
@@ -440,24 +548,133 @@
   </footer>
 
   <script>
-    document.getElementById('partnerForm').addEventListener('submit', function(e) {
+    const SUPABASE_URL = 'https://hhflmdnwrtjpzyxpdew.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // <-- तुमची login.html मधील anon key इथे पेस्ट करा
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+
+    async function initAuth() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session && session.user) {
+        handleSignedInUser(session.user);
+      }
+
+      supabaseClient.auth.onAuthStateChange((_event, session) => {
+        if (session && session.user) {
+          handleSignedInUser(session.user);
+        }
+      });
+    }
+
+    async function handleSignedInUser(user) {
+      currentUser = user;
+      const email = user.email;
+      const fullName = user.user_metadata?.full_name || '';
+
+      document.getElementById('googleStepBox').style.display = 'none';
+      document.getElementById('verifiedUserBanner').style.display = 'flex';
+      document.getElementById('verifiedEmailText').textContent = email;
+
+      // आधीच नोंदणी झालेली आहे का ते तपासा
+      const { data: existingPartner } = await supabaseClient
+        .from('campus_partners')
+        .select('*')
+        .eq('email', email)
+        .maybeSingle();
+
+      if (existingPartner && existingPartner.partner_code) {
+        showSuccessBox(existingPartner.partner_code);
+        return;
+      }
+
+      document.getElementById('partnerForm').style.display = 'block';
+      document.getElementById('partnerEmail').value = email;
+      if (fullName && !document.getElementById('partnerName').value) {
+        document.getElementById('partnerName').value = fullName;
+      }
+    }
+
+    async function signInWithGoogle() {
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + '/partner-signup.html'
+        }
+      });
+      if (error) {
+        alert('Google Sign-In Error: ' + error.message);
+      }
+    }
+
+    async function switchGoogleAccount() {
+      await supabaseClient.auth.signOut();
+      window.location.reload();
+    }
+
+    document.getElementById('partnerForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const cityRaw = document.getElementById('partnerCity').value.trim().toUpperCase().replace(/[^A-Z]/g, '').slice(0, 6) || 'INDIA';
+      if (!currentUser) {
+        alert('Please verify your Google Account first.');
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Creating Partner Account...';
+
+      const name = document.getElementById('partnerName').value.trim();
+      const role = document.getElementById('partnerRole').value;
+      const college = document.getElementById('partnerCollege').value.trim();
+      const city = document.getElementById('partnerCity').value.trim();
+      const email = document.getElementById('partnerEmail').value.trim();
+      const phone = document.getElementById('partnerPhone').value.trim();
+      const upi = document.getElementById('partnerUpi').value.trim();
+
+      const cityRaw = city.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 6) || 'INDIA';
       const rand = Math.floor(100 + Math.random() * 900);
       const code = `CP-${cityRaw}-${rand}`;
-      const fullLink = `https://ijmrst.shrinandainfotech.com/submit.html?ref=${code}`;
 
+      const { error } = await supabaseClient
+        .from('campus_partners')
+        .upsert({
+          user_id: currentUser.id,
+          full_name: name,
+          role: role,
+          college: college,
+          city: city,
+          email: email,
+          phone: phone,
+          upi_id: upi,
+          partner_code: code
+        }, { onConflict: 'email' });
+
+      if (error) {
+        console.error('Supabase insert error:', error);
+        alert('Error saving details: ' + error.message);
+        btn.disabled = false;
+        btn.textContent = 'Generate My Campus Partner Link';
+        return;
+      }
+
+      showSuccessBox(code);
+    });
+
+    function showSuccessBox(code) {
+      const fullLink = `https://ijmrst.shrinandainfotech.com/submit.html?ref=${code}`;
       document.getElementById('outPartnerCode').textContent = code;
       document.getElementById('outPartnerLink').textContent = fullLink;
       document.getElementById('partnerForm').style.display = 'none';
       document.getElementById('partnerSuccess').style.display = 'block';
-    });
+    }
 
     function copyPartnerLink() {
       const linkText = document.getElementById('outPartnerLink').textContent;
       navigator.clipboard.writeText(linkText);
       alert('Referral Link Copied!\n\n' + linkText);
     }
+
+    initAuth();
   </script>
 
 </body>
