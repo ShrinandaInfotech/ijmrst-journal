@@ -68,17 +68,37 @@
     <div id="loginCard" class="hidden max-w-md w-full bg-[#0F1A34] rounded-2xl shadow-2xl border border-slate-800 overflow-hidden">
       <div class="p-6 border-b border-slate-800 flex items-center justify-between">
         <div>
-          <h1 class="text-lg font-bold text-orange-400">2-Step Portal Sign In</h1>
+          <h1 class="text-lg font-bold text-orange-400">Portal Sign In</h1>
           <p class="text-xs text-slate-400 mt-0.5">Admin • Editors • Reviewers • Partners</p>
         </div>
         <span class="inline-flex items-center text-xs text-emerald-400 font-semibold shrink-0">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span> 2FA Active
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span> Secure SSO
         </span>
       </div>
 
       <div class="p-6">
         <!-- Status Alert Box -->
         <div id="alertBox" class="hidden mb-4 p-3 rounded-lg text-xs font-medium leading-relaxed"></div>
+
+        <!-- GOOGLE SIGN-IN SECTION -->
+        <div id="googleLoginSection" class="mb-5">
+          <button type="button" id="googleSignInBtn" onclick="signInWithGoogle()"
+            class="w-full bg-white hover:bg-slate-100 text-slate-900 font-bold py-3 px-4 rounded-lg transition shadow-md flex items-center justify-center gap-3 text-sm">
+            <svg class="w-5 h-5" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <div class="relative flex py-4 items-center">
+            <div class="flex-grow border-t border-slate-800"></div>
+            <span class="flex-shrink mx-3 text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Or sign in with email</span>
+            <div class="flex-grow border-t border-slate-800"></div>
+          </div>
+        </div>
 
         <!-- STEP 1: Email & Password Form -->
         <form id="step1Form" class="space-y-4">
@@ -263,19 +283,40 @@
       document.getElementById('alertBox').classList.add('hidden');
     }
 
+    async function signInWithGoogle() {
+      hideAlert();
+      const btn = document.getElementById('googleSignInBtn');
+      btn.disabled = true;
+      btn.innerHTML = 'Redirecting to Google...';
+
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + '/login.html'
+        }
+      });
+
+      if (error) {
+        btn.disabled = false;
+        btn.textContent = 'Continue with Google';
+        showAlert('Google Sign-In failed: ' + error.message);
+      }
+    }
+
     async function redirectToDashboard(email) {
       const { data: roleData } = await supabaseClient
         .from('user_roles')
         .select('role, is_active')
         .eq('email', email)
-        .single();
+        .maybeSingle();
 
       if (roleData && roleData.is_active) {
         localStorage.setItem('ijmrst_user_role', roleData.role);
         window.location.replace(roleData.role === 'campus_partner' ? 'partner-dashboard.html' : 'admin.html');
       } else {
         localStorage.removeItem('ijmrst_user_role');
-        showAlert('Access Denied: No active role found for ' + email);
+        await supabaseClient.auth.signOut();
+        showAlert('No active portal account found for ' + email + '. If you are a new Campus Partner, please register via Partner Sign-Up below.');
       }
     }
 
@@ -298,6 +339,7 @@
     supabaseClient.auth.onAuthStateChange(async (event, session) => {
       if (event === 'PASSWORD_RECOVERY') {
         showLoginCard();
+        document.getElementById('googleLoginSection').classList.add('hidden');
         document.getElementById('step1Form').classList.add('hidden');
         document.getElementById('step2Form').classList.add('hidden');
         document.getElementById('forgotForm').classList.add('hidden');
@@ -362,6 +404,7 @@
       verifiedEmail = email;
       document.getElementById('otpEmailDisplay').textContent = email;
       document.getElementById('otpInput').value = '';
+      document.getElementById('googleLoginSection').classList.add('hidden');
       document.getElementById('step1Form').classList.add('hidden');
       document.getElementById('step2Form').classList.remove('hidden');
       document.getElementById('otpInput').focus();
@@ -421,6 +464,7 @@
 
     function showForgotPassword() {
       hideAlert();
+      document.getElementById('googleLoginSection').classList.add('hidden');
       document.getElementById('step1Form').classList.add('hidden');
       document.getElementById('forgotForm').classList.remove('hidden');
     }
@@ -430,6 +474,7 @@
       document.getElementById('step2Form').classList.add('hidden');
       document.getElementById('forgotForm').classList.add('hidden');
       document.getElementById('updatePasswordForm').classList.add('hidden');
+      document.getElementById('googleLoginSection').classList.remove('hidden');
       document.getElementById('step1Form').classList.remove('hidden');
     }
 
