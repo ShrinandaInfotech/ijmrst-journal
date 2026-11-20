@@ -72,6 +72,19 @@
   <!-- Main Dashboard Content -->
   <main id="dashboardContainer" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow space-y-6">
 
+    <!-- Suspended Account Warning Banner (Hidden unless status === 'Suspended') -->
+    <div id="suspendedBanner" class="hidden bg-red-500/15 border border-red-500/40 rounded-2xl p-5 text-red-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+      <div>
+        <h2 class="text-base font-extrabold text-red-400">⚠ Campus Partner Account Suspended</h2>
+        <p class="text-xs text-red-200/90 mt-1">
+          Your referral privileges are currently paused by the IJMRST Super Admin. New manuscript referrals submitted using your code will not earn honorarium until your account is re-activated.
+        </p>
+      </div>
+      <a href="mailto:ijmrst@shrinandainfotech.com" class="shrink-0 bg-red-600 hover:bg-red-500 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition">
+        Contact Admin
+      </a>
+    </div>
+
     <!-- Partner Welcome & Referral Code Card -->
     <div class="bg-[#0F1A34] border border-orange-500/30 rounded-2xl p-6 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-6">
       <div class="space-y-1.5">
@@ -81,7 +94,7 @@
         <p class="text-xs text-emerald-400 font-medium pt-1">Registered UPI for Payouts: <span id="partnerUpiDisplay" class="font-bold"></span></p>
       </div>
 
-      <div class="bg-[#091124] border border-slate-700 rounded-xl p-4 flex flex-col sm:flex-row items-center gap-4">
+      <div id="referralBox" class="bg-[#091124] border border-slate-700 rounded-xl p-4 flex flex-col sm:flex-row items-center gap-4">
         <div>
           <span class="block text-[11px] uppercase tracking-wider text-slate-400 font-semibold">Your Referral Partner Code</span>
           <span id="partnerCodeDisplay" class="text-xl font-extrabold text-orange-400 tracking-wider">IJMRST-P---</span>
@@ -109,8 +122,8 @@
 
       <div class="bg-[#0F1A34] border border-slate-800 rounded-xl p-5 shadow-lg">
         <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Account Status</span>
-        <div id="statAccountStatus" class="text-xl font-extrabold text-orange-400 mt-2.5">Active</div>
-        <p class="text-xs text-slate-400 mt-1.5">Verified IJMRST Campus Partner</p>
+        <div id="statAccountStatus" class="text-xl font-extrabold text-emerald-400 mt-2.5">Active</div>
+        <p id="statAccountSubtext" class="text-xs text-slate-400 mt-1.5">Verified IJMRST Campus Partner</p>
       </div>
     </div>
 
@@ -156,6 +169,7 @@
 
   <script>
     let partnerCode = '';
+    let isPartnerSuspended = false;
 
     async function initPartnerDashboard() {
       const { data: { session } } = await supabaseClient.auth.getSession();
@@ -172,7 +186,6 @@
         .single();
 
       if (error || !partnerData) {
-        // Fallback to user_roles if not yet in campus_partners
         const { data: roleData } = await supabaseClient
           .from('user_roles')
           .select('*')
@@ -188,11 +201,25 @@
         document.getElementById('partnerUpiDisplay').textContent = 'Pending Profile Setup';
       } else {
         partnerCode = partnerData.partner_code || '';
+        const status = partnerData.status || 'Active';
+        isPartnerSuspended = (status.toLowerCase() === 'suspended');
+
         document.getElementById('partnerNameDisplay').textContent = `Welcome, ${partnerData.full_name}`;
         document.getElementById('partnerCollegeDisplay').textContent = `${partnerData.college || ''} • ${email}`;
         document.getElementById('partnerUpiDisplay').textContent = partnerData.upi_id || 'Not Provided';
         document.getElementById('partnerCodeDisplay').textContent = partnerCode || 'PENDING';
-        document.getElementById('statAccountStatus').textContent = partnerData.status || 'Active';
+        document.getElementById('statAccountStatus').textContent = status;
+
+        if (isPartnerSuspended) {
+          document.getElementById('suspendedBanner').classList.remove('hidden');
+          document.getElementById('statAccountStatus').className = 'text-xl font-extrabold text-red-400 mt-2.5';
+          document.getElementById('statAccountSubtext').textContent = 'Referral link paused by Admin';
+          document.getElementById('partnerCodeDisplay').className = 'text-xl font-extrabold text-slate-500 line-through tracking-wider';
+          const copyBtn = document.getElementById('copyCodeBtn');
+          copyBtn.disabled = true;
+          copyBtn.textContent = 'Suspended';
+          copyBtn.className = 'bg-slate-700 text-slate-400 font-bold text-xs px-4 py-2.5 rounded-lg cursor-not-allowed shrink-0';
+        }
       }
 
       document.getElementById('loadingScreen').classList.add('hidden');
@@ -221,7 +248,7 @@
       if (!data || data.length === 0) {
         document.getElementById('statTotalPapers').textContent = '0';
         document.getElementById('statPublishedPapers').textContent = '0';
-        tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">No manuscripts submitted with your code (${partnerCode}) yet. Share your code with researchers to start earning!</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400">No manuscripts submitted with your code (${partnerCode}) yet.</td></tr>`;
         return;
       }
 
@@ -250,7 +277,7 @@
     }
 
     function copyPartnerCode() {
-      if (!partnerCode) return;
+      if (isPartnerSuspended || !partnerCode) return;
       navigator.clipboard.writeText(partnerCode);
       const btn = document.getElementById('copyCodeBtn');
       btn.textContent = 'Copied! ✓';
