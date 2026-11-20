@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Track Manuscript Status | IJMRST</title>
   <meta name="description" content="Track the live peer-review and publication status of your submitted manuscript on IJMRST." />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <style>
     :root {
       --bg-dark: #0A192F;
@@ -237,6 +239,25 @@
       background: var(--accent-orange-hover);
     }
 
+    .btn-track:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Error Box */
+    #errorBox {
+      display: none;
+      margin-top: 22px;
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #F87171;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
     /* Status Result Card */
     #statusResult {
       display: none;
@@ -250,22 +271,45 @@
     .result-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 14px;
+      padding-bottom: 16px;
       margin-bottom: 20px;
     }
 
     .status-badge {
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ADE80;
-      border: 1px solid rgba(34, 197, 94, 0.4);
-      padding: 5px 14px;
+      background: rgba(255, 107, 0, 0.15);
+      color: var(--accent-orange);
+      border: 1px solid rgba(255, 107, 0, 0.4);
+      padding: 6px 14px;
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 700;
+    }
+
+    .status-badge.approved {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ADE80;
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+
+    .status-badge.rejected {
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    .reviewer-notes-box {
+      display: none;
+      background: rgba(255, 255, 255, 0.04);
+      border-left: 3px solid var(--accent-orange);
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      font-size: 0.88rem;
+      color: #E2E8F0;
     }
 
     /* Progress Timeline */
@@ -289,17 +333,27 @@
       width: 12px;
       height: 12px;
       border-radius: 50%;
+      background: #22C55E;
+      box-shadow: 0 0 8px #22C55E;
+    }
+
+    .timeline li.in-progress::before {
       background: var(--accent-orange);
       box-shadow: 0 0 8px var(--accent-orange);
     }
 
     .timeline li.pending {
-      opacity: 0.5;
+      opacity: 0.48;
     }
 
     .timeline li.pending::before {
       background: #64748B;
       box-shadow: none;
+    }
+
+    .timeline li.failed::before {
+      background: #EF4444;
+      box-shadow: 0 0 8px #EF4444;
     }
 
     .timeline h4 {
@@ -309,13 +363,6 @@
 
     .timeline p {
       font-size: 0.86rem;
-      color: var(--text-muted);
-    }
-
-    .demo-hint {
-      text-align: center;
-      margin-top: 14px;
-      font-size: 0.82rem;
       color: var(--text-muted);
     }
 
@@ -341,7 +388,7 @@
     <span>Publisher: <strong>Shrinanda Infotech</strong> | Email: <strong>ijmrst@shrinandainfotech.com</strong></span>
     <div>
       <span class="badge-pill">24–48 Hr Review</span>
-      <span class="badge-pill">Live Tracking</span>
+      <span class="badge-pill">Live Database Tracking</span>
     </div>
   </div>
 
@@ -370,7 +417,7 @@
 
   <div class="page-banner">
     <h2>Track <span>Manuscript Status</span></h2>
-    <p>Enter your Paper Tracking ID and Corresponding Author Email to view real-time editorial and peer-review progress.</p>
+    <p>Enter your Paper Tracking ID and Corresponding Author Email to view real-time peer-review and plagiarism screening progress.</p>
   </div>
 
   <div class="container">
@@ -379,66 +426,162 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Paper Tracking ID *</label>
-            <input type="text" id="trackPaperId" placeholder="e.g., IJMRST-2026-1001" required />
+            <input type="text" id="trackPaperId" placeholder="e.g., IJMRST-2026-2126" required />
           </div>
           <div class="form-group">
             <label>Corresponding Author Email *</label>
             <input type="email" id="trackEmail" placeholder="author@college.edu.in" required />
           </div>
         </div>
-        <button type="submit" class="btn-track">Check Live Status</button>
-        <p class="demo-hint">Preview Tip: Enter any ID like <strong>IJMRST-2026-1001</strong> and email to preview the live status timeline.</p>
+        <button type="submit" id="trackBtn" class="btn-track">Check Live Status</button>
       </form>
+
+      <div id="errorBox"></div>
 
       <!-- Live Status Output -->
       <div id="statusResult">
         <div class="result-header">
           <div>
-            <div style="font-size:0.82rem; color:var(--text-muted);">Tracking ID</div>
-            <h3 id="resPaperId" style="color:var(--accent-orange);">IJMRST-2026-1001</h3>
+            <div style="font-size:0.82rem; color:var(--text-muted);">Tracking ID & Subject Track</div>
+            <h3 id="resPaperId" style="color:var(--accent-orange);">IJMRST-2026-0000</h3>
+            <div id="resPaperTitle" style="font-size:0.95rem; font-weight:600; color:#F8FAFC; margin-top:4px;"></div>
+            <div id="resTrack" style="font-size:0.8rem; color:#94A3B8; margin-top:2px;"></div>
           </div>
-          <span class="status-badge">Under Double-Blind Peer Review</span>
+          <span id="resStatusBadge" class="status-badge">Loading...</span>
         </div>
 
-        <ul class="timeline">
-          <li>
-            <h4>1. Manuscript Received & Logged</h4>
-            <p>Original file securely archived; author details masked for double-blind review.</p>
-          </li>
-          <li>
-            <h4>2. Plagiarism & Formatting Screening Passed</h4>
-            <p>Similarity index verified below 15% threshold.</p>
-          </li>
-          <li>
-            <h4>3. Assigned to Subject Peer Reviewer (In Progress)</h4>
-            <p>Expected editorial decision within 24–48 hours of submission.</p>
-          </li>
-          <li class="pending">
-            <h4>4. Acceptance Letter & APC Settlement (₹600)</h4>
-            <p>Unlocks automatically once peer reviewer recommends acceptance.</p>
-          </li>
-          <li class="pending">
-            <h4>5. Final Publication & QR-Verified Certificates</h4>
-            <p>Published in current issue with individual downloadable PDF certificates.</p>
-          </li>
+        <div id="reviewerNotesBox" class="reviewer-notes-box">
+          <strong style="color:var(--accent-orange);">Reviewer / Editorial Remarks:</strong>
+          <p id="resReviewNotes" style="margin-top:4px;"></p>
+        </div>
+
+        <ul class="timeline" id="statusTimeline">
+          <!-- Dynamically populated from real database fields -->
         </ul>
       </div>
     </div>
   </div>
 
   <footer>
-    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
+    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science & Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
   </footer>
 
   <script>
-    document.getElementById('trackForm').addEventListener('submit', function(e) {
+    document.getElementById('trackForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+      const btn = document.getElementById('trackBtn');
+      const errorBox = document.getElementById('errorBox');
+      const statusResult = document.getElementById('statusResult');
+
       const pid = document.getElementById('trackPaperId').value.trim().toUpperCase();
-      document.getElementById('resPaperId').textContent = pid;
-      document.getElementById('statusResult').style.display = 'block';
+      const email = document.getElementById('trackEmail').value.trim().toLowerCase();
+
+      btn.disabled = true;
+      btn.textContent = 'Fetching Live Status...';
+      errorBox.style.display = 'none';
+      statusResult.style.display = 'none';
+
+      const { data: paper, error } = await supabaseClient
+        .from('manuscripts')
+        .select('*')
+        .eq('paper_id', pid)
+        .ilike('corresponding_email', email)
+        .maybeSingle();
+
+      btn.disabled = false;
+      btn.textContent = 'Check Live Status';
+
+      if (error || !paper) {
+        errorBox.textContent = 'No manuscript found matching this Paper Tracking ID and Corresponding Author Email. Please verify both details and try again.';
+        errorBox.style.display = 'block';
+        return;
+      }
+
+      document.getElementById('resPaperId').textContent = paper.paper_id;
+      document.getElementById('resPaperTitle').textContent = paper.title;
+      document.getElementById('resTrack').textContent = `Subject Track: ${paper.subject_track}`;
+
+      const statusText = paper.status || 'Submitted - Under Screening';
+      const plagText = paper.plagiarism_status || 'Pending Reviewer Check';
+      const badge = document.getElementById('resStatusBadge');
+      badge.textContent = statusText;
+      badge.className = 'status-badge';
+
+      if (statusText.includes('Accepted') || statusText.includes('Published')) {
+        badge.classList.add('approved');
+      } else if (statusText.includes('Rejected') || statusText.includes('Revision')) {
+        badge.classList.add('rejected');
+      }
+
+      // Show reviewer notes if available
+      const notesBox = document.getElementById('reviewerNotesBox');
+      if (paper.review_notes && paper.review_notes.trim() !== '') {
+        document.getElementById('resReviewNotes').textContent = paper.review_notes;
+        notesBox.style.display = 'block';
+      } else {
+        notesBox.style.display = 'none';
+      }
+
+      // Build truthful step-by-step timeline
+      const isPlagPassed = plagText.toLowerCase().includes('passed');
+      const isPlagFailed = plagText.toLowerCase().includes('high similarity') || plagText.toLowerCase().includes('revision');
+      const isAccepted = statusText.includes('Accepted') || statusText.includes('Recommended for Acceptance') || statusText.includes('Published');
+      const isPublished = statusText.includes('Published');
+      const isRejected = statusText.includes('Rejected');
+
+      const step2Class = isPlagPassed ? '' : (isPlagFailed ? 'failed' : 'in-progress');
+      const step2Title = isPlagPassed
+        ? '2. Plagiarism & Formatting Screening Passed'
+        : isPlagFailed
+        ? '2. Plagiarism Check Flagged (>15% Similarity)'
+        : '2. Plagiarism & Formatting Screening (In Progress)';
+      const step2Desc = isPlagPassed
+        ? 'Verified by subject peer reviewer (similarity index below 15% threshold).'
+        : isPlagFailed
+        ? 'Please review the remarks above and submit a revised manuscript.'
+        : 'Awaiting manual plagiarism and formatting check by assigned subject peer reviewer.';
+
+      const step3Class = isAccepted ? '' : (isRejected ? 'failed' : (isPlagPassed ? 'in-progress' : 'pending'));
+      const step3Title = isAccepted
+        ? '3. Double-Blind Peer Review Completed (Recommended)'
+        : isRejected
+        ? '3. Peer Review Decision: Not Accepted'
+        : '3. Double-Blind Subject Peer Review';
+      const step3Desc = isAccepted
+        ? 'Reviewer evaluation completed positively.'
+        : isRejected
+        ? 'Manuscript did not meet publication criteria. Check reviewer remarks above.'
+        : 'Expected editorial decision within 24–48 hours of submission.';
+
+      const step4Class = isPublished ? '' : (isAccepted ? 'in-progress' : 'pending');
+      const step5Class = isPublished ? '' : 'pending';
+
+      document.getElementById('statusTimeline').innerHTML = `
+        <li>
+          <h4>1. Manuscript Received & Logged</h4>
+          <p>Original file securely archived; author details masked for double-blind review.</p>
+        </li>
+        <li class="${step2Class}">
+          <h4>${step2Title}</h4>
+          <p>${step2Desc}</p>
+        </li>
+        <li class="${step3Class}">
+          <h4>${step3Title}</h4>
+          <p>${step3Desc}</p>
+        </li>
+        <li class="${step4Class}">
+          <h4>4. Acceptance Letter & APC Settlement (₹600)</h4>
+          <p>${isAccepted ? 'Unlocked! Follow instructions sent to your email/WhatsApp for final publication.' : 'Unlocks automatically once peer reviewer recommends acceptance.'}</p>
+        </li>
+        <li class="${step5Class}">
+          <h4>5. Final Publication & QR-Verified Certificates</h4>
+          <p>${isPublished ? 'Published! Verify and download your QR certificate from the Verify Certificate page.' : 'Published in current issue with individual downloadable PDF certificates.'}</p>
+        </li>
+      `;
+
+      statusResult.style.display = 'block';
     });
-  </script>
-<script>
+
     // युजर आधीच लॉगिन असल्यास "Portal Login" बटण थेट "Dashboard" मध्ये बदला
     document.addEventListener('DOMContentLoaded', () => {
       const cachedRole = localStorage.getItem('ijmrst_user_role');
