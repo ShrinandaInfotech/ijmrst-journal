@@ -32,15 +32,11 @@
   <header class="bg-[#091124]/95 border-b border-slate-800/80 sticky top-0 z-40 backdrop-blur">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col xl:flex-row items-center justify-between gap-4">
       <a href="index.html" class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center text-slate-950 font-extrabold text-lg shadow-md">
-          IJ
-        </div>
+        <div class="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center text-slate-950 font-extrabold text-lg shadow-md">IJ</div>
         <div>
           <div class="flex items-center gap-2">
             <span class="text-xl font-extrabold text-white tracking-tight leading-none">IJMRST</span>
-            <span id="roleBadge" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30">
-              Verifying...
-            </span>
+            <span id="roleBadge" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30">Verifying...</span>
           </div>
           <span class="block text-[11px] text-slate-400 mt-1">International Journal of Multidisciplinary Research in Science & Technology</span>
         </div>
@@ -53,27 +49,21 @@
         <a href="guidelines.html" class="hover:text-orange-400 transition">Author Guidelines</a>
         <a href="archives.html" class="hover:text-orange-400 transition">Archives</a>
         <a href="verify.html" class="hover:text-orange-400 transition">Verify Certificate</a>
-        <a href="admin.html" class="px-3.5 py-1.5 rounded-lg border border-orange-500 text-orange-400 bg-orange-500/10 font-semibold">
-          Dashboard
-        </a>
-        <button onclick="logoutUser()" class="bg-red-600/90 hover:bg-red-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition shadow">
-          Sign Out
-        </button>
+        <a href="admin.html" class="px-3.5 py-1.5 rounded-lg border border-orange-500 text-orange-400 bg-orange-500/10 font-semibold">Dashboard</a>
+        <button onclick="logoutUser()" class="bg-red-600/90 hover:bg-red-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition shadow">Sign Out</button>
       </nav>
     </div>
   </header>
 
-  <!-- Loading Overlay -->
   <div id="loadingScreen" class="max-w-7xl mx-auto p-12 text-center">
     <div class="inline-block w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mb-3"></div>
     <p class="text-slate-400 text-sm font-medium">Authenticating session & loading role permissions...</p>
   </div>
 
-  <!-- Main Dashboard Content -->
   <main id="dashboardContainer" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
 
     <!-- Role & User Info Notice Banner -->
-    <div id="trackBanner" class="hidden mb-6 bg-[#0F1A34] border border-orange-500/30 rounded-xl p-4 text-sm text-slate-200 flex flex-col lg:flex-row lg:items-center justify-between gap-2 shadow-md">
+    <div id="trackBanner" class="hidden mb-4 bg-[#0F1A34] border border-orange-500/30 rounded-xl p-4 text-sm text-slate-200 flex flex-col lg:flex-row lg:items-center justify-between gap-2 shadow-md">
       <div class="space-y-1">
         <div><strong class="text-orange-400">Assigned Scope:</strong> <span id="trackScopeText"></span></div>
         <div class="text-xs text-slate-400">Logged in as: <span id="userNameDisplay" class="text-slate-200 font-semibold"></span></div>
@@ -81,6 +71,12 @@
       <span class="inline-flex items-center text-xs text-emerald-400 font-semibold shrink-0">
         <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span> Database Row-Level Security Active
       </span>
+    </div>
+
+    <!-- Reviewer Pending Notification Alert -->
+    <div id="reviewerNotificationBanner" class="hidden mb-6 bg-amber-500/15 border border-amber-500/40 rounded-xl p-4 text-sm text-amber-300 flex items-center justify-between gap-3">
+      <div class="font-semibold" id="reviewerNotificationText"></div>
+      <span class="px-2.5 py-1 rounded-full bg-amber-500 text-slate-950 text-xs font-extrabold shrink-0">Action Required</span>
     </div>
 
     <!-- Navigation Tabs -->
@@ -114,7 +110,7 @@
     <!-- TAB 1: MANUSCRIPTS -->
     <section id="section-manuscripts" class="tab-section space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <h2 class="text-lg font-bold text-white">Submitted Research Manuscripts</h2>
+        <h2 class="text-lg font-bold text-white">Research Manuscripts & Peer Review Queue</h2>
         <button onclick="loadManuscripts()" class="text-xs bg-[#0F1A34] border border-slate-700 text-slate-200 hover:border-orange-500 hover:text-orange-400 px-3.5 py-2 rounded-lg font-semibold transition">
           ↻ Refresh List
         </button>
@@ -125,9 +121,9 @@
           <thead>
             <tr class="bg-[#060B19] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
               <th class="p-4">Paper ID & Track</th>
-              <th class="p-4">Title & Authors</th>
-              <th class="p-4">Status</th>
-              <th class="p-4">Editorial / Review Notes</th>
+              <th class="p-4">Title & Assigned Reviewer</th>
+              <th class="p-4">Plagiarism & Review Status</th>
+              <th class="p-4">Reviewer Remarks</th>
               <th class="p-4 text-right">Actions</th>
             </tr>
           </thead>
@@ -142,7 +138,7 @@
     <section id="section-team" class="tab-section hidden space-y-6">
       <div class="bg-[#0F1A34] p-6 rounded-xl shadow-xl border border-slate-800">
         <h3 class="text-base font-bold text-orange-400 mb-1">Assign Role to Editor / Reviewer / Partner</h3>
-        <p class="text-xs text-slate-400 mb-4">Note: Also create their login password in Supabase Authentication → Users with the exact same email.</p>
+        <p class="text-xs text-slate-400 mb-4">Note: Select exact Subject Track for Peer Reviewers so incoming papers auto-route to them.</p>
 
         <form id="addRoleForm" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
           <input type="text" id="newRoleName" required placeholder="Full Name (e.g. Dr. A. Patil)"
@@ -150,13 +146,21 @@
           <input type="email" id="newRoleEmail" required placeholder="Email ID"
             class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500" />
           <select id="newRoleType" class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+            <option value="peer_reviewer">Peer Reviewer</option>
             <option value="chief_editor">Chief Editor</option>
             <option value="associate_editor">Associate Editor</option>
-            <option value="peer_reviewer">Peer Reviewer</option>
             <option value="campus_partner">Campus Partner</option>
           </select>
-          <input type="text" id="newRoleTrack" placeholder="Track (or ALL)" value="ALL"
-            class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500" />
+          <select id="newRoleTrack" class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+            <option value="ALL">ALL Tracks</option>
+            <option value="Engineering & Polytechnic">Engineering & Polytechnic</option>
+            <option value="Computer Science, AI & Data Science">Computer Science, AI & Data Science</option>
+            <option value="Pure & Applied Sciences">Pure & Applied Sciences</option>
+            <option value="Education (B.Ed & M.Ed)">Education (B.Ed & M.Ed)</option>
+            <option value="Commerce & Management">Commerce & Management</option>
+            <option value="Arts & Humanities">Arts & Humanities</option>
+            <option value="Medical & Pharmacy">Medical & Pharmacy</option>
+          </select>
           <button type="submit" class="sm:col-span-4 bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold py-2.5 rounded-lg text-sm transition shadow">
             + Save User Role Permission
           </button>
@@ -240,7 +244,7 @@
 
   </main>
 
-  <!-- UNIVERSAL EDIT MODAL (For Team / Campus Partners / Reviewers) -->
+  <!-- UNIVERSAL EDIT MODAL -->
   <div id="editModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-[#0F1A34] border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -252,18 +256,13 @@
         <input type="hidden" id="editRecordId" />
         <div id="editFieldsContainer" class="space-y-3"></div>
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
-          <button type="button" onclick="closeEditModal()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
-            Cancel
-          </button>
-          <button type="submit" class="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-slate-950 text-xs font-bold shadow">
-            Save Changes
-          </button>
+          <button type="button" onclick="closeEditModal()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-slate-950 text-xs font-bold shadow">Save Changes</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="bg-[#060B19] text-slate-400 text-xs py-6 px-4 border-t border-slate-800/80 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
       <p>© 2026 IJMRST | Published by <span class="text-orange-400 font-semibold">Shrinanda Infotech</span>. All Rights Reserved.</p>
@@ -281,7 +280,6 @@
     let cachedPartners = [];
     let cachedReviewers = [];
 
-    // 1. Verify Session & Load Role
     async function initDashboard() {
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (!session) {
@@ -308,13 +306,13 @@
 
       document.getElementById('trackBanner').classList.remove('hidden');
       document.getElementById('trackScopeText').textContent =
-        roleData.role === 'super_admin' ? 'Full Administrative Control (All Tracks, Payments, Team & Certificates)' :
-        roleData.role === 'chief_editor' ? 'All Subject Tracks (Academic Review & Final Recommendation Only)' :
-        `Restricted to Track: ${roleData.assigned_track}`;
+        roleData.role === 'super_admin' ? 'Full Administrative Override (Auto-Routing Active; Edit/Reassign Only If Needed)' :
+        roleData.role === 'chief_editor' ? 'All Subject Tracks (Academic Oversight)' :
+        `Assigned Subject Track: ${roleData.assigned_track} (Plagiarism & Double-Blind Review)`;
 
       if (roleData.role === 'super_admin') {
         document.querySelectorAll('.super-admin-only').forEach(el => el.classList.remove('hidden'));
-        loadRoles();
+        await loadRoles();
         loadPartners();
         loadReviewers();
       }
@@ -335,13 +333,16 @@
       activeBtn.className = 'tab-btn bg-orange-500 text-slate-950 px-4 py-2 rounded-lg text-sm font-bold transition shadow';
     }
 
-    // Load Manuscripts
+    // Load Manuscripts (Filtered automatically for Peer Reviewers!)
     async function loadManuscripts() {
       const tbody = document.getElementById('manuscriptsTableBody');
-      const { data, error } = await supabaseClient
-        .from('manuscripts')
-        .select('*')
-        .order('created_at', { ascending: false });
+      let query = supabaseClient.from('manuscripts').select('*').order('created_at', { ascending: false });
+
+      if (currentUserRole.role === 'peer_reviewer') {
+        query = query.eq('assigned_reviewer_email', currentUserRole.email);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-red-400">Error: ${error.message}</td></tr>`;
@@ -349,46 +350,82 @@
       }
 
       if (!data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">No manuscripts found in your assigned scope.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">No manuscripts currently assigned in your queue.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = data.map(m => {
-        const authorInfo = currentUserRole.role === 'peer_reviewer'
-          ? '<span class="italic text-slate-500">Hidden (Double-Blind Review)</span>'
-          : `<span class="text-xs text-slate-400">${m.corresponding_email}</span>`;
+      // Show notification banner if reviewer has pending plagiarism/review items
+      const pendingCount = data.filter(m => (m.plagiarism_status || '').includes('Pending') || (m.status || '').includes('Pending')).length;
+      if (pendingCount > 0 && currentUserRole.role === 'peer_reviewer') {
+        document.getElementById('reviewerNotificationBanner').classList.remove('hidden');
+        document.getElementById('reviewerNotificationText').textContent =
+          `🔔 Notification: You have ${pendingCount} newly assigned manuscript(s) waiting for Plagiarism Verification & Double-Blind Peer Review.`;
+      }
 
-        const statusOptions = currentUserRole.role === 'super_admin'
-          ? ['Submitted - Under Screening', 'Under Peer Review', 'Revision Required', 'Accepted', 'Published', 'Rejected']
-          : currentUserRole.role === 'chief_editor'
-          ? ['Under Peer Review', 'Recommended for Acceptance', 'Revision Required', 'Recommended for Rejection']
-          : ['Initial Screening Passed', 'Sent to Reviewer', 'Revision Required'];
+      const activeReviewers = cachedRoles.filter(r => r.role === 'peer_reviewer' && r.is_active);
+
+      tbody.innerHTML = data.map(m => {
+        const isReviewer = currentUserRole.role === 'peer_reviewer';
+        const authorBlock = isReviewer
+          ? '<span class="italic text-slate-500 text-xs">Author Identity Hidden (Double-Blind Review)</span>'
+          : `<div class="text-xs text-slate-400 mt-1">Author: ${m.authors || m.authors_info || '-'} (${m.corresponding_email || ''})</div>`;
+
+        const reviewerAssignHtml = currentUserRole.role === 'super_admin'
+          ? `<div class="mt-2">
+               <label class="block text-[11px] text-slate-400 mb-0.5">Assigned Reviewer (Override):</label>
+               <select id="rev-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-orange-300 rounded px-2 py-1 text-xs">
+                 <option value="">-- Unassigned --</option>
+                 ${activeReviewers.map(r => `<option value="${r.email}|${r.full_name}" ${m.assigned_reviewer_email === r.email ? 'selected' : ''}>${r.full_name} (${r.assigned_track})</option>`).join('')}
+               </select>
+             </div>`
+          : `<div class="text-xs text-emerald-400 mt-1">Reviewer: ${m.assigned_reviewer_name || currentUserRole.full_name}</div>`;
+
+        const plagOptions = ['Pending Reviewer Check', 'Plagiarism Passed (<15%)', 'High Similarity (>15%) - Revision Needed'];
+        const statusOptions = [
+          'Assigned to Reviewer (Plagiarism Check Pending)',
+          'Plagiarism Passed - Under Peer Review',
+          'Revision Required',
+          'Recommended for Acceptance',
+          'Accepted',
+          'Published',
+          'Rejected'
+        ];
 
         return `
           <tr class="hover:bg-[#142242]/60 transition">
             <td class="p-4 align-top">
               <div class="font-bold text-orange-400">${m.paper_id}</div>
               <div class="text-xs text-slate-400 mt-0.5">${m.subject_track}</div>
+              <div class="text-[11px] text-slate-500 mt-0.5">${m.article_type || ''}</div>
             </td>
             <td class="p-4 align-top max-w-xs">
               <div class="font-semibold text-white">${m.title}</div>
-              <div class="mt-1">${authorInfo}</div>
-              ${m.file_url ? `<a href="${m.file_url}" target="_blank" class="inline-block mt-1.5 text-xs text-orange-400 hover:underline font-medium">View Manuscript File →</a>` : ''}
+              ${authorBlock}
+              ${reviewerAssignHtml}
+            </td>
+            <td class="p-4 align-top space-y-2">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-0.5">1. Plagiarism Check (By Reviewer):</label>
+                <select id="plag-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-amber-300 rounded-lg px-2.5 py-1.5 text-xs font-medium outline-none">
+                  ${plagOptions.map(p => `<option value="${p}" ${(m.plagiarism_status || 'Pending Reviewer Check') === p ? 'selected' : ''}>${p}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-0.5">2. Peer Review Decision:</label>
+                <select id="status-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium outline-none">
+                  <option value="${m.status}" selected>${m.status}</option>
+                  ${statusOptions.filter(s => s !== m.status).map(s => `<option value="${s}">${s}</option>`).join('')}
+                </select>
+              </div>
             </td>
             <td class="p-4 align-top">
-              <select id="status-${m.id}" class="bg-[#091124] border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium focus:ring-2 focus:ring-orange-500 outline-none">
-                <option value="${m.status}" selected>${m.status}</option>
-                ${statusOptions.filter(s => s !== m.status).map(s => `<option value="${s}">${s}</option>`).join('')}
-              </select>
-            </td>
-            <td class="p-4 align-top">
-              <textarea id="notes-${m.id}" rows="2" placeholder="Add review/screening remarks..."
+              <textarea id="notes-${m.id}" rows="3" placeholder="Enter plagiarism % and peer review comments..."
                 class="w-full bg-[#091124] border border-slate-700 text-slate-200 rounded-lg p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500">${m.review_notes || ''}</textarea>
             </td>
             <td class="p-4 align-top text-right space-y-1.5">
               <button onclick="updateManuscript('${m.id}')"
                 class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
-                Save Update
+                Save Review
               </button>
               ${currentUserRole.role === 'super_admin' ? `
                 <button onclick="deleteManuscript('${m.id}')"
@@ -402,16 +439,35 @@
     }
 
     async function updateManuscript(id) {
+      const plagiarism_status = document.getElementById(`plag-${id}`).value;
       const status = document.getElementById(`status-${id}`).value;
       const review_notes = document.getElementById(`notes-${id}`).value;
 
+      const updates = { plagiarism_status, status, review_notes };
+
+      // Allow Super Admin to override assigned reviewer if needed
+      const revSelect = document.getElementById(`rev-${id}`);
+      if (revSelect) {
+        if (revSelect.value) {
+          const [revEmail, revName] = revSelect.value.split('|');
+          updates.assigned_reviewer_email = revEmail;
+          updates.assigned_reviewer_name = revName;
+        } else {
+          updates.assigned_reviewer_email = null;
+          updates.assigned_reviewer_name = 'Unassigned';
+        }
+      }
+
       const { error } = await supabaseClient
         .from('manuscripts')
-        .update({ status, review_notes })
+        .update(updates)
         .eq('id', id);
 
       if (error) alert('Update failed: ' + error.message);
-      else alert('Manuscript status & notes saved!');
+      else {
+        alert('Plagiarism & Review status saved successfully!');
+        loadManuscripts();
+      }
     }
 
     async function deleteManuscript(id) {
@@ -422,10 +478,7 @@
       else loadManuscripts();
     }
 
-    // ==========================================
     // SUPER ADMIN: TEAM, PARTNERS & REVIEWERS
-    // ==========================================
-
     async function loadRoles() {
       const { data } = await supabaseClient.from('user_roles').select('*').order('created_at', { ascending: false });
       if (!data) return;
@@ -456,7 +509,7 @@
       const full_name = document.getElementById('newRoleName').value.trim();
       const email = document.getElementById('newRoleEmail').value.trim();
       const role = document.getElementById('newRoleType').value;
-      const assigned_track = document.getElementById('newRoleTrack').value.trim() || 'ALL';
+      const assigned_track = document.getElementById('newRoleTrack').value;
 
       const { error } = await supabaseClient.from('user_roles').insert([{ full_name, email, role, assigned_track }]);
       if (error) alert(error.message);
@@ -503,7 +556,6 @@
       `).join('');
     }
 
-    // UNIVERSAL DELETE FUNCTION (Protects Super Admin + Double Confirmation + Cleans user_roles for Partners)
     async function deleteAdminRecord(tableName, id, name) {
       if (tableName === 'user_roles') {
         const targetUser = cachedRoles.find(x => String(x.id) === String(id));
@@ -527,21 +579,15 @@
         alert('Delete failed: ' + error.message);
       } else {
         if (partnerEmail) {
-          await supabaseClient
-            .from('user_roles')
-            .delete()
-            .eq('email', partnerEmail)
-            .eq('role', 'campus_partner');
+          await supabaseClient.from('user_roles').delete().eq('email', partnerEmail).eq('role', 'campus_partner');
         }
-
-        alert(`"${name}" deleted successfully! They can re-register anytime with the same email.`);
+        alert(`"${name}" deleted successfully!`);
         if (tableName === 'user_roles') loadRoles();
         if (tableName === 'campus_partners') { loadPartners(); loadRoles(); }
         if (tableName === 'peer_reviewers') loadReviewers();
       }
     }
 
-    // UNIVERSAL EDIT MODAL OPEN
     function openEditModal(tableName, id) {
       document.getElementById('editTable').value = tableName;
       document.getElementById('editRecordId').value = id;
@@ -557,13 +603,22 @@
           ${isSuperAdmin ? `<input type="hidden" name="role" value="super_admin" /><input type="hidden" name="is_active" value="true" />` : `
           <div><label class="text-xs text-slate-400">Role</label>
             <select name="role" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
+              <option value="peer_reviewer" ${item.role === 'peer_reviewer' ? 'selected' : ''}>Peer Reviewer</option>
               <option value="chief_editor" ${item.role === 'chief_editor' ? 'selected' : ''}>Chief Editor</option>
               <option value="associate_editor" ${item.role === 'associate_editor' ? 'selected' : ''}>Associate Editor</option>
-              <option value="peer_reviewer" ${item.role === 'peer_reviewer' ? 'selected' : ''}>Peer Reviewer</option>
               <option value="campus_partner" ${item.role === 'campus_partner' ? 'selected' : ''}>Campus Partner</option>
             </select></div>`}
           <div><label class="text-xs text-slate-400">Assigned Track</label>
-            <input type="text" name="assigned_track" value="${item.assigned_track || 'ALL'}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+            <select name="assigned_track" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
+              <option value="ALL" ${item.assigned_track === 'ALL' ? 'selected' : ''}>ALL Tracks</option>
+              <option value="Engineering & Polytechnic" ${item.assigned_track === 'Engineering & Polytechnic' ? 'selected' : ''}>Engineering & Polytechnic</option>
+              <option value="Computer Science, AI & Data Science" ${item.assigned_track === 'Computer Science, AI & Data Science' ? 'selected' : ''}>Computer Science, AI & Data Science</option>
+              <option value="Pure & Applied Sciences" ${item.assigned_track === 'Pure & Applied Sciences' ? 'selected' : ''}>Pure & Applied Sciences</option>
+              <option value="Education (B.Ed & M.Ed)" ${item.assigned_track === 'Education (B.Ed & M.Ed)' ? 'selected' : ''}>Education (B.Ed & M.Ed)</option>
+              <option value="Commerce & Management" ${item.assigned_track === 'Commerce & Management' ? 'selected' : ''}>Commerce & Management</option>
+              <option value="Arts & Humanities" ${item.assigned_track === 'Arts & Humanities' ? 'selected' : ''}>Arts & Humanities</option>
+              <option value="Medical & Pharmacy" ${item.assigned_track === 'Medical & Pharmacy' ? 'selected' : ''}>Medical & Pharmacy</option>
+            </select></div>
           ${isSuperAdmin ? '' : `
           <div><label class="text-xs text-slate-400">Account Status</label>
             <select name="is_active" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
@@ -617,7 +672,6 @@
       document.getElementById('editModal').classList.add('hidden');
     }
 
-    // UNIVERSAL EDIT SUBMIT
     document.getElementById('universalEditForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const tableName = document.getElementById('editTable').value;
@@ -626,11 +680,8 @@
       const updates = {};
 
       for (const [key, value] of formData.entries()) {
-        if (key === 'is_active') {
-          updates[key] = (value === 'true');
-        } else {
-          updates[key] = value.trim();
-        }
+        if (key === 'is_active') updates[key] = (value === 'true');
+        else updates[key] = value.trim();
       }
 
       const { error } = await supabaseClient.from(tableName).update(updates).eq('id', id);
