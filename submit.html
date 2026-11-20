@@ -574,7 +574,7 @@
   </div>
 
   <footer>
-    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science and Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
+    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science & Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
   </footer>
 
   <script>
@@ -713,7 +713,10 @@
       const { error } = await supabaseClient.from('manuscripts').insert([payload]);
 
       if (error) {
-        console.warn('Database insert notice:', error.message);
+        alert('Submission failed: ' + error.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Manuscript for Free Peer Review';
+        return;
       }
 
       document.getElementById('generatedPaperId').textContent = paperId;
