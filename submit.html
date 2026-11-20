@@ -19,392 +19,66 @@
       --border-color: rgba(255, 107, 0, 0.25);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-white); line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
 
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-white);
-      line-height: 1.6;
-    }
+    .top-bar { background: #061020; border-bottom: 1px solid var(--border-color); padding: 8px 5%; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; color: var(--text-muted); }
+    .top-bar span strong { color: var(--accent-orange); }
+    .badge-pill { background: rgba(255, 107, 0, 0.15); color: var(--accent-orange); padding: 2px 10px; border-radius: 12px; border: 1px solid var(--border-color); font-size: 0.8rem; font-weight: 600; }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    header { background-color: rgba(10, 25, 47, 0.95); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px); }
+    .nav-container { max-w-width: 1250px; margin: auto; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-orange), #FF9E44); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: #0A192F; box-shadow: 0 0 15px rgba(255, 107, 0, 0.4); }
+    .logo-text h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--text-white); line-height: 1.1; }
+    .logo-text p { font-size: 0.75rem; color: var(--text-muted); }
+    nav ul { list-style: none; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+    nav ul li a { font-size: 0.92rem; font-weight: 500; color: var(--text-white); transition: color 0.2s; }
+    nav ul li a:hover { color: var(--accent-orange); }
+    .btn-login { border: 1px solid var(--accent-orange); color: var(--accent-orange) !important; padding: 7px 16px; border-radius: 6px; font-weight: 600; transition: all 0.2s; }
+    .btn-login:hover { background: var(--accent-orange); color: #fff !important; }
 
-    /* Top Bar */
-    .top-bar {
-      background: #061020;
-      border-bottom: 1px solid var(--border-color);
-      padding: 8px 5%;
-      font-size: 0.85rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      color: var(--text-muted);
-    }
+    .page-banner { background: linear-gradient(135deg, #061020, #112240); border-bottom: 1px solid var(--border-color); padding: 45px 5%; text-align: center; }
+    .page-banner h2 { font-size: 2.1rem; margin-bottom: 8px; }
+    .page-banner h2 span { color: var(--accent-orange); }
+    .page-banner p { color: var(--text-muted); max-width: 720px; margin: auto; font-size: 0.98rem; }
 
-    .top-bar span strong {
-      color: var(--accent-orange);
-    }
+    #partnerBanner { display: none; max-width: 920px; margin: 22px auto 0; background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ADE80; padding: 12px 20px; border-radius: 10px; font-size: 0.92rem; font-weight: 600; text-align: center; }
+    #partnerBanner.suspended-warning { background: rgba(239, 68, 68, 0.14); border: 1px solid rgba(239, 68, 68, 0.45); color: #F87171; }
 
-    .badge-pill {
-      background: rgba(255, 107, 0, 0.15);
-      color: var(--accent-orange);
-      padding: 2px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
+    .container { max-width: 920px; margin: auto; padding: 35px 5% 50px; }
+    .form-card { background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 35px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+    .section-header { color: var(--accent-orange); font-size: 1.2rem; margin-bottom: 18px; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #E2E8F0; }
+    .form-group label span.req { color: var(--accent-orange); }
+    .helper-text { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; }
 
-    /* Navbar */
-    header {
-      background-color: rgba(10, 25, 47, 0.95);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(8px);
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea, input[type="file"] {
+      width: 100%; padding: 12px 14px; background: var(--bg-light-navy); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: var(--text-white); font-size: 0.95rem; outline: none; transition: border-color 0.2s;
     }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent-orange); }
 
-    .nav-container {
-      max-width: 1250px;
-      margin: auto;
-      padding: 15px 5%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
+    .author-box { background: rgba(6, 16, 32, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 20px; margin-bottom: 18px; }
+    .author-box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-weight: 700; color: var(--accent-orange); font-size: 0.95rem; }
+    .btn-add { background: rgba(255, 107, 0, 0.15); color: var(--accent-orange); border: 1px solid var(--accent-orange); padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; }
+    .btn-add:hover { background: var(--accent-orange); color: #fff; }
+    .btn-remove { background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 4px 10px; border-radius: 5px; font-size: 0.8rem; cursor: pointer; }
+    .checkbox-row { display: flex; align-items: flex-start; gap: 10px; margin: 22px 0; font-size: 0.9rem; color: #CBD5E1; }
+    .checkbox-row input { margin-top: 4px; accent-color: var(--accent-orange); width: 18px; height: 18px; }
 
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .btn-submit { width: 100%; background: var(--accent-orange); color: #fff; border: none; padding: 15px; border-radius: 8px; font-size: 1.05rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(255, 107, 0, 0.35); transition: background 0.2s; }
+    .btn-submit:hover { background: var(--accent-orange-hover); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    .logo-icon {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 1.2rem;
-      color: #0A192F;
-      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
-    }
+    #successBox { display: none; background: rgba(34, 197, 94, 0.12); border: 1px solid #22C55E; border-radius: 12px; padding: 28px; text-align: center; margin-top: 25px; }
+    #successBox h3 { color: #4ADE80; font-size: 1.4rem; margin-bottom: 10px; }
+    .paper-id-badge { display: inline-block; background: #061020; border: 1px dashed var(--accent-orange); color: var(--accent-orange); font-size: 1.3rem; font-weight: 800; padding: 10px 22px; border-radius: 8px; margin: 12px 0; letter-spacing: 1px; }
 
-    .logo-text h1 {
-      font-size: 1.5rem;
-      letter-spacing: 1px;
-      color: var(--text-white);
-      line-height: 1.1;
-    }
-
-    .logo-text p {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    nav ul li a {
-      font-size: 0.92rem;
-      font-weight: 500;
-      color: var(--text-white);
-      transition: color 0.2s;
-    }
-
-    nav ul li a:hover {
-      color: var(--accent-orange);
-    }
-
-    .btn-login {
-      border: 1px solid var(--accent-orange);
-      color: var(--accent-orange) !important;
-      padding: 7px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-
-    .btn-login:hover {
-      background: var(--accent-orange);
-      color: #fff !important;
-    }
-
-    /* Page Banner */
-    .page-banner {
-      background: linear-gradient(135deg, #061020, #112240);
-      border-bottom: 1px solid var(--border-color);
-      padding: 45px 5%;
-      text-align: center;
-    }
-
-    .page-banner h2 {
-      font-size: 2.1rem;
-      margin-bottom: 8px;
-    }
-
-    .page-banner h2 span {
-      color: var(--accent-orange);
-    }
-
-    .page-banner p {
-      color: var(--text-muted);
-      max-width: 720px;
-      margin: auto;
-      font-size: 0.98rem;
-    }
-
-    /* Referral Status Banner */
-    #partnerBanner {
-      display: none;
-      max-width: 920px;
-      margin: 22px auto 0;
-      background: rgba(34, 197, 94, 0.12);
-      border: 1px solid rgba(34, 197, 94, 0.4);
-      color: #4ADE80;
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    #partnerBanner.suspended-warning {
-      background: rgba(239, 68, 68, 0.14);
-      border: 1px solid rgba(239, 68, 68, 0.45);
-      color: #F87171;
-    }
-
-    /* Form Container */
-    .container {
-      max-width: 920px;
-      margin: auto;
-      padding: 35px 5% 50px;
-    }
-
-    .form-card {
-      background: var(--bg-card);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 35px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .section-header {
-      color: var(--accent-orange);
-      font-size: 1.2rem;
-      margin-bottom: 18px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #E2E8F0;
-    }
-
-    .form-group label span.req {
-      color: var(--accent-orange);
-    }
-
-    .helper-text {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 5px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    select,
-    textarea,
-    input[type="file"] {
-      width: 100%;
-      padding: 12px 14px;
-      background: var(--bg-light-navy);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      color: var(--text-white);
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--accent-orange);
-    }
-
-    .author-box {
-      background: rgba(6, 16, 32, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 18px;
-    }
-
-    .author-box-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-      font-weight: 700;
-      color: var(--accent-orange);
-      font-size: 0.95rem;
-    }
-
-    .btn-add {
-      background: rgba(255, 107, 0, 0.15);
-      color: var(--accent-orange);
-      border: 1px solid var(--accent-orange);
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 0.88rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-add:hover {
-      background: var(--accent-orange);
-      color: #fff;
-    }
-
-    .btn-remove {
-      background: rgba(239, 68, 68, 0.15);
-      color: #F87171;
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      padding: 4px 10px;
-      border-radius: 5px;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-
-    .checkbox-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin: 22px 0;
-      font-size: 0.9rem;
-      color: #CBD5E1;
-    }
-
-    .checkbox-row input {
-      margin-top: 4px;
-      accent-color: var(--accent-orange);
-      width: 18px;
-      height: 18px;
-    }
-
-    .btn-submit {
-      width: 100%;
-      background: var(--accent-orange);
-      color: #fff;
-      border: none;
-      padding: 15px;
-      border-radius: 8px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(255, 107, 0, 0.35);
-      transition: background 0.2s;
-    }
-
-    .btn-submit:hover {
-      background: var(--accent-orange-hover);
-    }
-
-    .btn-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    /* Success Banner */
-    #successBox {
-      display: none;
-      background: rgba(34, 197, 94, 0.12);
-      border: 1px solid #22C55E;
-      border-radius: 12px;
-      padding: 28px;
-      text-align: center;
-      margin-top: 25px;
-    }
-
-    #successBox h3 {
-      color: #4ADE80;
-      font-size: 1.4rem;
-      margin-bottom: 10px;
-    }
-
-    .paper-id-badge {
-      display: inline-block;
-      background: #061020;
-      border: 1px dashed var(--accent-orange);
-      color: var(--accent-orange);
-      font-size: 1.3rem;
-      font-weight: 800;
-      padding: 10px 22px;
-      border-radius: 8px;
-      margin: 12px 0;
-      letter-spacing: 1px;
-    }
-
-    footer {
-      background: #061020;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 35px 5%;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      text-align: center;
-    }
-
-    @media (max-width: 700px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    footer { background: #061020; border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 35px 5%; color: var(--text-muted); font-size: 0.85rem; text-align: center; }
+    @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -442,19 +116,16 @@
 
   <div class="page-banner">
     <h2>Online <span>Manuscript Submission</span></h2>
-    <p>Upload your complete research paper in a single file. Our system automatically masks author identities before assigning your paper for Double-Blind Peer Review.</p>
+    <p>Upload your complete research paper in a single file. Our system automatically routes your paper to the Subject Peer Reviewer for Plagiarism & Double-Blind Peer Review.</p>
   </div>
 
-  <!-- Auto-Detected Campus Partner Referral Strip -->
   <div id="partnerBanner"></div>
 
   <div class="container">
     <div class="form-card">
       <form id="submissionForm">
-        <!-- Hidden field auto-populated from ?ref= URL parameter -->
         <input type="hidden" id="campusPartnerRef" name="campusPartnerRef" value="DIRECT" />
 
-        <!-- Step 1: Manuscript Details -->
         <div class="section-header">
           <span>1. Manuscript Details</span>
         </div>
@@ -508,14 +179,12 @@
           </div>
         </div>
 
-        <!-- Step 2: Authors Details (Max 5) -->
         <div class="section-header" style="margin-top: 32px;">
           <span>2. Author Details (Maximum 5 Authors Included in Standard APC)</span>
           <button type="button" class="btn-add" id="addAuthorBtn">+ Add Co-Author</button>
         </div>
 
         <div id="authorsContainer">
-          <!-- Primary / Corresponding Author -->
           <div class="author-box">
             <div class="author-box-header">
               <span>Author 1 (Corresponding Author)</span>
@@ -557,14 +226,13 @@
         <button type="submit" id="submitBtn" class="btn-submit">Submit Manuscript for Free Peer Review</button>
       </form>
 
-      <!-- Confirmation Output -->
       <div id="successBox">
-        <h3>✓ Manuscript Submitted Successfully!</h3>
-        <p style="color:#E2E8F0;">Your paper has been queued for Double-Blind Peer Review (author details will be masked automatically before reviewer assignment). Please save your unique Paper Tracking ID:</p>
+        <h3>✓ Manuscript Submitted & Routed to Peer Reviewer!</h3>
+        <p style="color:#E2E8F0;">Your paper has been automatically assigned to our subject peer review panel (author details masked for double-blind evaluation). Save your unique Paper Tracking ID:</p>
         <div class="paper-id-badge" id="generatedPaperId">IJMRST-2026-1001</div>
         <p id="refConfirmText" style="color:#4ADE80; font-size:0.88rem; font-weight:600;"></p>
         <p style="color:#94A3B8; font-size:0.9rem; margin-top:8px;">
-          Our editorial team will complete the screening and peer review within <strong>24 to 48 hours</strong> and notify the corresponding author via email/WhatsApp.
+          Our reviewer will verify plagiarism, formatting, and technical quality within <strong>24 to 48 hours</strong>.
         </p>
         <div style="margin-top:18px;">
           <a href="track-paper.html" class="btn-add">Track Paper Status →</a>
@@ -578,7 +246,7 @@
   </footer>
 
   <script>
-    // 1. Auto-capture & Live-Validate Campus Partner Referral from URL (?ref=PARTNER_CODE)
+    // 1. Validate Campus Partner Referral Code
     async function validateReferralCode(rawCode) {
       const banner = document.getElementById('partnerBanner');
       const refInput = document.getElementById('campusPartnerRef');
@@ -619,18 +287,15 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const refCode = urlParams.get('ref');
-    if (refCode) {
-      validateReferralCode(refCode);
-    }
+    if (refCode) validateReferralCode(refCode);
 
     // 2. Dynamic Co-Authors (Max 5)
     const authorsContainer = document.getElementById('authorsContainer');
     const addAuthorBtn = document.getElementById('addAuthorBtn');
     let authorCount = 1;
-    const maxAuthors = 5;
 
     addAuthorBtn.addEventListener('click', () => {
-      if (authorCount >= maxAuthors) {
+      if (authorCount >= 5) {
         alert('Maximum 5 authors are permitted per manuscript under the standard publication tier.');
         return;
       }
@@ -664,9 +329,7 @@
         </div>
       `;
       authorsContainer.appendChild(div);
-      if (authorCount === maxAuthors) {
-        addAuthorBtn.style.display = 'none';
-      }
+      if (authorCount === 5) addAuthorBtn.style.display = 'none';
     });
 
     function removeAuthor(btn) {
@@ -675,42 +338,89 @@
       addAuthorBtn.style.display = 'inline-block';
       const boxes = authorsContainer.querySelectorAll('.author-box');
       boxes.forEach((box, idx) => {
-        if (idx > 0) {
-          box.querySelector('.author-box-header span').textContent = `Author ${idx + 1} (Co-Author / Project Guide)`;
-        }
+        if (idx > 0) box.querySelector('.author-box-header span').textContent = `Author ${idx + 1} (Co-Author / Project Guide)`;
       });
     }
 
-    // 3. Handle Submission & Re-verify Partner Status before saving
+    // 3. Auto-Find Subject Reviewer by Branch/Track
+    async function findAutoReviewer(subjectTrack) {
+      const { data: reviewers } = await supabaseClient
+        .from('user_roles')
+        .select('full_name, email, assigned_track')
+        .eq('role', 'peer_reviewer')
+        .eq('is_active', true);
+
+      if (!reviewers || reviewers.length === 0) return null;
+
+      // Match exact branch/track or 'ALL'
+      const matched = reviewers.filter(r =>
+        (r.assigned_track || '').toLowerCase() === subjectTrack.toLowerCase() ||
+        (r.assigned_track || '').toUpperCase() === 'ALL'
+      );
+
+      const pool = matched.length > 0 ? matched : reviewers;
+      // Distribute evenly at random among matching subject reviewers
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    // 4. Send Notification Email to Assigned Reviewer (via FormSubmit silent webhook)
+    async function notifyReviewerByEmail(reviewer, paperDetails) {
+      if (!reviewer || !reviewer.email) return;
+      try {
+        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(reviewer.email)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            _subject: `[IJMRST New Paper Assigned] ${paperDetails.paper_id} - ${paperDetails.subject_track}`,
+            Reviewer_Name: reviewer.full_name,
+            Paper_ID: paperDetails.paper_id,
+            Subject_Track: paperDetails.subject_track,
+            Manuscript_Title: paperDetails.title,
+            Action_Required: 'Please login to IJMRST Editorial Dashboard (https://ijmrst.shrinandainfotech.com/login.html) within 24-48 hours to verify Plagiarism & complete Double-Blind Peer Review.'
+          })
+        });
+      } catch (err) {
+        console.warn('Email notification skipped:', err);
+      }
+    }
+
+    // 5. Handle Submission
     document.getElementById('submissionForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Verifying & Submitting Manuscript...';
+      submitBtn.textContent = 'Assigning Subject Reviewer & Submitting...';
 
-      // Re-check partner status right at submission time (blocks pre-copied suspended codes!)
       const currentRef = document.getElementById('campusPartnerRef').value;
       const verifiedRef = await validateReferralCode(currentRef);
 
       const randomNum = Math.floor(1000 + Math.random() * 9000);
       const paperId = `IJMRST-2026-${randomNum}`;
+      const selectedTrack = document.getElementById('subjectTrack').value;
 
       const authorNames = Array.from(document.getElementsByName('authorName[]')).map(i => i.value.trim());
       const authorEmails = Array.from(document.getElementsByName('authorEmail[]')).map(i => i.value.trim());
       const authorPhones = Array.from(document.getElementsByName('authorPhone[]')).map(i => i.value.trim());
 
+      // Auto-assign matching branch reviewer
+      const assignedReviewer = await findAutoReviewer(selectedTrack);
+
       const payload = {
         paper_id: paperId,
         title: document.getElementById('paperTitle').value.trim(),
-        subject_track: document.getElementById('subjectTrack').value,
+        subject_track: selectedTrack,
         article_type: document.getElementById('articleType').value,
         abstract: document.getElementById('abstract').value.trim(),
         keywords: document.getElementById('keywords').value.trim(),
         corresponding_email: authorEmails[0] || '',
+        authors: authorNames.join(', '),
         authors_info: authorNames.join(', '),
         phone: authorPhones[0] || '',
         referral_code: verifiedRef,
-        status: 'Submitted - Under Screening'
+        assigned_reviewer_email: assignedReviewer ? assignedReviewer.email : null,
+        assigned_reviewer_name: assignedReviewer ? assignedReviewer.full_name : 'Unassigned (Pending Reviewer)',
+        plagiarism_status: 'Pending Reviewer Check',
+        status: assignedReviewer ? 'Assigned to Reviewer (Plagiarism Check Pending)' : 'Submitted - Awaiting Reviewer'
       };
 
       const { error } = await supabaseClient.from('manuscripts').insert([payload]);
@@ -722,12 +432,14 @@
         return;
       }
 
+      // Send email alert to assigned reviewer
+      if (assignedReviewer) {
+        notifyReviewerByEmail(assignedReviewer, payload);
+      }
+
       document.getElementById('generatedPaperId').textContent = paperId;
       if (verifiedRef !== 'DIRECT') {
         document.getElementById('refConfirmText').textContent = `Linked to Verified Campus Partner Code: ${verifiedRef}`;
-      } else if (currentRef !== 'DIRECT') {
-        document.getElementById('refConfirmText').style.color = '#F87171';
-        document.getElementById('refConfirmText').textContent = `Submitted as Direct Author (Referral code ${currentRef} was suspended/inactive)`;
       }
 
       document.getElementById('submissionForm').style.display = 'none';
@@ -735,7 +447,6 @@
       window.scrollTo({ top: 150, behavior: 'smooth' });
     });
 
-    // युजर आधीच लॉगिन असल्यास "Portal Login" बटण थेट "Dashboard" मध्ये बदला
     document.addEventListener('DOMContentLoaded', () => {
       const cachedRole = localStorage.getItem('ijmrst_user_role');
       if (cachedRole) {
