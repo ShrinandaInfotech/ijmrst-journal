@@ -415,7 +415,8 @@
     }
 
     async function deleteManuscript(id) {
-      if (!confirm('Are you sure you want to permanently delete this manuscript?')) return;
+      const typed = prompt('To prevent accidental deletion, type DELETE to confirm removing this manuscript:');
+      if (typed !== 'DELETE') return;
       const { error } = await supabaseClient.from('manuscripts').delete().eq('id', id);
       if (error) alert(error.message);
       else loadManuscripts();
@@ -429,19 +430,25 @@
       const { data } = await supabaseClient.from('user_roles').select('*').order('created_at', { ascending: false });
       if (!data) return;
       cachedRoles = data;
-      document.getElementById('rolesTableBody').innerHTML = data.map(r => `
-        <tr class="hover:bg-[#142242]/60 transition">
-          <td class="p-4 font-semibold text-white">${r.full_name}</td>
-          <td class="p-4 text-slate-300">${r.email}</td>
-          <td class="p-4"><span class="px-2.5 py-0.5 rounded bg-orange-500/15 text-orange-400 border border-orange-500/30 text-xs font-semibold">${r.role}</span></td>
-          <td class="p-4 text-xs text-slate-300">${r.assigned_track}</td>
-          <td class="p-4 text-xs font-semibold ${r.is_active ? 'text-emerald-400' : 'text-red-400'}">${r.is_active ? 'Active' : 'Disabled'}</td>
-          <td class="p-4 text-right space-x-1.5 whitespace-nowrap">
-            <button onclick="openEditModal('user_roles', '${r.id}')" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border border-blue-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Edit</button>
-            <button onclick="deleteAdminRecord('user_roles', '${r.id}', '${r.full_name.replace(/'/g, "\\'")}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Delete</button>
-          </td>
-        </tr>
-      `).join('');
+      document.getElementById('rolesTableBody').innerHTML = data.map(r => {
+        const isProtectedAdmin = r.role === 'super_admin' || r.email === currentUserRole.email;
+        return `
+          <tr class="hover:bg-[#142242]/60 transition">
+            <td class="p-4 font-semibold text-white">${r.full_name}</td>
+            <td class="p-4 text-slate-300">${r.email}</td>
+            <td class="p-4"><span class="px-2.5 py-0.5 rounded bg-orange-500/15 text-orange-400 border border-orange-500/30 text-xs font-semibold">${r.role}</span></td>
+            <td class="p-4 text-xs text-slate-300">${r.assigned_track}</td>
+            <td class="p-4 text-xs font-semibold ${r.is_active ? 'text-emerald-400' : 'text-red-400'}">${r.is_active ? 'Active' : 'Disabled'}</td>
+            <td class="p-4 text-right space-x-1.5 whitespace-nowrap">
+              <button onclick="openEditModal('user_roles', '${r.id}')" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border border-blue-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Edit</button>
+              ${isProtectedAdmin
+                ? `<span class="inline-block px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-semibold">Protected</span>`
+                : `<button onclick="deleteAdminRecord('user_roles', '${r.id}', '${r.full_name.replace(/'/g, "\\'")}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Delete</button>`
+              }
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
     document.getElementById('addRoleForm')?.addEventListener('submit', async (e) => {
@@ -496,9 +503,18 @@
       `).join('');
     }
 
-    // UNIVERSAL DELETE FUNCTION (Cleans up user_roles too if a Campus Partner is deleted)
+    // UNIVERSAL DELETE FUNCTION (Protects Super Admin + Double Confirmation + Cleans user_roles for Partners)
     async function deleteAdminRecord(tableName, id, name) {
-      if (!confirm(`Are you sure you want to permanently delete "${name}"?`)) return;
+      if (tableName === 'user_roles') {
+        const targetUser = cachedRoles.find(x => String(x.id) === String(id));
+        if (targetUser && (targetUser.role === 'super_admin' || targetUser.email === currentUserRole.email)) {
+          alert('Action blocked: Super Admin account cannot be deleted!');
+          return;
+        }
+      }
+
+      const typed = prompt(`To permanently delete "${name}", type DELETE below:`);
+      if (typed !== 'DELETE') return;
 
       let partnerEmail = null;
       if (tableName === 'campus_partners') {
@@ -533,25 +549,27 @@
 
       if (tableName === 'user_roles') {
         const item = cachedRoles.find(x => String(x.id) === String(id));
+        const isSuperAdmin = item.role === 'super_admin' || item.email === currentUserRole.email;
         document.getElementById('editModalTitle').textContent = 'Edit Team Member / Role';
         container.innerHTML = `
           <div><label class="text-xs text-slate-400">Full Name</label>
             <input type="text" name="full_name" value="${item.full_name || ''}" required class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          ${isSuperAdmin ? `<input type="hidden" name="role" value="super_admin" /><input type="hidden" name="is_active" value="true" />` : `
           <div><label class="text-xs text-slate-400">Role</label>
             <select name="role" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
-              <option value="super_admin" ${item.role === 'super_admin' ? 'selected' : ''}>Super Admin</option>
               <option value="chief_editor" ${item.role === 'chief_editor' ? 'selected' : ''}>Chief Editor</option>
               <option value="associate_editor" ${item.role === 'associate_editor' ? 'selected' : ''}>Associate Editor</option>
               <option value="peer_reviewer" ${item.role === 'peer_reviewer' ? 'selected' : ''}>Peer Reviewer</option>
               <option value="campus_partner" ${item.role === 'campus_partner' ? 'selected' : ''}>Campus Partner</option>
-            </select></div>
+            </select></div>`}
           <div><label class="text-xs text-slate-400">Assigned Track</label>
             <input type="text" name="assigned_track" value="${item.assigned_track || 'ALL'}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          ${isSuperAdmin ? '' : `
           <div><label class="text-xs text-slate-400">Account Status</label>
             <select name="is_active" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
               <option value="true" ${item.is_active ? 'selected' : ''}>Active</option>
               <option value="false" ${!item.is_active ? 'selected' : ''}>Disabled</option>
-            </select></div>
+            </select></div>`}
         `;
       } else if (tableName === 'campus_partners') {
         const item = cachedPartners.find(x => String(x.id) === String(id));
