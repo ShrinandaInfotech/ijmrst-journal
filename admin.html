@@ -496,16 +496,31 @@
       `).join('');
     }
 
-    // UNIVERSAL DELETE FUNCTION
+    // UNIVERSAL DELETE FUNCTION (Cleans up user_roles too if a Campus Partner is deleted)
     async function deleteAdminRecord(tableName, id, name) {
       if (!confirm(`Are you sure you want to permanently delete "${name}"?`)) return;
+
+      let partnerEmail = null;
+      if (tableName === 'campus_partners') {
+        const partnerObj = cachedPartners.find(x => String(x.id) === String(id));
+        if (partnerObj) partnerEmail = partnerObj.email;
+      }
+
       const { error } = await supabaseClient.from(tableName).delete().eq('id', id);
       if (error) {
         alert('Delete failed: ' + error.message);
       } else {
-        alert(`"${name}" deleted successfully!`);
+        if (partnerEmail) {
+          await supabaseClient
+            .from('user_roles')
+            .delete()
+            .eq('email', partnerEmail)
+            .eq('role', 'campus_partner');
+        }
+
+        alert(`"${name}" deleted successfully! They can re-register anytime with the same email.`);
         if (tableName === 'user_roles') loadRoles();
-        if (tableName === 'campus_partners') loadPartners();
+        if (tableName === 'campus_partners') { loadPartners(); loadRoles(); }
         if (tableName === 'peer_reviewers') loadReviewers();
       }
     }
