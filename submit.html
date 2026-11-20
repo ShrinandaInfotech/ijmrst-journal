@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Submit Manuscript Online | IJMRST</title>
   <meta name="description" content="Submit your research paper online to IJMRST for double-blind peer review." />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <style>
     :root {
       --bg-dark: #0A192F;
@@ -173,7 +175,7 @@
       font-size: 0.98rem;
     }
 
-    /* Referral Active Banner */
+    /* Referral Status Banner */
     #partnerBanner {
       display: none;
       max-width: 920px;
@@ -186,6 +188,12 @@
       font-size: 0.92rem;
       font-weight: 600;
       text-align: center;
+    }
+
+    #partnerBanner.suspended-warning {
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #F87171;
     }
 
     /* Form Container */
@@ -346,6 +354,11 @@
 
     .btn-submit:hover {
       background: var(--accent-orange-hover);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     /* Success Banner */
@@ -541,7 +554,7 @@
           </label>
         </div>
 
-        <button type="submit" class="btn-submit">Submit Manuscript for Free Peer Review</button>
+        <button type="submit" id="submitBtn" class="btn-submit">Submit Manuscript for Free Peer Review</button>
       </form>
 
       <!-- Confirmation Output -->
@@ -565,15 +578,49 @@
   </footer>
 
   <script>
-    // 1. Auto-capture Campus Partner Referral from URL (?ref=PARTNER_CODE)
+    // 1. Auto-capture & Live-Validate Campus Partner Referral from URL (?ref=PARTNER_CODE)
+    async function validateReferralCode(rawCode) {
+      const banner = document.getElementById('partnerBanner');
+      const refInput = document.getElementById('campusPartnerRef');
+
+      if (!rawCode || rawCode.trim() === '' || rawCode.trim().toUpperCase() === 'DIRECT') {
+        refInput.value = 'DIRECT';
+        return 'DIRECT';
+      }
+
+      const cleanRef = rawCode.trim().toUpperCase();
+      const { data: partner, error } = await supabaseClient
+        .from('campus_partners')
+        .select('partner_code, status')
+        .eq('partner_code', cleanRef)
+        .maybeSingle();
+
+      banner.style.display = 'block';
+
+      if (error || !partner) {
+        banner.className = 'suspended-warning';
+        banner.textContent = `⚠ Referral code (${cleanRef}) is invalid or no longer active. Submitting as Direct Author.`;
+        refInput.value = 'DIRECT';
+        return 'DIRECT';
+      }
+
+      if ((partner.status || '').toLowerCase() === 'suspended') {
+        banner.className = 'suspended-warning';
+        banner.textContent = `⚠ Campus Partner Code (${cleanRef}) is currently SUSPENDED by Admin. Referral credit disabled; submitting as Direct Author.`;
+        refInput.value = 'DIRECT';
+        return 'DIRECT';
+      }
+
+      banner.className = '';
+      banner.textContent = `✓ Official Campus Partner Referral Link Active (${cleanRef})`;
+      refInput.value = cleanRef;
+      return cleanRef;
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const refCode = urlParams.get('ref');
-    if (refCode && refCode.trim() !== '') {
-      const cleanRef = refCode.trim().toUpperCase();
-      document.getElementById('campusPartnerRef').value = cleanRef;
-      const banner = document.getElementById('partnerBanner');
-      banner.style.display = 'block';
-      banner.textContent = `✓ Official Campus Partner Referral Link Active (${cleanRef})`;
+    if (refCode) {
+      validateReferralCode(refCode);
     }
 
     // 2. Dynamic Co-Authors (Max 5)
@@ -634,23 +681,54 @@
       });
     }
 
-    // 3. Handle Submission Preview
-    document.getElementById('submissionForm').addEventListener('submit', function(e) {
+    // 3. Handle Submission & Re-verify Partner Status before saving
+    document.getElementById('submissionForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Verifying & Submitting Manuscript...';
+
+      // Re-check partner status right at submission time (blocks pre-copied suspended codes!)
+      const currentRef = document.getElementById('campusPartnerRef').value;
+      const verifiedRef = await validateReferralCode(currentRef);
+
       const randomNum = Math.floor(1000 + Math.random() * 9000);
       const paperId = `IJMRST-2026-${randomNum}`;
-      const activeRef = document.getElementById('campusPartnerRef').value;
+
+      const authorNames = Array.from(document.getElementsByName('authorName[]')).map(i => i.value.trim());
+      const authorEmails = Array.from(document.getElementsByName('authorEmail[]')).map(i => i.value.trim());
+      const authorPhones = Array.from(document.getElementsByName('authorPhone[]')).map(i => i.value.trim());
+
+      const payload = {
+        paper_id: paperId,
+        title: document.getElementById('paperTitle').value.trim(),
+        subject_track: document.getElementById('subjectTrack').value,
+        corresponding_email: authorEmails[0] || '',
+        authors_info: authorNames.join(', '),
+        phone: authorPhones[0] || '',
+        referral_code: verifiedRef,
+        status: 'Submitted - Under Screening'
+      };
+
+      const { error } = await supabaseClient.from('manuscripts').insert([payload]);
+
+      if (error) {
+        console.warn('Database insert notice:', error.message);
+      }
 
       document.getElementById('generatedPaperId').textContent = paperId;
-      if (activeRef !== 'DIRECT') {
-        document.getElementById('refConfirmText').textContent = `Linked to Campus Partner Code: ${activeRef}`;
+      if (verifiedRef !== 'DIRECT') {
+        document.getElementById('refConfirmText').textContent = `Linked to Verified Campus Partner Code: ${verifiedRef}`;
+      } else if (currentRef !== 'DIRECT') {
+        document.getElementById('refConfirmText').style.color = '#F87171';
+        document.getElementById('refConfirmText').textContent = `Submitted as Direct Author (Referral code ${currentRef} was suspended/inactive)`;
       }
+
       document.getElementById('submissionForm').style.display = 'none';
       document.getElementById('successBox').style.display = 'block';
       window.scrollTo({ top: 150, behavior: 'smooth' });
     });
-  </script>
-<script>
+
     // युजर आधीच लॉगिन असल्यास "Portal Login" बटण थेट "Dashboard" मध्ये बदला
     document.addEventListener('DOMContentLoaded', () => {
       const cachedRole = localStorage.getItem('ijmrst_user_role');
