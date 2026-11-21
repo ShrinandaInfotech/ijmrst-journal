@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apply as Peer Reviewer | IJMRST</title>
   <meta name="description" content="Join the IJMRST Editorial and Double-Blind Peer-Review Board for a 1-year renewable term." />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <style>
     :root {
       --bg-dark: #0A192F;
@@ -202,6 +204,19 @@
       font-size: 0.95rem;
     }
 
+    #googleNotice {
+      display: none;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #4ADE80;
+      padding: 12px 18px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
     .form-card {
       background: var(--bg-card);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -249,6 +264,12 @@
       outline: none;
     }
 
+    input[readonly] {
+      opacity: 0.75;
+      cursor: not-allowed;
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+
     input:focus,
     select:focus {
       border-color: var(--accent-orange);
@@ -270,6 +291,11 @@
 
     .btn-submit:hover {
       background: var(--accent-orange-hover);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     #revSuccess {
@@ -356,16 +382,18 @@
       </div>
     </div>
 
+    <div id="googleNotice"></div>
+
     <div class="form-card">
       <form id="reviewerForm">
         <div class="form-grid">
           <div class="form-group" style="margin-bottom:0;">
             <label>Full Name (With Title: Dr. / Prof.) <span class="req">*</span></label>
-            <input type="text" placeholder="e.g., Dr. Amit K. Deshmukh" required />
+            <input type="text" id="revName" placeholder="e.g., Dr. Amit K. Deshmukh" required />
           </div>
           <div class="form-group" style="margin-bottom:0;">
             <label>Highest Qualification <span class="req">*</span></label>
-            <select required>
+            <select id="revQual" required>
               <option value="">-- Select Qualification --</option>
               <option value="Ph.D.">Ph.D. / Post-Doctoral</option>
               <option value="M.E. / M.Tech">M.E. / M.Tech</option>
@@ -378,55 +406,56 @@
         <div class="form-grid">
           <div class="form-group" style="margin-bottom:0;">
             <label>Current Designation <span class="req">*</span></label>
-            <input type="text" placeholder="e.g., Assistant Professor / Lecturer / HOD" required />
+            <input type="text" id="revDesig" placeholder="e.g., Assistant Professor / Lecturer / HOD" required />
           </div>
           <div class="form-group" style="margin-bottom:0;">
             <label>Teaching / Research Experience (Years) <span class="req">*</span></label>
-            <input type="number" min="1" max="50" placeholder="e.g., 6" required />
+            <input type="number" id="revExp" min="1" max="50" placeholder="e.g., 6" required />
           </div>
         </div>
 
         <div class="form-group">
           <label>College / University / Institution Name <span class="req">*</span></label>
-          <input type="text" placeholder="Enter full institution name and city" required />
+          <input type="text" id="revCollege" placeholder="Enter full institution name and city" required />
         </div>
 
         <div class="form-grid">
           <div class="form-group" style="margin-bottom:0;">
-            <label>Primary Review Domain <span class="req">*</span></label>
-            <select required>
+            <label>Primary Review Domain / Track <span class="req">*</span></label>
+            <select id="revDomain" required>
               <option value="">-- Select Domain --</option>
-              <option value="Computer Science, AI & IT">Computer Science, AI & IT</option>
-              <option value="Core Engineering (Mech/Civil/Elec)">Core Engineering (Mech / Civil / Electrical)</option>
+              <option value="Engineering & Polytechnic">Engineering & Polytechnic</option>
+              <option value="Computer Science, AI & Data Science">Computer Science, AI & Data Science</option>
               <option value="Pure & Applied Sciences">Pure & Applied Sciences</option>
               <option value="Education (B.Ed & M.Ed)">Education (B.Ed & M.Ed)</option>
               <option value="Commerce & Management">Commerce & Management</option>
+              <option value="Arts & Humanities">Arts & Humanities</option>
               <option value="Medical & Pharmacy">Medical & Pharmacy</option>
             </select>
           </div>
           <div class="form-group" style="margin-bottom:0;">
             <label>Upload Brief CV / Resume (.pdf) <span class="req">*</span></label>
-            <input type="file" accept=".pdf,.doc,.docx" required />
+            <input type="file" id="revCv" accept=".pdf,.doc,.docx" required />
           </div>
         </div>
 
         <div class="form-grid">
           <div class="form-group" style="margin-bottom:0;">
             <label>Official / Personal Email <span class="req">*</span></label>
-            <input type="email" placeholder="professor@college.edu.in" required />
+            <input type="email" id="revEmail" placeholder="professor@college.edu.in" required />
           </div>
           <div class="form-group" style="margin-bottom:0;">
             <label>WhatsApp / Mobile Number <span class="req">*</span></label>
-            <input type="tel" placeholder="+91 98XXXXXXXX" required />
+            <input type="tel" id="revPhone" placeholder="+91 98XXXXXXXX" required />
           </div>
         </div>
 
-        <button type="submit" class="btn-submit">Submit Reviewer Application</button>
+        <button type="submit" id="revSubmitBtn" class="btn-submit">Submit Reviewer Application</button>
       </form>
 
       <div id="revSuccess">
-        <h3>✓ Reviewer Application Received!</h3>
-        <p style="color:#E2E8F0;">Thank you for applying to the IJMRST Peer-Review Board. Our Editorial Office will verify your credentials and issue your Appointment Letter & Reviewer Portal login within 48 hours.</p>
+        <h3 id="revSuccessTitle">✓ Reviewer Application Received!</h3>
+        <p id="revSuccessMsg" style="color:#E2E8F0;">Thank you for applying to the IJMRST Peer-Review Board. Our Editorial Office will verify your credentials and activate your Reviewer Portal login within 24–48 hours.</p>
       </div>
     </div>
   </div>
@@ -436,10 +465,87 @@
   </footer>
 
   <script>
-    document.getElementById('reviewerForm').addEventListener('submit', function(e) {
+    // Auto-fill Name & Email if logged in via Google OAuth
+    async function checkGoogleSession() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session || !session.user) return;
+
+      const user = session.user;
+      const email = user.email;
+      const googleName = user.user_metadata?.full_name || user.user_metadata?.name || '';
+
+      const emailInput = document.getElementById('revEmail');
+      const nameInput = document.getElementById('revName');
+      const notice = document.getElementById('googleNotice');
+
+      if (email) {
+        emailInput.value = email;
+        emailInput.readOnly = true;
+      }
+      if (googleName && !nameInput.value) {
+        nameInput.value = googleName;
+      }
+
+      notice.style.display = 'block';
+      notice.textContent = `✓ Google Account Verified (${email}) — Name & Email auto-filled. Complete your academic details below.`;
+
+      // Check if user already applied
+      const { data: existing } = await supabaseClient
+        .from('peer_reviewers')
+        .select('*')
+        .eq('email', email)
+        .maybeSingle();
+
+      if (existing) {
+        document.getElementById('reviewerForm').style.display = 'none';
+        document.getElementById('revSuccess').style.display = 'block';
+        document.getElementById('revSuccessTitle').textContent = `Application Status: ${existing.status || 'Pending Verification'}`;
+        document.getElementById('revSuccessMsg').textContent =
+          existing.status === 'Approved'
+            ? 'Your Peer Reviewer account is APPROVED! Please Sign Out and login again via Portal Login to access your Reviewer Dashboard.'
+            : 'Your Peer Reviewer application is already submitted and currently under review by the Super Admin.';
+      }
+    }
+
+    document.getElementById('reviewerForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+      const btn = document.getElementById('revSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting Application...';
+
+      const payload = {
+        full_name: document.getElementById('revName').value.trim(),
+        qualification: `${document.getElementById('revQual').value} (${document.getElementById('revDesig').value.trim()}, ${document.getElementById('revExp').value} Yrs Exp)`,
+        institution: document.getElementById('revCollege').value.trim(),
+        specialization: document.getElementById('revDomain').value,
+        email: document.getElementById('revEmail').value.trim().toLowerCase(),
+        phone: document.getElementById('revPhone').value.trim(),
+        status: 'Pending'
+      };
+
+      const { error } = await supabaseClient.from('peer_reviewers').insert([payload]);
+
+      if (error) {
+        alert('Application failed: ' + error.message);
+        btn.disabled = false;
+        btn.textContent = 'Submit Reviewer Application';
+        return;
+      }
+
       document.getElementById('reviewerForm').style.display = 'none';
       document.getElementById('revSuccess').style.display = 'block';
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkGoogleSession();
+      const cachedRole = localStorage.getItem('ijmrst_user_role');
+      if (cachedRole) {
+        const targetUrl = cachedRole === 'campus_partner' ? 'partner-dashboard.html' : 'admin.html';
+        document.querySelectorAll('a[href="login.html"]').forEach(link => {
+          link.href = targetUrl;
+          link.textContent = 'Dashboard →';
+        });
+      }
     });
   </script>
 
