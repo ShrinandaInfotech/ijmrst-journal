@@ -330,10 +330,12 @@
         document.getElementById('reviewerForm').style.display = 'none';
         document.getElementById('revSuccess').style.display = 'block';
         document.getElementById('revSuccessTitle').textContent = `Application Status: ${existing.status || 'Pending Verification'}`;
-        document.getElementById('revSuccessMsg').textContent =
+        document.getElementById('revSuccessMsg').innerHTML =
           existing.status === 'Approved'
             ? 'Your Peer Reviewer account is APPROVED! Click Portal Login to access your Reviewer Dashboard.'
-            : 'Your CV & application have been received and are currently under Editorial verification.';
+            : existing.official_verified
+            ? 'Your Official Email is VERIFIED! Our Super Admin is reviewing your CV to activate your account.'
+            : `Action Required: Please open your Official Email (<strong>${existing.official_email}</strong>) and click the Accept/Confirm link sent to you.`;
       }
     }
 
@@ -348,7 +350,7 @@
       }
 
       btn.disabled = true;
-      btn.textContent = 'Uploading CV & Submitting...';
+      btn.textContent = 'Uploading CV & Sending Official Verification...';
 
       // 1. Upload CV to Supabase Storage
       const safeName = cvFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
@@ -371,8 +373,10 @@
       const cv_url = publicUrlData?.publicUrl || '';
       const loginEmail = document.getElementById('revEmail').value.trim().toLowerCase();
       const officialEmail = document.getElementById('revOfficialEmail').value.trim().toLowerCase();
+      const verificationToken = 'REV_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10).toUpperCase();
+      const verifyLink = `${window.location.origin}/verify-reviewer.html?token=${verificationToken}`;
 
-      // 2. Save Application + CV URL + Official Email in database
+      // 2. Save Application + CV URL + Official Email + Verification Token
       const payload = {
         full_name: document.getElementById('revName').value.trim(),
         qualification: document.getElementById('revQual').value,
@@ -384,6 +388,8 @@
         official_email: officialEmail,
         phone: document.getElementById('revPhone').value.trim(),
         cv_url: cv_url,
+        verification_token: verificationToken,
+        official_verified: false,
         status: 'Pending'
       };
 
@@ -396,23 +402,27 @@
         return;
       }
 
-      // 3. Send verification email to Official College Email via FormSubmit
+      // 3. Send clickable Accept/Confirm link to Official College Email
       try {
         await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(officialEmail)}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({
-            _subject: 'IJMRST Editorial Board — Official Email & Consent Verification',
+            _subject: 'Action Required: Confirm Your IJMRST Peer-Reviewer Appointment',
             Applicant_Name: payload.full_name,
             Institution: payload.institution,
             Domain: payload.specialization,
-            Message: 'We received your IJMRST Peer-Reviewer application listing this official institutional email. Please reply YES to confirm your consent if requested by our Editorial Office.'
+            Click_Here_To_Confirm_And_Accept: verifyLink,
+            Instructions: 'Please click the verification link above to confirm your official email and accept your role on the IJMRST Editorial Board.'
           })
         });
       } catch (mailErr) { /* silent fallback */ }
 
       document.getElementById('reviewerForm').style.display = 'none';
       document.getElementById('revSuccess').style.display = 'block';
+      document.getElementById('revSuccessTitle').textContent = '✓ Application Submitted — Official Email Verification Sent!';
+      document.getElementById('revSuccessMsg').innerHTML =
+        `We have sent a confirmation link to your official email <strong>${officialEmail}</strong>.<br/>Please open that email and click <strong>"Yes, I Confirm & Accept"</strong>. Once verified, the Super Admin will approve your account.`;
     });
 
     document.addEventListener('DOMContentLoaded', () => {
