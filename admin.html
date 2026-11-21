@@ -30,27 +30,29 @@
 
   <!-- Main Header Navigation -->
   <header class="bg-[#091124]/95 border-b border-slate-800/80 sticky top-0 z-40 backdrop-blur">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col xl:flex-row items-center justify-between gap-4">
-      <a href="index.html" class="flex items-center space-x-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center space-x-3 shrink-0">
         <div class="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center text-slate-950 font-extrabold text-lg shadow-md">IJ</div>
         <div>
           <div class="flex items-center gap-2">
             <span class="text-xl font-extrabold text-white tracking-tight leading-none">IJMRST</span>
-            <span id="roleBadge" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30">Verifying...</span>
+            <span id="roleBadge" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30 whitespace-nowrap">Verifying...</span>
           </div>
           <span class="block text-[11px] text-slate-400 mt-1">International Journal of Multidisciplinary Research in Science & Technology</span>
         </div>
       </a>
 
-      <nav class="flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-slate-300">
-        <a href="index.html" class="hover:text-orange-400 transition">Home</a>
-        <a href="index.html#aim-scope" class="hover:text-orange-400 transition">Aim & Scope</a>
-        <a href="editorial-board.html" class="hover:text-orange-400 transition">Editorial Board</a>
-        <a href="guidelines.html" class="hover:text-orange-400 transition">Author Guidelines</a>
-        <a href="archives.html" class="hover:text-orange-400 transition">Archives</a>
-        <a href="verify.html" class="hover:text-orange-400 transition">Verify Certificate</a>
-        <a href="admin.html" class="px-3.5 py-1.5 rounded-lg border border-orange-500 text-orange-400 bg-orange-500/10 font-semibold">Dashboard</a>
-        <button onclick="logoutUser()" class="bg-red-600/90 hover:bg-red-500 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition shadow">Sign Out</button>
+      <nav class="flex flex-wrap lg:flex-nowrap items-center justify-end gap-3 xl:gap-4 text-xs xl:text-sm font-medium text-slate-300">
+        <a href="index.html" class="hover:text-orange-400 transition whitespace-nowrap">Home</a>
+        <a href="index.html#aim-scope" class="hover:text-orange-400 transition whitespace-nowrap">Aim & Scope</a>
+        <a href="editorial-board.html" class="hover:text-orange-400 transition whitespace-nowrap">Editorial Board</a>
+        <a href="guidelines.html" class="hover:text-orange-400 transition whitespace-nowrap">Author Guidelines</a>
+        <a href="archives.html" class="hover:text-orange-400 transition whitespace-nowrap">Archives</a>
+        <a href="verify.html" class="hover:text-orange-400 transition whitespace-nowrap">Verify Certificate</a>
+        <div class="flex items-center gap-2 pl-1">
+          <a href="admin.html" class="px-3 py-1.5 rounded-lg border border-orange-500 text-orange-400 bg-orange-500/10 font-semibold whitespace-nowrap">Dashboard</a>
+          <button onclick="logoutUser()" class="bg-red-600/90 hover:bg-red-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition shadow whitespace-nowrap">Sign Out</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -107,30 +109,22 @@
       </button>
     </div>
 
-    <!-- TAB 1: MANUSCRIPTS -->
+    <!-- TAB 1: MANUSCRIPTS (CLEAN CARD QUEUE) -->
     <section id="section-manuscripts" class="tab-section space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <h2 class="text-lg font-bold text-white">Research Manuscripts & Peer Review Queue</h2>
-        <button onclick="loadManuscripts()" class="text-xs bg-[#0F1A34] border border-slate-700 text-slate-200 hover:border-orange-500 hover:text-orange-400 px-3.5 py-2 rounded-lg font-semibold transition">
+        <div>
+          <h2 class="text-lg font-bold text-white">Research Manuscripts & Peer Review Queue</h2>
+          <p class="text-xs text-slate-400">Verify plagiarism (<15%), assign or update peer-review decisions, and record editorial remarks.</p>
+        </div>
+        <button onclick="loadManuscripts()" class="text-xs bg-[#0F1A34] border border-slate-700 text-slate-200 hover:border-orange-500 hover:text-orange-400 px-3.5 py-2 rounded-lg font-semibold transition self-start sm:self-auto">
           ↻ Refresh List
         </button>
       </div>
 
-      <div class="bg-[#0F1A34] rounded-xl shadow-xl border border-slate-800 overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr class="bg-[#060B19] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
-              <th class="p-4">Paper ID & Track</th>
-              <th class="p-4">Title & Assigned Reviewer</th>
-              <th class="p-4">Plagiarism & Review Status</th>
-              <th class="p-4">Reviewer Remarks</th>
-              <th class="p-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="manuscriptsTableBody" class="divide-y divide-slate-800/80 text-sm">
-            <tr><td colspan="5" class="p-8 text-center text-slate-400">Loading manuscripts...</td></tr>
-          </tbody>
-        </table>
+      <div id="manuscriptsListContainer" class="space-y-4">
+        <div class="bg-[#0F1A34] rounded-xl border border-slate-800 p-8 text-center text-slate-400 text-sm">
+          Loading manuscripts...
+        </div>
       </div>
     </section>
 
@@ -140,7 +134,7 @@
         <h3 class="text-base font-bold text-orange-400 mb-1">Assign Role to Editor / Reviewer / Partner</h3>
         <p class="text-xs text-slate-400 mb-4">Note: Select exact Subject Track for Peer Reviewers so incoming papers auto-route to them.</p>
 
-        <form id="addRoleForm" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+        <form id="addRoleForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <input type="text" id="newRoleName" required placeholder="Full Name (e.g. Dr. A. Patil)"
             class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500" />
           <input type="email" id="newRoleEmail" required placeholder="Email ID"
@@ -161,7 +155,7 @@
             <option value="Arts & Humanities">Arts & Humanities</option>
             <option value="Medical & Pharmacy">Medical & Pharmacy</option>
           </select>
-          <button type="submit" class="sm:col-span-4 bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold py-2.5 rounded-lg text-sm transition shadow">
+          <button type="submit" class="sm:col-span-2 lg:col-span-4 bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold py-2.5 rounded-lg text-sm transition shadow">
             + Save User Role Permission
           </button>
         </form>
@@ -333,9 +327,9 @@
       activeBtn.className = 'tab-btn bg-orange-500 text-slate-950 px-4 py-2 rounded-lg text-sm font-bold transition shadow';
     }
 
-    // Load Manuscripts (Filtered automatically for Peer Reviewers!)
+    // Load Manuscripts in Clean, Structured Cards
     async function loadManuscripts() {
-      const tbody = document.getElementById('manuscriptsTableBody');
+      const container = document.getElementById('manuscriptsListContainer');
       let query = supabaseClient.from('manuscripts').select('*').order('created_at', { ascending: false });
 
       if (currentUserRole.role === 'peer_reviewer') {
@@ -345,16 +339,15 @@
       const { data, error } = await query;
 
       if (error) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-red-400">Error: ${error.message}</td></tr>`;
+        container.innerHTML = `<div class="bg-[#0F1A34] rounded-xl border border-red-500/40 p-6 text-red-400 text-sm">Error: ${error.message}</div>`;
         return;
       }
 
       if (!data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-400">No manuscripts currently assigned in your queue.</td></tr>`;
+        container.innerHTML = `<div class="bg-[#0F1A34] rounded-xl border border-slate-800 p-8 text-center text-slate-400 text-sm">No manuscripts currently assigned in your queue.</div>`;
         return;
       }
 
-      // Show notification banner if reviewer has pending plagiarism/review items
       const pendingCount = data.filter(m => (m.plagiarism_status || '').includes('Pending') || (m.status || '').includes('Pending')).length;
       if (pendingCount > 0 && currentUserRole.role === 'peer_reviewer') {
         document.getElementById('reviewerNotificationBanner').classList.remove('hidden');
@@ -364,24 +357,45 @@
 
       const activeReviewers = cachedRoles.filter(r => r.role === 'peer_reviewer' && r.is_active);
 
-      tbody.innerHTML = data.map(m => {
+      container.innerHTML = data.map(m => {
         const isReviewer = currentUserRole.role === 'peer_reviewer';
-        const authorBlock = isReviewer
-          ? '<span class="italic text-slate-500 text-xs">Author Identity Hidden (Double-Blind Review)</span>'
-          : `<div class="text-xs text-slate-400 mt-1">Author: ${m.authors || m.authors_info || '-'} (${m.corresponding_email || ''})</div>`;
+        const plagVal = m.plagiarism_status || 'Pending Reviewer Check';
+        const statusVal = m.status || 'Submitted - Awaiting Reviewer';
 
-        const reviewerAssignHtml = currentUserRole.role === 'super_admin'
-          ? `<div class="mt-2">
-               <label class="block text-[11px] text-slate-400 mb-0.5">Assigned Reviewer (Override):</label>
-               <select id="rev-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-orange-300 rounded px-2 py-1 text-xs">
+        const plagBadgeColor = plagVal.includes('Passed')
+          ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+          : plagVal.includes('High')
+          ? 'bg-red-500/15 text-red-400 border-red-500/30'
+          : 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+
+        const statusBadgeColor = statusVal.includes('Accepted') || statusVal.includes('Published')
+          ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+          : statusVal.includes('Rejected')
+          ? 'bg-red-500/15 text-red-400 border-red-500/30'
+          : 'bg-orange-500/15 text-orange-300 border-orange-500/30';
+
+        const authorBlock = isReviewer
+          ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded bg-slate-800 text-slate-400 text-xs italic">🔒 Author Identity Hidden (Double-Blind Review)</span>`
+          : `<div class="text-xs text-slate-400"><span class="text-slate-300 font-medium">Author:</span> ${m.authors || m.authors_info || '-'} (${m.corresponding_email || ''})</div>`;
+
+        const reviewerFieldHtml = currentUserRole.role === 'super_admin'
+          ? `<div>
+               <label class="block text-[11px] font-semibold text-slate-400 mb-1">Assigned Peer Reviewer</label>
+               <select id="rev-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-orange-300 rounded-lg px-3 py-2 text-xs font-medium outline-none focus:border-orange-500">
                  <option value="">-- Unassigned --</option>
                  ${activeReviewers.map(r => `<option value="${r.email}|${r.full_name}" ${m.assigned_reviewer_email === r.email ? 'selected' : ''}>${r.full_name} (${r.assigned_track})</option>`).join('')}
                </select>
              </div>`
-          : `<div class="text-xs text-emerald-400 mt-1">Reviewer: ${m.assigned_reviewer_name || currentUserRole.full_name}</div>`;
+          : `<div>
+               <label class="block text-[11px] font-semibold text-slate-400 mb-1">Assigned Peer Reviewer</label>
+               <div class="w-full bg-[#091124] border border-slate-800 text-emerald-400 rounded-lg px-3 py-2 text-xs font-semibold">
+                 ✓ ${m.assigned_reviewer_name || currentUserRole.full_name}
+               </div>
+             </div>`;
 
         const plagOptions = ['Pending Reviewer Check', 'Plagiarism Passed (<15%)', 'High Similarity (>15%) - Revision Needed'];
         const statusOptions = [
+          'Submitted - Awaiting Reviewer',
           'Assigned to Reviewer (Plagiarism Check Pending)',
           'Plagiarism Passed - Under Peer Review',
           'Revision Required',
@@ -392,48 +406,62 @@
         ];
 
         return `
-          <tr class="hover:bg-[#142242]/60 transition">
-            <td class="p-4 align-top">
-              <div class="font-bold text-orange-400">${m.paper_id}</div>
-              <div class="text-xs text-slate-400 mt-0.5">${m.subject_track}</div>
-              <div class="text-[11px] text-slate-500 mt-0.5">${m.article_type || ''}</div>
-            </td>
-            <td class="p-4 align-top max-w-xs">
-              <div class="font-semibold text-white">${m.title}</div>
+          <div class="bg-[#0F1A34] rounded-xl border border-slate-800 hover:border-slate-700/90 p-5 shadow-lg transition space-y-4">
+            <!-- Top Row: ID, Track, Status Pills & Action Buttons -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800/80 pb-3.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-sm font-extrabold text-orange-400 tracking-wide">${m.paper_id}</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-slate-800/90 text-slate-300 text-xs font-medium">${m.subject_track}</span>
+                ${m.article_type ? `<span class="px-2.5 py-0.5 rounded-md bg-slate-900 text-slate-400 text-[11px]">${m.article_type}</span>` : ''}
+                <span class="px-2.5 py-0.5 rounded-full border text-[11px] font-semibold ${plagBadgeColor}">${plagVal}</span>
+                <span class="px-2.5 py-0.5 rounded-full border text-[11px] font-semibold ${statusBadgeColor}">${statusVal}</span>
+              </div>
+
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="updateManuscript('${m.id}')"
+                  class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow">
+                  ✓ Save Review
+                </button>
+                ${currentUserRole.role === 'super_admin' ? `
+                  <button onclick="deleteManuscript('${m.id}')"
+                    class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-3 py-2 rounded-lg transition">
+                    Delete
+                  </button>` : ''}
+              </div>
+            </div>
+
+            <!-- Middle Row: Manuscript Title & Author -->
+            <div class="space-y-1.5">
+              <h3 class="text-base font-bold text-white leading-snug">${m.title}</h3>
               ${authorBlock}
-              ${reviewerAssignHtml}
-            </td>
-            <td class="p-4 align-top space-y-2">
+            </div>
+
+            <!-- Bottom Row: 4 Clean Controls Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+              ${reviewerFieldHtml}
+
               <div>
-                <label class="block text-[11px] text-slate-400 mb-0.5">1. Plagiarism Check (By Reviewer):</label>
-                <select id="plag-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-amber-300 rounded-lg px-2.5 py-1.5 text-xs font-medium outline-none">
-                  ${plagOptions.map(p => `<option value="${p}" ${(m.plagiarism_status || 'Pending Reviewer Check') === p ? 'selected' : ''}>${p}</option>`).join('')}
+                <label class="block text-[11px] font-semibold text-slate-400 mb-1">1. Plagiarism Check (By Reviewer)</label>
+                <select id="plag-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-amber-300 rounded-lg px-3 py-2 text-xs font-medium outline-none focus:border-orange-500">
+                  ${plagOptions.map(p => `<option value="${p}" ${plagVal === p ? 'selected' : ''}>${p}</option>`).join('')}
                 </select>
               </div>
+
               <div>
-                <label class="block text-[11px] text-slate-400 mb-0.5">2. Peer Review Decision:</label>
-                <select id="status-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium outline-none">
-                  <option value="${m.status}" selected>${m.status}</option>
-                  ${statusOptions.filter(s => s !== m.status).map(s => `<option value="${s}">${s}</option>`).join('')}
+                <label class="block text-[11px] font-semibold text-slate-400 mb-1">2. Peer Review Decision</label>
+                <select id="status-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-xs font-medium outline-none focus:border-orange-500">
+                  <option value="${statusVal}" selected>${statusVal}</option>
+                  ${statusOptions.filter(s => s !== statusVal).map(s => `<option value="${s}">${s}</option>`).join('')}
                 </select>
               </div>
-            </td>
-            <td class="p-4 align-top">
-              <textarea id="notes-${m.id}" rows="3" placeholder="Enter plagiarism % and peer review comments..."
-                class="w-full bg-[#091124] border border-slate-700 text-slate-200 rounded-lg p-2 text-xs focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500">${m.review_notes || ''}</textarea>
-            </td>
-            <td class="p-4 align-top text-right space-y-1.5">
-              <button onclick="updateManuscript('${m.id}')"
-                class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
-                Save Review
-              </button>
-              ${currentUserRole.role === 'super_admin' ? `
-                <button onclick="deleteManuscript('${m.id}')"
-                  class="block w-full bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-3 py-1 rounded-lg mt-1 transition">
-                  Delete
-                </button>` : ''}
-            </td>
-          </tr>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 mb-1">Reviewer Remarks / Similarity %</label>
+                <input type="text" id="notes-${m.id}" value="${(m.review_notes || '').replace(/"/g, '"')}" placeholder="e.g. Plagiarism 8%, Approved"
+                  class="w-full bg-[#091124] border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-orange-500 placeholder-slate-500" />
+              </div>
+            </div>
+          </div>
         `;
       }).join('');
     }
@@ -445,7 +473,6 @@
 
       const updates = { plagiarism_status, status, review_notes };
 
-      // Allow Super Admin to override assigned reviewer if needed
       const revSelect = document.getElementById(`rev-${id}`);
       if (revSelect) {
         if (revSelect.value) {
@@ -507,16 +534,17 @@
     document.getElementById('addRoleForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const full_name = document.getElementById('newRoleName').value.trim();
-      const email = document.getElementById('newRoleEmail').value.trim();
+      const email = document.getElementById('newRoleEmail').value.trim().toLowerCase();
       const role = document.getElementById('newRoleType').value;
       const assigned_track = document.getElementById('newRoleTrack').value;
 
-      const { error } = await supabaseClient.from('user_roles').insert([{ full_name, email, role, assigned_track }]);
+      const { error } = await supabaseClient.from('user_roles').insert([{ full_name, email, role, assigned_track, is_active: true }]);
       if (error) alert(error.message);
       else {
-        alert('Role assigned! Remember to also create their password in Supabase Authentication → Users.');
+        alert('Role assigned successfully!');
         e.target.reset();
-        loadRoles();
+        await loadRoles();
+        loadManuscripts();
       }
     });
 
@@ -545,11 +573,11 @@
       document.getElementById('reviewersTableBody').innerHTML = data.map(r => `
         <tr class="hover:bg-[#142242]/60 transition">
           <td class="p-4 font-semibold text-white">${r.full_name}<div class="text-xs text-slate-400">${r.institution || ''}</div></td>
-          <td class="p-4 text-xs text-slate-300">${r.qualification || ''} - ${r.specialization || ''}</td>
+          <td class="p-4 text-xs text-slate-300">${r.qualification || ''} — <span class="text-orange-300">${r.specialization || ''}</span></td>
           <td class="p-4 text-xs text-slate-300">${r.email || ''}<br/>${r.phone || ''}</td>
-          <td class="p-4 text-xs font-semibold text-orange-400">${r.status || 'Pending'}</td>
+          <td class="p-4 text-xs font-semibold ${r.status === 'Approved' ? 'text-emerald-400' : 'text-orange-400'}">${r.status || 'Pending'}</td>
           <td class="p-4 text-right space-x-1.5 whitespace-nowrap">
-            <button onclick="openEditModal('peer_reviewers', '${r.id}')" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border border-blue-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Edit</button>
+            <button onclick="openEditModal('peer_reviewers', '${r.id}')" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border border-blue-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Edit / Approve</button>
             <button onclick="deleteAdminRecord('peer_reviewers', '${r.id}', '${r.full_name.replace(/'/g, "\\'")}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Delete</button>
           </td>
         </tr>
@@ -582,7 +610,7 @@
           await supabaseClient.from('user_roles').delete().eq('email', partnerEmail).eq('role', 'campus_partner');
         }
         alert(`"${name}" deleted successfully!`);
-        if (tableName === 'user_roles') loadRoles();
+        if (tableName === 'user_roles') { await loadRoles(); loadManuscripts(); }
         if (tableName === 'campus_partners') { loadPartners(); loadRoles(); }
         if (tableName === 'peer_reviewers') loadReviewers();
       }
@@ -646,7 +674,7 @@
         `;
       } else if (tableName === 'peer_reviewers') {
         const item = cachedReviewers.find(x => String(x.id) === String(id));
-        document.getElementById('editModalTitle').textContent = 'Edit Reviewer Application';
+        document.getElementById('editModalTitle').textContent = 'Approve / Edit Reviewer Application';
         container.innerHTML = `
           <div><label class="text-xs text-slate-400">Full Name</label>
             <input type="text" name="full_name" value="${item.full_name || ''}" required class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
@@ -656,7 +684,7 @@
             <input type="text" name="qualification" value="${item.qualification || ''}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
           <div><label class="text-xs text-slate-400">Specialization / Domain</label>
             <input type="text" name="specialization" value="${item.specialization || ''}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
-          <div><label class="text-xs text-slate-400">Status</label>
+          <div><label class="text-xs text-slate-400">Application Status (Approved grants Peer Reviewer Login)</label>
             <select name="status" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
               <option value="Pending" ${item.status === 'Pending' ? 'selected' : ''}>Pending</option>
               <option value="Approved" ${item.status === 'Approved' ? 'selected' : ''}>Approved</option>
@@ -688,11 +716,25 @@
       if (error) {
         alert('Update failed: ' + error.message);
       } else {
+        // Auto-sync user_roles when Peer Reviewer is Approved!
+        if (tableName === 'peer_reviewers' && updates.status === 'Approved') {
+          const revObj = cachedReviewers.find(x => String(x.id) === String(id));
+          if (revObj && revObj.email) {
+            await supabaseClient.from('user_roles').upsert([{
+              full_name: updates.full_name || revObj.full_name,
+              email: revObj.email.toLowerCase(),
+              role: 'peer_reviewer',
+              assigned_track: updates.specialization || revObj.specialization || 'ALL',
+              is_active: true
+            }], { onConflict: 'email' });
+          }
+        }
+
         alert('Record updated successfully!');
         closeEditModal();
-        if (tableName === 'user_roles') loadRoles();
+        if (tableName === 'user_roles') { await loadRoles(); loadManuscripts(); }
         if (tableName === 'campus_partners') loadPartners();
-        if (tableName === 'peer_reviewers') loadReviewers();
+        if (tableName === 'peer_reviewers') { loadReviewers(); await loadRoles(); loadManuscripts(); }
       }
     });
 
