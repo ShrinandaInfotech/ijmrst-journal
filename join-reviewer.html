@@ -570,7 +570,9 @@
 
       const payload = {
         full_name: document.getElementById('revName').value.trim(),
-        qualification: `${document.getElementById('revQual').value} (${document.getElementById('revDesig').value.trim()}, ${document.getElementById('revExp').value} Yrs Exp)`,
+        qualification: document.getElementById('revQual').value,
+        designation: document.getElementById('revDesig').value.trim(),
+        experience: parseInt(document.getElementById('revExp').value, 10) || 1,
         institution: document.getElementById('revCollege').value.trim(),
         specialization: document.getElementById('revDomain').value,
         email: document.getElementById('revEmail').value.trim().toLowerCase(),
