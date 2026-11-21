@@ -288,6 +288,8 @@
   </footer>
 
   <script>
+    const APPS_SCRIPT_MAILER_URL = "https://script.google.com/macros/s/AKfycbwJPvKTVxBSJxWVxGUPn4MeydIGOs-LG5jNc69B6c1SdOT5Ee5EJvgLgpUrb1ydEUh0/exec";
+
     async function signInWithGoogleReviewer() {
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
@@ -335,7 +337,7 @@
             ? 'Your Peer Reviewer account is APPROVED! Click Portal Login to access your Reviewer Dashboard.'
             : existing.official_verified
             ? 'Your Official Email is VERIFIED! Our Super Admin is reviewing your CV to activate your account.'
-            : `Action Required: Please open your Official Email (<strong>${existing.official_email}</strong>) and click the Accept/Confirm link sent to you.`;
+            : `Action Required: Please open your Official Email (<strong>${existing.official_email}</strong>) and click <strong>"✓ Yes, I Accept & Confirm Consent"</strong>.`;
       }
     }
 
@@ -350,7 +352,7 @@
       }
 
       btn.disabled = true;
-      btn.textContent = 'Uploading CV & Sending Official Verification...';
+      btn.textContent = 'Uploading CV & Sending Official Invitation...';
 
       // 1. Upload CV to Supabase Storage
       const safeName = cvFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
@@ -374,7 +376,7 @@
       const loginEmail = document.getElementById('revEmail').value.trim().toLowerCase();
       const officialEmail = document.getElementById('revOfficialEmail').value.trim().toLowerCase();
       const verificationToken = 'REV_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10).toUpperCase();
-      const verifyLink = `${window.location.origin}/verify-reviewer.html?token=${verificationToken}`;
+      const acceptLink = `${window.location.origin}/verify-reviewer.html?token=${verificationToken}`;
 
       // 2. Save Application + CV URL + Official Email + Verification Token
       const payload = {
@@ -402,27 +404,29 @@
         return;
       }
 
-      // 3. Send clickable Accept/Confirm link to Official College Email
+      // 3. Send Official IJMRST Invitation & Consent Email via Google Apps Script
       try {
-        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(officialEmail)}`, {
+        await fetch(APPS_SCRIPT_MAILER_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
-            _subject: 'Action Required: Confirm Your IJMRST Peer-Reviewer Appointment',
-            Applicant_Name: payload.full_name,
-            Institution: payload.institution,
-            Domain: payload.specialization,
-            Click_Here_To_Confirm_And_Accept: verifyLink,
-            Instructions: 'Please click the verification link above to confirm your official email and accept your role on the IJMRST Editorial Board.'
+            to_email: officialEmail,
+            full_name: payload.full_name,
+            institution: payload.institution,
+            domain: payload.specialization,
+            accept_link: acceptLink
           })
         });
-      } catch (mailErr) { /* silent fallback */ }
+      } catch (mailErr) {
+        console.error('Invitation email error:', mailErr);
+      }
 
       document.getElementById('reviewerForm').style.display = 'none';
       document.getElementById('revSuccess').style.display = 'block';
-      document.getElementById('revSuccessTitle').textContent = '✓ Application Submitted — Official Email Verification Sent!';
+      document.getElementById('revSuccessTitle').textContent = '✓ Application Submitted — Official Invitation Email Sent!';
       document.getElementById('revSuccessMsg').innerHTML =
-        `We have sent a confirmation link to your official email <strong>${officialEmail}</strong>.<br/>Please open that email and click <strong>"Yes, I Confirm & Accept"</strong>. Once verified, the Super Admin will approve your account.`;
+        `We have sent an official invitation email to <strong>${officialEmail}</strong>.<br/>Please open that email and click <strong>"✓ Yes, I Accept & Confirm Consent"</strong>. Once accepted, the Super Admin's Approve button will unlock automatically.`;
     });
 
     document.addEventListener('DOMContentLoaded', () => {
