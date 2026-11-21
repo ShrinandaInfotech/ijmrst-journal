@@ -176,8 +176,8 @@
         Receive a digitally signed 1-year Editorial / Reviewer Appointment Letter for academic appraisal.
       </div>
       <div class="benefit-item">
-        <strong>QR Reviewer Certificates</strong>
-        Earn verified Peer-Reviewer Certificates for every manuscript evaluated.
+        <strong>QR Certificates & Honorarium</strong>
+        Earn verified Peer-Reviewer Certificates plus direct UPI honorarium per completed manuscript review.
       </div>
       <div class="benefit-item">
         <strong>Double-Blind Workflow</strong>
@@ -263,9 +263,15 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label>WhatsApp / Mobile Number <span class="req">*</span></label>
-          <input type="tel" id="revPhone" placeholder="+91 98XXXXXXXX" required />
+        <div class="form-grid">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>WhatsApp / Mobile Number <span class="req">*</span></label>
+            <input type="tel" id="revPhone" placeholder="+91 98XXXXXXXX" required />
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>UPI ID (For Reviewer Honorarium / Payout) <span class="req">*</span></label>
+            <input type="text" id="revUpi" placeholder="e.g., professor@okicici / 98XXXXXXXX@ybl" required />
+          </div>
         </div>
 
         <label class="consent-box">
@@ -378,7 +384,7 @@
       const verificationToken = 'REV_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10).toUpperCase();
       const acceptLink = `${window.location.origin}/verify-reviewer.html?token=${verificationToken}`;
 
-      // 2. Save Application + CV URL + Official Email + Verification Token
+      // 2. Save Application + CV URL + Official Email + UPI ID + Verification Token
       const payload = {
         full_name: document.getElementById('revName').value.trim(),
         qualification: document.getElementById('revQual').value,
@@ -389,6 +395,7 @@
         email: loginEmail,
         official_email: officialEmail,
         phone: document.getElementById('revPhone').value.trim(),
+        upi_id: document.getElementById('revUpi').value.trim(),
         cv_url: cv_url,
         verification_token: verificationToken,
         official_verified: false,
