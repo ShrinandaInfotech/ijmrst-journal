@@ -19,345 +19,116 @@
       --border-color: rgba(255, 107, 0, 0.25);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg-dark); color: var(--text-white); line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
 
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-white);
-      line-height: 1.6;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    /* Top Bar */
     .top-bar {
-      background: #061020;
-      border-bottom: 1px solid var(--border-color);
-      padding: 8px 5%;
-      font-size: 0.85rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      color: var(--text-muted);
+      background: #061020; border-bottom: 1px solid var(--border-color); padding: 8px 5%;
+      font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px; color: var(--text-muted);
     }
-
-    .top-bar span strong {
-      color: var(--accent-orange);
-    }
-
+    .top-bar span strong { color: var(--accent-orange); }
     .badge-pill {
-      background: rgba(255, 107, 0, 0.15);
-      color: var(--accent-orange);
-      padding: 2px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      font-size: 0.8rem;
-      font-weight: 600;
+      background: rgba(255, 107, 0, 0.15); color: var(--accent-orange); padding: 2px 10px;
+      border-radius: 12px; border: 1px solid var(--border-color); font-size: 0.8rem; font-weight: 600;
     }
 
-    /* Navbar */
     header {
-      background-color: rgba(10, 25, 47, 0.95);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(8px);
+      background-color: rgba(10, 25, 47, 0.95); position: sticky; top: 0; z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px);
     }
-
     .nav-container {
-      max-width: 1250px;
-      margin: auto;
-      padding: 15px 5%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
+      max-width: 1250px; margin: auto; padding: 15px 5%; display: flex;
+      justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
     }
-
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
+    .logo-area { display: flex; align-items: center; gap: 12px; }
     .logo-icon {
-      width: 44px;
-      height: 44px;
-      background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 1.2rem;
-      color: #0A192F;
-      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+      width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-orange), #FF9E44);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 1.2rem; color: #0A192F; box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
     }
-
-    .logo-text h1 {
-      font-size: 1.5rem;
-      letter-spacing: 1px;
-      color: var(--text-white);
-      line-height: 1.1;
-    }
-
-    .logo-text p {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    nav ul li a {
-      font-size: 0.92rem;
-      font-weight: 500;
-      color: var(--text-white);
-      transition: color 0.2s;
-    }
-
-    nav ul li a:hover {
-      color: var(--accent-orange);
-    }
-
+    .logo-text h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--text-white); line-height: 1.1; }
+    .logo-text p { font-size: 0.75rem; color: var(--text-muted); }
+    nav ul { list-style: none; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+    nav ul li a { font-size: 0.92rem; font-weight: 500; color: var(--text-white); transition: color 0.2s; }
+    nav ul li a:hover { color: var(--accent-orange); }
     .btn-login {
-      border: 1px solid var(--accent-orange);
-      color: var(--accent-orange) !important;
-      padding: 7px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      transition: all 0.2s;
+      border: 1px solid var(--accent-orange); color: var(--accent-orange) !important;
+      padding: 7px 16px; border-radius: 6px; font-weight: 600; transition: all 0.2s;
     }
+    .btn-login:hover { background: var(--accent-orange); color: #fff !important; }
 
-    .btn-login:hover {
-      background: var(--accent-orange);
-      color: #fff !important;
-    }
-
-    /* Banner */
     .page-banner {
-      background: linear-gradient(135deg, #061020, #112240);
-      border-bottom: 1px solid var(--border-color);
-      padding: 45px 5%;
-      text-align: center;
+      background: linear-gradient(135deg, #061020, #112240); border-bottom: 1px solid var(--border-color);
+      padding: 45px 5%; text-align: center;
     }
+    .page-banner h2 { font-size: 2.1rem; margin-bottom: 8px; }
+    .page-banner h2 span { color: var(--accent-orange); }
+    .page-banner p { color: var(--text-muted); max-width: 720px; margin: auto; font-size: 0.98rem; }
 
-    .page-banner h2 {
-      font-size: 2.1rem;
-      margin-bottom: 8px;
-    }
+    .container { max-width: 880px; margin: auto; padding: 45px 5%; }
+    .benefits-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .benefit-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; font-size: 0.88rem; }
+    .benefit-item strong { display: block; color: var(--accent-orange); margin-bottom: 4px; font-size: 0.95rem; }
 
-    .page-banner h2 span {
-      color: var(--accent-orange);
-    }
-
-    .page-banner p {
-      color: var(--text-muted);
-      max-width: 720px;
-      margin: auto;
-      font-size: 0.98rem;
-    }
-
-    /* Container */
-    .container {
-      max-width: 880px;
-      margin: auto;
-      padding: 45px 5%;
-    }
-
-    .benefits-strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    .benefit-item {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 16px;
-      font-size: 0.88rem;
-    }
-
-    .benefit-item strong {
-      display: block;
-      color: var(--accent-orange);
-      margin-bottom: 4px;
-      font-size: 0.95rem;
-    }
-
-    /* Google Quick Fill Box */
     .google-box {
-      background: #061020;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
-      padding: 18px;
-      text-align: center;
-      margin-bottom: 24px;
+      background: #061020; border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px; padding: 18px; text-align: center; margin-bottom: 24px;
     }
-
     .btn-google {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: #ffffff;
-      color: #0f172a;
-      border: none;
-      padding: 11px 22px;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-      transition: transform 0.15s, background 0.2s;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      background: #ffffff; color: #0f172a; border: none; padding: 11px 22px;
+      border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer;
     }
-
-    .btn-google:hover {
-      background: #f1f5f9;
-      transform: translateY(-1px);
-    }
-
     #googleNotice {
-      display: none;
-      background: rgba(34, 197, 94, 0.12);
-      border: 1px solid rgba(34, 197, 94, 0.4);
-      color: #4ADE80;
-      padding: 12px 18px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-align: center;
+      display: none; background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #4ADE80; padding: 12px 18px; border-radius: 10px; margin-bottom: 20px;
+      font-size: 0.9rem; font-weight: 600; text-align: center;
     }
 
     .form-card {
-      background: var(--bg-card);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 34px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px; padding: 34px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #E2E8F0; }
+    .req { color: var(--accent-orange); }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-bottom: 18px;
+    input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select, input[type="file"] {
+      width: 100%; padding: 12px 14px; background: var(--bg-light-navy);
+      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px;
+      color: var(--text-white); font-size: 0.95rem; outline: none;
     }
+    input[readonly] { opacity: 0.78; cursor: not-allowed; border-color: rgba(34, 197, 94, 0.45); }
+    input:focus, select:focus { border-color: var(--accent-orange); }
 
-    .form-group {
-      margin-bottom: 18px;
+    .consent-box {
+      background: rgba(255, 107, 0, 0.08); border: 1px solid rgba(255, 107, 0, 0.3);
+      border-radius: 8px; padding: 12px 14px; margin-bottom: 18px;
+      display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; color: #CBD5E1;
     }
-
-    .form-group label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #E2E8F0;
-    }
-
-    .req {
-      color: var(--accent-orange);
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="number"],
-    select,
-    input[type="file"] {
-      width: 100%;
-      padding: 12px 14px;
-      background: var(--bg-light-navy);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      color: var(--text-white);
-      font-size: 0.95rem;
-      outline: none;
-    }
-
-    input[readonly] {
-      opacity: 0.78;
-      cursor: not-allowed;
-      border-color: rgba(34, 197, 94, 0.45);
-    }
-
-    input:focus,
-    select:focus {
-      border-color: var(--accent-orange);
-    }
+    .consent-box input { margin-top: 4px; accent-color: var(--accent-orange); }
 
     .btn-submit {
-      width: 100%;
-      background: var(--accent-orange);
-      color: #fff;
-      border: none;
-      padding: 14px;
-      border-radius: 8px;
-      font-size: 1.02rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 18px rgba(255, 107, 0, 0.35);
-      transition: background 0.2s;
+      width: 100%; background: var(--accent-orange); color: #fff; border: none;
+      padding: 14px; border-radius: 8px; font-size: 1.02rem; font-weight: 700;
+      cursor: pointer; box-shadow: 0 4px 18px rgba(255, 107, 0, 0.35);
     }
-
-    .btn-submit:hover {
-      background: var(--accent-orange-hover);
-    }
-
-    .btn-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
     #revSuccess {
-      display: none;
-      background: rgba(34, 197, 94, 0.12);
-      border: 1px solid #22C55E;
-      border-radius: 12px;
-      padding: 26px;
-      text-align: center;
+      display: none; background: rgba(34, 197, 94, 0.12); border: 1px solid #22C55E;
+      border-radius: 12px; padding: 26px; text-align: center;
     }
-
-    #revSuccess h3 {
-      color: #4ADE80;
-      margin-bottom: 8px;
-    }
+    #revSuccess h3 { color: #4ADE80; margin-bottom: 8px; }
 
     footer {
-      background: #061020;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 35px 5%;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      text-align: center;
+      background: #061020; border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 35px 5%; color: var(--text-muted); font-size: 0.85rem; text-align: center;
     }
-
-    @media (max-width: 680px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media (max-width: 680px) { .form-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -414,7 +185,6 @@
       </div>
     </div>
 
-    <!-- Direct Google Auto-Fill Box -->
     <div id="googleQuickBox" class="google-box">
       <p style="font-size:0.86rem; color:#94A3B8; margin-bottom:10px;">
         Verify your Google Account first to auto-fill your Name & Email for instant Reviewer Portal access after approval:
@@ -477,28 +247,38 @@
             </select>
           </div>
           <div class="form-group" style="margin-bottom:0;">
-            <label>Upload Brief CV / Resume (.pdf) <span class="req">*</span></label>
+            <label>Upload Updated CV / Resume + Faculty ID (.pdf/.docx) <span class="req">*</span></label>
             <input type="file" id="revCv" accept=".pdf,.doc,.docx" required />
           </div>
         </div>
 
         <div class="form-grid">
           <div class="form-group" style="margin-bottom:0;">
-            <label>Official / Personal Email <span class="req">*</span></label>
-            <input type="email" id="revEmail" placeholder="professor@college.edu.in" required />
+            <label>Portal Login Email (Google Verified) <span class="req">*</span></label>
+            <input type="email" id="revEmail" placeholder="professor@gmail.com" required />
           </div>
           <div class="form-group" style="margin-bottom:0;">
-            <label>WhatsApp / Mobile Number <span class="req">*</span></label>
-            <input type="tel" id="revPhone" placeholder="+91 98XXXXXXXX" required />
+            <label>Official College / Institutional Email <span class="req">*</span></label>
+            <input type="email" id="revOfficialEmail" placeholder="name@college.edu.in" required />
           </div>
         </div>
 
-        <button type="submit" id="revSubmitBtn" class="btn-submit">Submit Reviewer Application</button>
+        <div class="form-group">
+          <label>WhatsApp / Mobile Number <span class="req">*</span></label>
+          <input type="tel" id="revPhone" placeholder="+91 98XXXXXXXX" required />
+        </div>
+
+        <label class="consent-box">
+          <input type="checkbox" id="revConsent" required />
+          <span>I hereby give my official consent to serve on the IJMRST Peer-Review Board, confirm that my attached CV & institutional email are authentic, and agree to uphold Double-Blind peer-review ethics.</span>
+        </label>
+
+        <button type="submit" id="revSubmitBtn" class="btn-submit">Upload CV & Submit Reviewer Application</button>
       </form>
 
       <div id="revSuccess">
-        <h3 id="revSuccessTitle">✓ Reviewer Application Received!</h3>
-        <p id="revSuccessMsg" style="color:#E2E8F0;">Thank you for applying to the IJMRST Peer-Review Board. Our Editorial Office will verify your credentials and activate your Reviewer Portal login within 24–48 hours.</p>
+        <h3 id="revSuccessTitle">✓ Reviewer Application & CV Uploaded!</h3>
+        <p id="revSuccessMsg" style="color:#E2E8F0;">Thank you for applying. Our Editorial Office will verify your uploaded CV and official institutional email before activating your Reviewer Portal login.</p>
       </div>
     </div>
   </div>
@@ -508,18 +288,14 @@
   </footer>
 
   <script>
-    // Trigger Google Login right on this page
     async function signInWithGoogleReviewer() {
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: window.location.origin + '/join-reviewer.html'
-        }
+        options: { redirectTo: window.location.origin + '/join-reviewer.html' }
       });
       if (error) alert('Google Sign-In Error: ' + error.message);
     }
 
-    // Auto-fill Name & Email if logged in via Google OAuth
     async function checkGoogleSession() {
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (!session || !session.user) return;
@@ -542,9 +318,8 @@
 
       document.getElementById('googleQuickBox').style.display = 'none';
       notice.style.display = 'block';
-      notice.textContent = `✓ Google Account Verified (${email}) — Name & Email auto-filled. Complete your academic details below.`;
+      notice.textContent = `✓ Google Account Verified (${email}) — Name & Email auto-filled. Please upload your CV and provide your official college email below.`;
 
-      // Check if user already applied
       const { data: existing } = await supabaseClient
         .from('peer_reviewers')
         .select('*')
@@ -558,25 +333,57 @@
         document.getElementById('revSuccessMsg').textContent =
           existing.status === 'Approved'
             ? 'Your Peer Reviewer account is APPROVED! Click Portal Login to access your Reviewer Dashboard.'
-            : 'Your Peer Reviewer application is already submitted and currently under review by the Super Admin.';
+            : 'Your CV & application have been received and are currently under Editorial verification.';
       }
     }
 
     document.getElementById('reviewerForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const btn = document.getElementById('revSubmitBtn');
-      btn.disabled = true;
-      btn.textContent = 'Submitting Application...';
+      const cvFile = document.getElementById('revCv').files[0];
 
+      if (!cvFile) {
+        alert('Please upload your CV / Resume file.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Uploading CV & Submitting...';
+
+      // 1. Upload CV to Supabase Storage
+      const safeName = cvFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const filePath = `cv_${Date.now()}_${safeName}`;
+      const { error: uploadError } = await supabaseClient.storage
+        .from('reviewer-docs')
+        .upload(filePath, cvFile);
+
+      if (uploadError) {
+        alert('CV Upload failed: ' + uploadError.message);
+        btn.disabled = false;
+        btn.textContent = 'Upload CV & Submit Reviewer Application';
+        return;
+      }
+
+      const { data: publicUrlData } = supabaseClient.storage
+        .from('reviewer-docs')
+        .getPublicUrl(filePath);
+
+      const cv_url = publicUrlData?.publicUrl || '';
+      const loginEmail = document.getElementById('revEmail').value.trim().toLowerCase();
+      const officialEmail = document.getElementById('revOfficialEmail').value.trim().toLowerCase();
+
+      // 2. Save Application + CV URL + Official Email in database
       const payload = {
         full_name: document.getElementById('revName').value.trim(),
         qualification: document.getElementById('revQual').value,
         designation: document.getElementById('revDesig').value.trim(),
-        experience: parseInt(document.getElementById('revExp').value, 10) || 1,
+        experience_years: parseInt(document.getElementById('revExp').value, 10) || 1,
         institution: document.getElementById('revCollege').value.trim(),
         specialization: document.getElementById('revDomain').value,
-        email: document.getElementById('revEmail').value.trim().toLowerCase(),
+        email: loginEmail,
+        official_email: officialEmail,
         phone: document.getElementById('revPhone').value.trim(),
+        cv_url: cv_url,
         status: 'Pending'
       };
 
@@ -585,9 +392,24 @@
       if (error) {
         alert('Application failed: ' + error.message);
         btn.disabled = false;
-        btn.textContent = 'Submit Reviewer Application';
+        btn.textContent = 'Upload CV & Submit Reviewer Application';
         return;
       }
+
+      // 3. Send verification email to Official College Email via FormSubmit
+      try {
+        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(officialEmail)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            _subject: 'IJMRST Editorial Board — Official Email & Consent Verification',
+            Applicant_Name: payload.full_name,
+            Institution: payload.institution,
+            Domain: payload.specialization,
+            Message: 'We received your IJMRST Peer-Reviewer application listing this official institutional email. Please reply YES to confirm your consent if requested by our Editorial Office.'
+          })
+        });
+      } catch (mailErr) { /* silent fallback */ }
 
       document.getElementById('reviewerForm').style.display = 'none';
       document.getElementById('revSuccess').style.display = 'block';
