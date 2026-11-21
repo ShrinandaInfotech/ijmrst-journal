@@ -3,460 +3,891 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Submit Manuscript Online | IJMRST</title>
-  <meta name="description" content="Submit your research paper online to IJMRST for double-blind peer review." />
+  <title>Editorial & Admin Dashboard | IJMRST - International Journal of Multidisciplinary Research in Science & Technology</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-dark: #0A192F;
-      --bg-card: #112240;
-      --bg-light-navy: #1D2D50;
-      --accent-orange: #FF6B00;
-      --accent-orange-hover: #E65C00;
-      --text-white: #F8FAFC;
-      --text-muted: #94A3B8;
-      --border-color: rgba(255, 107, 0, 0.25);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg-dark); color: var(--text-white); line-height: 1.6; }
-    a { text-decoration: none; color: inherit; }
-
-    .top-bar { background: #061020; border-bottom: 1px solid var(--border-color); padding: 8px 5%; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; color: var(--text-muted); }
-    .top-bar span strong { color: var(--accent-orange); }
-    .badge-pill { background: rgba(255, 107, 0, 0.15); color: var(--accent-orange); padding: 2px 10px; border-radius: 12px; border: 1px solid var(--border-color); font-size: 0.8rem; font-weight: 600; }
-
-    header { background-color: rgba(10, 25, 47, 0.95); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px); }
-    .nav-container { max-width: 1250px; margin: auto; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
-    .logo-area { display: flex; align-items: center; gap: 12px; }
-    .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-orange), #FF9E44); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: #0A192F; box-shadow: 0 0 15px rgba(255, 107, 0, 0.4); }
-    .logo-text h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--text-white); line-height: 1.1; }
-    .logo-text p { font-size: 0.75rem; color: var(--text-muted); }
-    nav ul { list-style: none; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-    nav ul li a { font-size: 0.92rem; font-weight: 500; color: var(--text-white); transition: color 0.2s; }
-    nav ul li a:hover { color: var(--accent-orange); }
-    .btn-login { border: 1px solid var(--accent-orange); color: var(--accent-orange) !important; padding: 7px 16px; border-radius: 6px; font-weight: 600; transition: all 0.2s; }
-    .btn-login:hover { background: var(--accent-orange); color: #fff !important; }
-
-    .page-banner { background: linear-gradient(135deg, #061020, #112240); border-bottom: 1px solid var(--border-color); padding: 45px 5%; text-align: center; }
-    .page-banner h2 { font-size: 2.1rem; margin-bottom: 8px; }
-    .page-banner h2 span { color: var(--accent-orange); }
-    .page-banner p { color: var(--text-muted); max-width: 720px; margin: auto; font-size: 0.98rem; }
-
-    #partnerBanner { display: none; max-width: 920px; margin: 22px auto 0; background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.4); color: #4ADE80; padding: 12px 20px; border-radius: 10px; font-size: 0.92rem; font-weight: 600; text-align: center; }
-    #partnerBanner.suspended-warning { background: rgba(239, 68, 68, 0.14); border: 1px solid rgba(239, 68, 68, 0.45); color: #F87171; }
-
-    .container { max-width: 920px; margin: auto; padding: 35px 5% 50px; }
-    .form-card { background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 35px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
-    .section-header { color: var(--accent-orange); font-size: 1.2rem; margin-bottom: 18px; padding-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
-    .form-group { margin-bottom: 18px; }
-    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #E2E8F0; }
-    .form-group label span.req { color: var(--accent-orange); }
-    .helper-text { display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; }
-
-    input[type="text"], input[type="email"], input[type="tel"], select, textarea, input[type="file"] {
-      width: 100%; padding: 12px 14px; background: var(--bg-light-navy); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: var(--text-white); font-size: 0.95rem; outline: none; transition: border-color 0.2s;
-    }
-    input:focus, select:focus, textarea:focus { border-color: var(--accent-orange); }
-
-    .author-box { background: rgba(6, 16, 32, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 20px; margin-bottom: 18px; }
-    .author-box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-weight: 700; color: var(--accent-orange); font-size: 0.95rem; }
-    .btn-add { background: rgba(255, 107, 0, 0.15); color: var(--accent-orange); border: 1px solid var(--accent-orange); padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 0.88rem; cursor: pointer; transition: all 0.2s; }
-    .btn-add:hover { background: var(--accent-orange); color: #fff; }
-    .btn-remove { background: rgba(239, 68, 68, 0.15); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 4px 10px; border-radius: 5px; font-size: 0.8rem; cursor: pointer; }
-    .checkbox-row { display: flex; align-items: flex-start; gap: 10px; margin: 22px 0; font-size: 0.9rem; color: #CBD5E1; }
-    .checkbox-row input { margin-top: 4px; accent-color: var(--accent-orange); width: 18px; height: 18px; }
-
-    .btn-submit { width: 100%; background: var(--accent-orange); color: #fff; border: none; padding: 15px; border-radius: 8px; font-size: 1.05rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(255, 107, 0, 0.35); transition: background 0.2s; }
-    .btn-submit:hover { background: var(--accent-orange-hover); }
-    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    #successBox { display: none; background: rgba(34, 197, 94, 0.12); border: 1px solid #22C55E; border-radius: 12px; padding: 28px; text-align: center; margin-top: 25px; }
-    #successBox h3 { color: #4ADE80; font-size: 1.4rem; margin-bottom: 10px; }
-    .paper-id-badge { display: inline-block; background: #061020; border: 1px dashed var(--accent-orange); color: var(--accent-orange); font-size: 1.3rem; font-weight: 800; padding: 10px 22px; border-radius: 8px; margin: 12px 0; letter-spacing: 1px; }
-
-    footer { background: #061020; border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 35px 5%; color: var(--text-muted); font-size: 0.85rem; text-align: center; }
-    @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+    body { font-family: 'Inter', sans-serif; background-color: #091124; color: #f8fafc; }
   </style>
 </head>
-<body>
+<body class="bg-[#091124] min-h-screen text-slate-200 flex flex-col">
 
-  <div class="top-bar">
-    <span>Publisher: <strong>Shrinanda Infotech</strong> | Email: <strong>ijmrst@shrinandainfotech.com</strong></span>
-    <div>
-      <span class="badge-pill">Free Submission (₹0)</span>
-      <span class="badge-pill">24–48 Hr Double-Blind Review</span>
-    </div>
-  </div>
-
-  <header>
-    <div class="nav-container">
-      <a href="index.html" class="logo-area">
-        <div class="logo-icon">IJ</div>
-        <div class="logo-text">
-          <h1>IJMRST</h1>
-          <p>International Journal of Multidisciplinary Research in Science & Technology</p>
-        </div>
-      </a>
-      <nav>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="index.html#scope">Aim & Scope</a></li>
-          <li><a href="editorial-board.html">Editorial Board</a></li>
-          <li><a href="guidelines.html">Author Guidelines</a></li>
-          <li><a href="archives.html">Archives</a></li>
-          <li><a href="verify.html">Verify Certificate</a></li>
-          <li><a href="login.html" class="btn-login">Portal Login</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <div class="page-banner">
-    <h2>Online <span>Manuscript Submission</span></h2>
-    <p>Upload your complete research paper in a single file. Our system automatically routes your paper to the Subject Peer Reviewer for Plagiarism & Double-Blind Peer Review.</p>
-  </div>
-
-  <div id="partnerBanner"></div>
-
-  <div class="container">
-    <div class="form-card">
-      <form id="submissionForm">
-        <input type="hidden" id="campusPartnerRef" name="campusPartnerRef" value="DIRECT" />
-
-        <div class="section-header">
-          <span>1. Manuscript Details</span>
-        </div>
-
-        <div class="form-group">
-          <label>Manuscript Title <span class="req">*</span></label>
-          <input type="text" id="paperTitle" placeholder="Enter the full title of your research paper" required />
-        </div>
-
-        <div class="form-grid">
-          <div class="form-group" style="margin-bottom:0;">
-            <label>Subject Area / Track <span class="req">*</span></label>
-            <select id="subjectTrack" required>
-              <option value="">-- Select Discipline --</option>
-              <option value="Engineering & Polytechnic">Engineering & Polytechnic</option>
-              <option value="Computer Science, AI & Data Science">Computer Science, AI & Data Science</option>
-              <option value="Pure & Applied Sciences">Pure & Applied Sciences</option>
-              <option value="Education (B.Ed & M.Ed)">Education (B.Ed & M.Ed)</option>
-              <option value="Commerce & Management">Commerce & Management</option>
-              <option value="Arts & Humanities">Arts & Humanities</option>
-              <option value="Medical & Pharmacy">Medical & Pharmacy</option>
-            </select>
-          </div>
-
-          <div class="form-group" style="margin-bottom:0;">
-            <label>Article Type <span class="req">*</span></label>
-            <select id="articleType" required>
-              <option value="Original Research Article">Original Research Article</option>
-              <option value="Review Paper">Review Paper</option>
-              <option value="Capstone / Diploma Project Paper">Capstone / Diploma Project Paper</option>
-              <option value="Case Study">Case Study</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Abstract (150–250 words) <span class="req">*</span></label>
-          <textarea id="abstract" rows="4" placeholder="Paste your paper abstract here..." required></textarea>
-        </div>
-
-        <div class="form-grid">
-          <div class="form-group" style="margin-bottom:0;">
-            <label>Keywords (Comma separated) <span class="req">*</span></label>
-            <input type="text" id="keywords" placeholder="e.g., Machine Learning, IoT, Cloud Security" required />
-          </div>
-
-          <div class="form-group" style="margin-bottom:0;">
-            <label>Upload Complete Manuscript (.doc, .docx, .pdf) <span class="req">*</span></label>
-            <input type="file" id="manuscriptFile" accept=".doc,.docx,.pdf" required />
-            <span class="helper-text">Upload one complete file (Max 15 MB). Author names are masked for reviewers.</span>
-          </div>
-        </div>
-
-        <div class="section-header" style="margin-top: 32px;">
-          <span>2. Author Details (Maximum 5 Authors Included in Standard APC)</span>
-          <button type="button" class="btn-add" id="addAuthorBtn">+ Add Co-Author</button>
-        </div>
-
-        <div id="authorsContainer">
-          <div class="author-box">
-            <div class="author-box-header">
-              <span>Author 1 (Corresponding Author)</span>
-            </div>
-            <div class="form-grid">
-              <div class="form-group" style="margin-bottom:0;">
-                <label>Full Name (As required on Certificate) <span class="req">*</span></label>
-                <input type="text" name="authorName[]" placeholder="e.g., Rahul S. Patil" required />
-              </div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label>Designation / Role <span class="req">*</span></label>
-                <input type="text" name="authorRole[]" placeholder="e.g., Final Year Student / Assistant Professor" required />
-              </div>
-            </div>
-            <div class="form-grid" style="margin-top:14px; margin-bottom:0;">
-              <div class="form-group" style="margin-bottom:0;">
-                <label>College / Organization Name <span class="req">*</span></label>
-                <input type="text" name="authorOrg[]" placeholder="e.g., Guru Gobind Singh Polytechnic, Nashik" required />
-              </div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label>Email Address <span class="req">*</span></label>
-                <input type="email" name="authorEmail[]" placeholder="author@college.edu.in" required />
-              </div>
-            </div>
-            <div class="form-group" style="margin-top:14px; margin-bottom:0;">
-              <label>WhatsApp / Mobile Number (For Review & Acceptance Updates) <span class="req">*</span></label>
-              <input type="tel" name="authorPhone[]" placeholder="+91 98XXXXXXXX" required />
-            </div>
-          </div>
-        </div>
-
-        <div class="checkbox-row">
-          <input type="checkbox" id="ethicsAgree" required />
-          <label for="ethicsAgree">
-            I confirm that this manuscript is original, unpublished, has similarity below 15%, and all listed co-authors approve this submission under IJMRST's CC BY 4.0 Open Access Policy.
-          </label>
-        </div>
-
-        <button type="submit" id="submitBtn" class="btn-submit">Upload Paper & Submit for Free Peer Review</button>
-      </form>
-
-      <div id="successBox">
-        <h3>✓ Manuscript Uploaded & Routed to Peer Reviewer!</h3>
-        <p style="color:#E2E8F0;">Your paper file has been securely uploaded and automatically assigned to our subject peer review panel. Save your unique Paper Tracking ID:</p>
-        <div class="paper-id-badge" id="generatedPaperId">IJMRST-2026-1001</div>
-        <p id="refConfirmText" style="color:#4ADE80; font-size:0.88rem; font-weight:600;"></p>
-        <p style="color:#94A3B8; font-size:0.9rem; margin-top:8px;">
-          Our reviewer will verify plagiarism, formatting, and technical quality within <strong>24 to 48 hours</strong>.
-        </p>
-        <div style="margin-top:18px;">
-          <a href="track-paper.html" class="btn-add">Track Paper Status →</a>
-        </div>
+  <!-- Top Utility Bar -->
+  <div class="bg-[#060B19] border-b border-slate-800/80 text-xs py-2 px-4">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="text-slate-300">
+        Publisher: <span class="text-orange-400 font-semibold">Shrinanda Infotech</span> | Email: <a href="mailto:ijmrst@shrinandainfotech.com" class="text-orange-400 hover:underline">ijmrst@shrinandainfotech.com</a>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="px-2.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30 font-medium">Peer-Reviewed & Open Access</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30 font-medium">ISSN: Applied</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30 font-medium">Monthly Frequency</span>
       </div>
     </div>
   </div>
 
-  <footer>
-    <p>© 2026 IJMRST — International Journal of Multidisciplinary Research in Science & Technology | Published by Shrinanda Infotech (Founder: Mrs. Shital Vaibhav Walke), Nashik.</p>
+  <!-- Main Header Navigation -->
+  <header class="bg-[#091124]/95 border-b border-slate-800/80 sticky top-0 z-40 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center space-x-3 shrink-0">
+        <div class="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center text-slate-950 font-extrabold text-lg shadow-md">IJ</div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-extrabold text-white tracking-tight leading-none">IJMRST</span>
+            <span id="roleBadge" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30 whitespace-nowrap">Verifying...</span>
+          </div>
+          <span class="block text-[11px] text-slate-400 mt-1">International Journal of Multidisciplinary Research in Science & Technology</span>
+        </div>
+      </a>
+
+      <nav class="flex flex-wrap lg:flex-nowrap items-center justify-end gap-3 xl:gap-4 text-xs xl:text-sm font-medium text-slate-300">
+        <a href="index.html" class="hover:text-orange-400 transition whitespace-nowrap">Home</a>
+        <a href="index.html#aim-scope" class="hover:text-orange-400 transition whitespace-nowrap">Aim & Scope</a>
+        <a href="editorial-board.html" class="hover:text-orange-400 transition whitespace-nowrap">Editorial Board</a>
+        <a href="guidelines.html" class="hover:text-orange-400 transition whitespace-nowrap">Author Guidelines</a>
+        <a href="archives.html" class="hover:text-orange-400 transition whitespace-nowrap">Archives</a>
+        <a href="verify.html" class="hover:text-orange-400 transition whitespace-nowrap">Verify Certificate</a>
+        <div class="flex items-center gap-2 pl-1">
+          <a href="admin.html" class="px-3 py-1.5 rounded-lg border border-orange-500 text-orange-400 bg-orange-500/10 font-semibold whitespace-nowrap">Dashboard</a>
+          <button onclick="logoutUser()" class="bg-red-600/90 hover:bg-red-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition shadow whitespace-nowrap">Sign Out</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div id="loadingScreen" class="max-w-7xl mx-auto p-12 text-center">
+    <div class="inline-block w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+    <p class="text-slate-400 text-sm font-medium">Authenticating session & loading role permissions...</p>
+  </div>
+
+  <main id="dashboardContainer" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+
+    <!-- Role & User Info Notice Banner -->
+    <div id="trackBanner" class="hidden mb-4 bg-[#0F1A34] border border-orange-500/30 rounded-xl p-4 text-sm text-slate-200 flex flex-col lg:flex-row lg:items-center justify-between gap-2 shadow-md">
+      <div class="space-y-1">
+        <div><strong class="text-orange-400">Assigned Scope:</strong> <span id="trackScopeText"></span></div>
+        <div class="text-xs text-slate-400">Logged in as: <span id="userNameDisplay" class="text-slate-200 font-semibold"></span></div>
+      </div>
+      <span class="inline-flex items-center text-xs text-emerald-400 font-semibold shrink-0">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span> Database Row-Level Security Active
+      </span>
+    </div>
+
+    <!-- Reviewer Pending Notification Alert -->
+    <div id="reviewerNotificationBanner" class="hidden mb-6 bg-amber-500/15 border border-amber-500/40 rounded-xl p-4 text-sm text-amber-300 flex items-center justify-between gap-3">
+      <div class="font-semibold" id="reviewerNotificationText"></div>
+      <span class="px-2.5 py-1 rounded-full bg-amber-500 text-slate-950 text-xs font-extrabold shrink-0">Action Required</span>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-3.5 mb-6" id="tabButtons">
+      <button onclick="switchTab('manuscripts')" id="tab-manuscripts"
+        class="tab-btn bg-orange-500 text-slate-950 px-4 py-2 rounded-lg text-sm font-bold transition shadow">
+        Manuscripts & Review
+      </button>
+
+      <button onclick="switchTab('team')" id="tab-team"
+        class="tab-btn super-admin-only hidden bg-[#0F1A34] text-slate-300 hover:text-white hover:border-orange-500/50 border border-slate-800 px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Editorial Team & Logins
+      </button>
+
+      <button onclick="switchTab('partners')" id="tab-partners"
+        class="tab-btn super-admin-only hidden bg-[#0F1A34] text-slate-300 hover:text-white hover:border-orange-500/50 border border-slate-800 px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Campus Partners & Payouts
+      </button>
+
+      <button onclick="switchTab('reviewers')" id="tab-reviewers"
+        class="tab-btn super-admin-only hidden bg-[#0F1A34] text-slate-300 hover:text-white hover:border-orange-500/50 border border-slate-800 px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Reviewer Applications
+      </button>
+
+      <button onclick="switchTab('certificates')" id="tab-certificates"
+        class="tab-btn super-admin-only hidden bg-[#0F1A34] text-slate-300 hover:text-white hover:border-orange-500/50 border border-slate-800 px-4 py-2 rounded-lg text-sm font-semibold transition">
+        Issue QR Certificates
+      </button>
+    </div>
+
+    <!-- TAB 1: MANUSCRIPTS (CLEAN CARD QUEUE) -->
+    <section id="section-manuscripts" class="tab-section space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-bold text-white">Research Manuscripts & Peer Review Queue</h2>
+          <p class="text-xs text-slate-400">Open manuscript to inspect content, verify plagiarism (<15%), and submit your peer-review decision.</p>
+        </div>
+        <button onclick="loadManuscripts()" class="text-xs bg-[#0F1A34] border border-slate-700 text-slate-200 hover:border-orange-500 hover:text-orange-400 px-3.5 py-2 rounded-lg font-semibold transition self-start sm:self-auto">
+          ↻ Refresh List
+        </button>
+      </div>
+
+      <div id="manuscriptsListContainer" class="space-y-4">
+        <div class="bg-[#0F1A34] rounded-xl border border-slate-800 p-8 text-center text-slate-400 text-sm">
+          Loading manuscripts...
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: EDITORIAL TEAM & ROLES -->
+    <section id="section-team" class="tab-section hidden space-y-6">
+      <div class="bg-[#0F1A34] p-6 rounded-xl shadow-xl border border-slate-800">
+        <h3 class="text-base font-bold text-orange-400 mb-1">Assign Role to Editor / Reviewer / Partner</h3>
+        <p class="text-xs text-slate-400 mb-4">Note: Select exact Subject Track for Peer Reviewers so incoming papers auto-route to them.</p>
+
+        <form id="addRoleForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <input type="text" id="newRoleName" required placeholder="Full Name (e.g. Dr. A. Patil)"
+            class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500" />
+          <input type="email" id="newRoleEmail" required placeholder="Email ID"
+            class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500" />
+          <select id="newRoleType" class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+            <option value="peer_reviewer">Peer Reviewer</option>
+            <option value="chief_editor">Chief Editor</option>
+            <option value="associate_editor">Associate Editor</option>
+            <option value="campus_partner">Campus Partner</option>
+          </select>
+          <select id="newRoleTrack" class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none">
+            <option value="ALL">ALL Tracks</option>
+            <option value="Engineering & Polytechnic">Engineering & Polytechnic</option>
+            <option value="Computer Science, AI & Data Science">Computer Science, AI & Data Science</option>
+            <option value="Pure & Applied Sciences">Pure & Applied Sciences</option>
+            <option value="Education (B.Ed & M.Ed)">Education (B.Ed & M.Ed)</option>
+            <option value="Commerce & Management">Commerce & Management</option>
+            <option value="Arts & Humanities">Arts & Humanities</option>
+            <option value="Medical & Pharmacy">Medical & Pharmacy</option>
+          </select>
+          <button type="submit" class="sm:col-span-2 lg:col-span-4 bg-orange-500 hover:bg-orange-600 text-slate-950 font-bold py-2.5 rounded-lg text-sm transition shadow">
+            + Save User Role Permission
+          </button>
+        </form>
+      </div>
+
+      <div class="bg-[#0F1A34] rounded-xl shadow-xl border border-slate-800 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-[#060B19] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+              <th class="p-4">Name</th>
+              <th class="p-4">Email</th>
+              <th class="p-4">Role</th>
+              <th class="p-4">Assigned Track</th>
+              <th class="p-4">Status</th>
+              <th class="p-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="rolesTableBody" class="divide-y divide-slate-800/80 text-sm"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 3: CAMPUS PARTNERS -->
+    <section id="section-partners" class="tab-section hidden">
+      <div class="bg-[#0F1A34] rounded-xl shadow-xl border border-slate-800 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-[#060B19] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+              <th class="p-4">Partner Code</th>
+              <th class="p-4">Name & College</th>
+              <th class="p-4">Phone & UPI ID</th>
+              <th class="p-4">Status</th>
+              <th class="p-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="partnersTableBody" class="divide-y divide-slate-800/80 text-sm"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 4: PEER REVIEWER APPLICATIONS -->
+    <section id="section-reviewers" class="tab-section hidden space-y-3">
+      <div class="bg-[#0F1A34] border border-slate-800 rounded-xl p-4 text-xs text-slate-300 flex flex-wrap items-center justify-between gap-2">
+        <span><strong class="text-orange-400">Verification Checklist:</strong> Approve button unlocks only after applicant clicks <strong>Accept</strong> on their Official Institutional Email. Inspect CV & UPI ID before approving.</span>
+        <button onclick="loadReviewers()" class="bg-[#091124] border border-slate-700 hover:border-orange-500 text-slate-200 px-3 py-1.5 rounded-lg font-semibold transition">↻ Refresh</button>
+      </div>
+
+      <div class="bg-[#0F1A34] rounded-xl shadow-xl border border-slate-800 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-[#060B19] text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+              <th class="p-4">Applicant & UPI</th>
+              <th class="p-4">Qualification & Domain</th>
+              <th class="p-4">Login & Official Email</th>
+              <th class="p-4">Status</th>
+              <th class="p-4 text-right">CV & Actions</th>
+            </tr>
+          </thead>
+          <tbody id="reviewersTableBody" class="divide-y divide-slate-800/80 text-sm"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 5: ISSUE CERTIFICATES -->
+    <section id="section-certificates" class="tab-section hidden space-y-6">
+      <div class="bg-[#0F1A34] p-6 rounded-xl shadow-xl border border-slate-800">
+        <h3 class="text-base font-bold text-orange-400 mb-3">Generate Verified Publication Certificate</h3>
+        <form id="issueCertForm" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input type="text" id="certIdInput" required placeholder="Cert ID (e.g. IJMRST-CERT-2026-01)"
+            class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500" />
+          <input type="text" id="certPaperIdInput" required placeholder="Paper ID (e.g. IJMRST-2026-4821)"
+            class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500" />
+          <input type="text" id="certAuthorInput" required placeholder="Author Full Name"
+            class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500" />
+          <input type="text" id="certTitleInput" required placeholder="Paper Title"
+            class="sm:col-span-2 px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500" />
+          <input type="text" id="certIssueInput" required placeholder="Vol 1, Issue 1 (Nov 2026)"
+            class="px-3.5 py-2.5 bg-[#091124] border border-slate-700 text-white rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none placeholder-slate-500" />
+          <button type="submit" class="sm:col-span-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-lg text-sm transition shadow">
+            Issue & Publish Verification Record
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- IN-PAGE DOCUMENT PREVIEW MODAL (CV & MANUSCRIPTS) -->
+  <div id="cvPreviewModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#0F1A34] border border-slate-700 rounded-2xl max-w-4xl w-full h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="flex flex-wrap items-center justify-between gap-2 px-5 py-3.5 bg-[#060B19] border-b border-slate-800">
+        <div>
+          <h3 id="cvPreviewTitle" class="text-sm font-bold text-orange-400">Document Preview</h3>
+          <p class="text-[11px] text-slate-400">Inspect document directly below or click Download to save locally.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a id="cvDownloadDirectBtn" href="#" download target="_blank"
+            class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg transition shadow">
+            ⬇ Download File
+          </a>
+          <button onclick="closeCvPreview()"
+            class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3 py-1.5 rounded-lg transition">
+            ✕ Close
+          </button>
+        </div>
+      </div>
+      <div class="flex-grow bg-slate-900 relative">
+        <iframe id="cvPreviewFrame" src="" class="w-full h-full border-0"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIVERSAL EDIT MODAL -->
+  <div id="editModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#0F1A34] border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 id="editModalTitle" class="text-base font-bold text-orange-400">Edit Record</h3>
+        <button onclick="closeEditModal()" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+      </div>
+      <form id="universalEditForm" class="space-y-3">
+        <input type="hidden" id="editTable" />
+        <input type="hidden" id="editRecordId" />
+        <div id="editFieldsContainer" class="space-y-3"></div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
+          <button type="button" onclick="closeEditModal()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-slate-950 text-xs font-bold shadow">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="bg-[#060B19] text-slate-400 text-xs py-6 px-4 border-t border-slate-800/80 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+      <p>© 2026 IJMRST | Published by <span class="text-orange-400 font-semibold">Shrinanda Infotech</span>. All Rights Reserved.</p>
+      <div class="flex space-x-4">
+        <a href="guidelines.html" class="hover:text-orange-400">Author Guidelines</a>
+        <a href="verify.html" class="hover:text-orange-400">Certificate Verification</a>
+        <a href="index.html" class="hover:text-orange-400">Home</a>
+      </div>
+    </div>
   </footer>
 
   <script>
-    // 1. Validate Campus Partner Referral Code
-    async function validateReferralCode(rawCode) {
-      const banner = document.getElementById('partnerBanner');
-      const refInput = document.getElementById('campusPartnerRef');
+    let currentUserRole = null;
+    let cachedRoles = [];
+    let cachedPartners = [];
+    let cachedReviewers = [];
 
-      if (!rawCode || rawCode.trim() === '' || rawCode.trim().toUpperCase() === 'DIRECT') {
-        refInput.value = 'DIRECT';
-        return 'DIRECT';
+    function openCvPreview(url, docTitle) {
+      if (!url) return;
+      document.getElementById('cvPreviewTitle').textContent = docTitle;
+      document.getElementById('cvDownloadDirectBtn').href = url;
+
+      const lowerUrl = url.toLowerCase();
+      const frame = document.getElementById('cvPreviewFrame');
+      if (lowerUrl.endsWith('.doc') || lowerUrl.endsWith('.docx')) {
+        frame.src = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+      } else {
+        frame.src = url;
       }
 
-      const cleanRef = rawCode.trim().toUpperCase();
-      const { data: partner, error } = await supabaseClient
-        .from('campus_partners')
-        .select('partner_code, status')
-        .eq('partner_code', cleanRef)
-        .maybeSingle();
-
-      banner.style.display = 'block';
-
-      if (error || !partner) {
-        banner.className = 'suspended-warning';
-        banner.textContent = `⚠ Referral code (${cleanRef}) is invalid or no longer active. Submitting as Direct Author.`;
-        refInput.value = 'DIRECT';
-        return 'DIRECT';
-      }
-
-      if ((partner.status || '').toLowerCase() === 'suspended') {
-        banner.className = 'suspended-warning';
-        banner.textContent = `⚠ Campus Partner Code (${cleanRef}) is currently SUSPENDED by Admin. Referral credit disabled; submitting as Direct Author.`;
-        refInput.value = 'DIRECT';
-        return 'DIRECT';
-      }
-
-      banner.className = '';
-      banner.textContent = `✓ Official Campus Partner Referral Link Active (${cleanRef})`;
-      refInput.value = cleanRef;
-      return cleanRef;
+      document.getElementById('cvPreviewModal').classList.remove('hidden');
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const refCode = urlParams.get('ref');
-    if (refCode) validateReferralCode(refCode);
+    function closeCvPreview() {
+      document.getElementById('cvPreviewModal').classList.add('hidden');
+      document.getElementById('cvPreviewFrame').src = '';
+    }
 
-    // 2. Dynamic Co-Authors (Max 5)
-    const authorsContainer = document.getElementById('authorsContainer');
-    const addAuthorBtn = document.getElementById('addAuthorBtn');
-    let authorCount = 1;
-
-    addAuthorBtn.addEventListener('click', () => {
-      if (authorCount >= 5) {
-        alert('Maximum 5 authors are permitted per manuscript under the standard publication tier.');
+    async function initDashboard() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) {
+        window.location.href = 'login.html';
         return;
       }
-      authorCount++;
-      const div = document.createElement('div');
-      div.className = 'author-box';
-      div.innerHTML = `
-        <div class="author-box-header">
-          <span>Author ${authorCount} (Co-Author / Project Guide)</span>
-          <button type="button" class="btn-remove" onclick="removeAuthor(this)">Remove</button>
-        </div>
-        <div class="form-grid">
-          <div class="form-group" style="margin-bottom:0;">
-            <label>Full Name (As required on Certificate) <span class="req">*</span></label>
-            <input type="text" name="authorName[]" placeholder="Enter full name" required />
-          </div>
-          <div class="form-group" style="margin-bottom:0;">
-            <label>Designation / Role <span class="req">*</span></label>
-            <input type="text" name="authorRole[]" placeholder="e.g., Student / Project Guide" required />
-          </div>
-        </div>
-        <div class="form-grid" style="margin-top:14px; margin-bottom:0;">
-          <div class="form-group" style="margin-bottom:0;">
-            <label>College / Organization Name <span class="req">*</span></label>
-            <input type="text" name="authorOrg[]" placeholder="Enter institution name" required />
-          </div>
-          <div class="form-group" style="margin-bottom:0;">
-            <label>Email Address <span class="req">*</span></label>
-            <input type="email" name="authorEmail[]" placeholder="coauthor@college.edu.in" required />
-          </div>
-        </div>
-      `;
-      authorsContainer.appendChild(div);
-      if (authorCount === 5) addAuthorBtn.style.display = 'none';
-    });
 
-    function removeAuthor(btn) {
-      btn.closest('.author-box').remove();
-      authorCount--;
-      addAuthorBtn.style.display = 'inline-block';
-      const boxes = authorsContainer.querySelectorAll('.author-box');
-      boxes.forEach((box, idx) => {
-        if (idx > 0) box.querySelector('.author-box-header span').textContent = `Author ${idx + 1} (Co-Author / Project Guide)`;
-      });
-    }
-
-    // 3. Auto-Find Subject Reviewer by Branch/Track
-    async function findAutoReviewer(subjectTrack) {
-      const { data: reviewers } = await supabaseClient
+      const email = session.user.email;
+      const { data: roleData, error } = await supabaseClient
         .from('user_roles')
-        .select('full_name, email, assigned_track')
-        .eq('role', 'peer_reviewer')
-        .eq('is_active', true);
+        .select('*')
+        .eq('email', email)
+        .single();
 
-      if (!reviewers || reviewers.length === 0) return null;
+      if (error || !roleData || !roleData.is_active) {
+        await supabaseClient.auth.signOut();
+        window.location.href = 'login.html';
+        return;
+      }
 
-      const matched = reviewers.filter(r =>
-        (r.assigned_track || '').toLowerCase() === subjectTrack.toLowerCase() ||
-        (r.assigned_track || '').toUpperCase() === 'ALL'
-      );
+      currentUserRole = roleData;
+      document.getElementById('userNameDisplay').textContent = `${roleData.full_name} (${email})`;
+      document.getElementById('roleBadge').textContent = roleData.role.replace('_', ' ').toUpperCase();
 
-      const pool = matched.length > 0 ? matched : reviewers;
-      return pool[Math.floor(Math.random() * pool.length)];
+      document.getElementById('trackBanner').classList.remove('hidden');
+      document.getElementById('trackScopeText').textContent =
+        roleData.role === 'super_admin' ? 'Full Administrative Override (Auto-Routing Active; Edit/Reassign Only If Needed)' :
+        roleData.role === 'chief_editor' ? 'All Subject Tracks (Academic Oversight)' :
+        `Assigned Subject Track: ${roleData.assigned_track} (Plagiarism & Double-Blind Review)`;
+
+      if (roleData.role === 'super_admin') {
+        document.querySelectorAll('.super-admin-only').forEach(el => el.classList.remove('hidden'));
+        await loadRoles();
+        loadPartners();
+        loadReviewers();
+      }
+
+      document.getElementById('loadingScreen').classList.add('hidden');
+      document.getElementById('dashboardContainer').classList.remove('hidden');
+      loadManuscripts();
     }
 
-    // 4. Handle Submission (Upload File to Supabase Storage + Save file_url)
-    document.getElementById('submissionForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const submitBtn = document.getElementById('submitBtn');
-      const paperFile = document.getElementById('manuscriptFile').files[0];
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById(`section-${tabName}`).classList.remove('hidden');
 
-      if (!paperFile) {
-        alert('Please select your manuscript file (.pdf, .doc, or .docx).');
-        return;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = 'tab-btn bg-[#0F1A34] text-slate-300 hover:text-white hover:border-orange-500/50 border border-slate-800 px-4 py-2 rounded-lg text-sm font-semibold transition';
+      });
+      const activeBtn = document.getElementById(`tab-${tabName}`);
+      activeBtn.className = 'tab-btn bg-orange-500 text-slate-950 px-4 py-2 rounded-lg text-sm font-bold transition shadow';
+    }
+
+    // Load Manuscripts in Clean, Structured Cards
+    async function loadManuscripts() {
+      const container = document.getElementById('manuscriptsListContainer');
+      let query = supabaseClient.from('manuscripts').select('*').order('created_at', { ascending: false });
+
+      if (currentUserRole.role === 'peer_reviewer') {
+        query = query.eq('assigned_reviewer_email', currentUserRole.email);
       }
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Uploading Manuscript File & Routing to Reviewer...';
-
-      const currentRef = document.getElementById('campusPartnerRef').value;
-      const verifiedRef = await validateReferralCode(currentRef);
-
-      const randomNum = Math.floor(1000 + Math.random() * 9000);
-      const paperId = `IJMRST-2026-${randomNum}`;
-      const selectedTrack = document.getElementById('subjectTrack').value;
-
-      // Upload Manuscript File to Supabase Storage ('manuscripts' bucket)
-      const safeFileName = paperFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-      const filePath = `${paperId}_${Date.now()}_${safeFileName}`;
-
-      const { error: uploadError } = await supabaseClient.storage
-        .from('manuscripts')
-        .upload(filePath, paperFile);
-
-      if (uploadError) {
-        alert('Manuscript file upload failed: ' + uploadError.message + '\n(Please make sure the "manuscripts" storage bucket exists and is public in Supabase)');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Upload Paper & Submit for Free Peer Review';
-        return;
-      }
-
-      const { data: publicUrlData } = supabaseClient.storage
-        .from('manuscripts')
-        .getPublicUrl(filePath);
-
-      const uploadedFileUrl = publicUrlData?.publicUrl || '';
-
-      const authorNames = Array.from(document.getElementsByName('authorName[]')).map(i => i.value.trim());
-      const authorEmails = Array.from(document.getElementsByName('authorEmail[]')).map(i => i.value.trim());
-      const authorPhones = Array.from(document.getElementsByName('authorPhone[]')).map(i => i.value.trim());
-
-      const assignedReviewer = await findAutoReviewer(selectedTrack);
-
-      const payload = {
-        paper_id: paperId,
-        title: document.getElementById('paperTitle').value.trim(),
-        subject_track: selectedTrack,
-        article_type: document.getElementById('articleType').value,
-        abstract: document.getElementById('abstract').value.trim(),
-        keywords: document.getElementById('keywords').value.trim(),
-        file_url: uploadedFileUrl,
-        corresponding_email: authorEmails[0] || '',
-        authors: authorNames.join(', '),
-        authors_info: authorNames.join(', '),
-        phone: authorPhones[0] || '',
-        referral_code: verifiedRef,
-        assigned_reviewer_email: assignedReviewer ? assignedReviewer.email : null,
-        assigned_reviewer_name: assignedReviewer ? assignedReviewer.full_name : 'Unassigned (Pending Reviewer)',
-        plagiarism_status: 'Pending Reviewer Check',
-        status: assignedReviewer ? 'Assigned to Reviewer (Plagiarism Check Pending)' : 'Submitted - Awaiting Reviewer'
-      };
-
-      const { error } = await supabaseClient.from('manuscripts').insert([payload]);
+      const { data, error } = await query;
 
       if (error) {
-        alert('Submission failed: ' + error.message);
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Upload Paper & Submit for Free Peer Review';
+        container.innerHTML = `<div class="bg-[#0F1A34] rounded-xl border border-red-500/40 p-6 text-red-400 text-sm">Error: ${error.message}</div>`;
         return;
       }
 
-      document.getElementById('generatedPaperId').textContent = paperId;
-      if (verifiedRef !== 'DIRECT') {
-        document.getElementById('refConfirmText').textContent = `Linked to Verified Campus Partner Code: ${verifiedRef}`;
+      if (!data || data.length === 0) {
+        container.innerHTML = `<div class="bg-[#0F1A34] rounded-xl border border-slate-800 p-8 text-center text-slate-400 text-sm">No manuscripts currently assigned in your queue.</div>`;
+        return;
       }
 
-      document.getElementById('submissionForm').style.display = 'none';
-      document.getElementById('successBox').style.display = 'block';
-      window.scrollTo({ top: 150, behavior: 'smooth' });
-    });
+      const pendingCount = data.filter(m => (m.plagiarism_status || '').includes('Pending') || (m.status || '').includes('Pending')).length;
+      if (pendingCount > 0 && currentUserRole.role === 'peer_reviewer') {
+        document.getElementById('reviewerNotificationBanner').classList.remove('hidden');
+        document.getElementById('reviewerNotificationText').textContent =
+          `🔔 Notification: You have ${pendingCount} newly assigned manuscript(s) waiting for Plagiarism Verification & Double-Blind Peer Review.`;
+      }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const cachedRole = localStorage.getItem('ijmrst_user_role');
-      if (cachedRole) {
-        const targetUrl = cachedRole === 'campus_partner' ? 'partner-dashboard.html' : 'admin.html';
-        document.querySelectorAll('a[href="login.html"]').forEach(link => {
-          link.href = targetUrl;
-          link.textContent = 'Dashboard →';
-        });
+      const activeReviewers = cachedRoles.filter(r => r.role === 'peer_reviewer' && r.is_active);
+
+      container.innerHTML = data.map(m => {
+        const isReviewer = currentUserRole.role === 'peer_reviewer';
+        const plagVal = m.plagiarism_status || 'Pending Reviewer Check';
+        const statusVal = m.status || 'Submitted - Awaiting Reviewer';
+
+        // Admin gets Original file; Reviewer gets Auto-Blinded file
+        const originalUrl = m.file_url || m.manuscript_url || '';
+        const blindUrl = m.blind_file_url || originalUrl;
+        const targetUrl = isReviewer ? blindUrl : originalUrl;
+
+        const safePaperTitle = `${m.paper_id} — ${(m.title || 'Manuscript').replace(/'/g, "\\'")}`;
+
+        const plagBadgeColor = plagVal.includes('Passed')
+          ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+          : plagVal.includes('High')
+          ? 'bg-red-500/15 text-red-400 border-red-500/30'
+          : 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+
+        const statusBadgeColor = statusVal.includes('Accepted') || statusVal.includes('Published')
+          ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+          : statusVal.includes('Rejected')
+          ? 'bg-red-500/15 text-red-400 border-red-500/30'
+          : 'bg-orange-500/15 text-orange-300 border-orange-500/30';
+
+        const authorBlock = isReviewer
+          ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded bg-slate-800 text-slate-400 text-xs italic">🔒 Author Identity Hidden (Double-Blind Review)</span>`
+          : `<div class="text-xs text-slate-300 space-y-0.5">
+               <div><span class="text-orange-400 font-semibold">Authors:</span> ${m.authors || m.authors_info || '-'}</div>
+               <div><span class="text-slate-400">Contact:</span> ${m.corresponding_email || '-'} ${m.phone ? `| ${m.phone}` : ''} ${m.referral_code ? `| Ref: <strong class="text-emerald-400">${m.referral_code}</strong>` : ''}</div>
+             </div>`;
+
+        const abstractBlock = m.abstract
+          ? `<div class="bg-[#091124]/90 border border-slate-800 rounded-lg p-3 text-xs text-slate-300 leading-relaxed">
+               <strong class="text-orange-400">Abstract:</strong> ${m.abstract}
+               ${m.keywords ? `<div class="mt-1.5 text-[11px] text-slate-400"><strong class="text-slate-300">Keywords:</strong> ${m.keywords}</div>` : ''}
+             </div>`
+          : '';
+
+        const manuscriptActionHtml = targetUrl
+          ? `<div class="flex flex-wrap items-center gap-2 pt-1">
+               <button type="button" onclick="openCvPreview('${targetUrl}', '${safePaperTitle}')"
+                 class="inline-flex items-center gap-1.5 bg-orange-500/15 hover:bg-orange-500/25 text-orange-400 border border-orange-500/40 px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                 ${isReviewer ? '👁 Read Blind Manuscript' : '📄 View Original Manuscript (With Authors)'}
+               </button>
+               <a href="${targetUrl}" download target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center gap-1.5 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
+                 ⬇ ${isReviewer ? 'Download Blind Copy' : 'Download Original'}
+               </a>
+             </div>`
+          : `<div class="pt-1">
+               <span class="inline-block text-xs text-red-400 bg-red-500/10 border border-red-500/30 px-2.5 py-1 rounded">
+                 ⚠️ Manuscript file not attached in database
+               </span>
+             </div>`;
+
+        const reviewerFieldHtml = currentUserRole.role === 'super_admin'
+          ? `<div>
+               <label class="block text-[11px] font-semibold text-slate-400 mb-1">Assigned Peer Reviewer</label>
+               <select id="rev-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-orange-300 rounded-lg px-3 py-2 text-xs font-medium outline-none focus:border-orange-500">
+                 <option value="">-- Unassigned --</option>
+                 ${activeReviewers.map(r => `<option value="${r.email}|${r.full_name}" ${m.assigned_reviewer_email === r.email ? 'selected' : ''}>${r.full_name} (${r.assigned_track})</option>`).join('')}
+               </select>
+             </div>`
+          : `<div>
+               <label class="block text-[11px] font-semibold text-slate-400 mb-1">Assigned Peer Reviewer</label>
+               <div class="w-full bg-[#091124] border border-slate-800 text-emerald-400 rounded-lg px-3 py-2 text-xs font-semibold">
+                 ✓ ${m.assigned_reviewer_name || currentUserRole.full_name}
+               </div>
+             </div>`;
+
+        const plagOptions = ['Pending Reviewer Check', 'Plagiarism Passed (<15%)', 'High Similarity (>15%) - Revision Needed'];
+        const statusOptions = [
+          'Submitted - Awaiting Reviewer',
+          'Assigned to Reviewer (Plagiarism Check Pending)',
+          'Plagiarism Passed - Under Peer Review',
+          'Revision Required',
+          'Recommended for Acceptance',
+          'Accepted',
+          'Published',
+          'Rejected'
+        ];
+
+        const safeNotes = (m.review_notes || '').replace(/"/g, '"');
+
+        return `
+          <div class="bg-[#0F1A34] rounded-xl border border-slate-800 hover:border-slate-700/90 p-5 shadow-lg transition space-y-4">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-slate-800/80 pb-3.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-sm font-extrabold text-orange-400 tracking-wide">${m.paper_id}</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-slate-800/90 text-slate-300 text-xs font-medium">${m.subject_track}</span>
+                ${m.article_type ? `<span class="px-2.5 py-0.5 rounded-md bg-slate-900 text-slate-400 text-[11px]">${m.article_type}</span>` : ''}
+                <span class="px-2.5 py-0.5 rounded-full border text-[11px] font-semibold ${plagBadgeColor}">${plagVal}</span>
+                <span class="px-2.5 py-0.5 rounded-full border text-[11px] font-semibold ${statusBadgeColor}">${statusVal}</span>
+              </div>
+
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="updateManuscript('${m.id}')"
+                  class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow">
+                  ✓ Save Review
+                </button>
+                ${currentUserRole.role === 'super_admin' ? `
+                  <button onclick="deleteManuscript('${m.id}')"
+                    class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-3 py-2 rounded-lg transition">
+                    Delete
+                  </button>` : ''}
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <h3 class="text-base font-bold text-white leading-snug">${m.title}</h3>
+              ${authorBlock}
+              ${abstractBlock}
+              ${manuscriptActionHtml}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+              ${reviewerFieldHtml}
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 mb-1">1. Plagiarism Check (By Reviewer)</label>
+                <select id="plag-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-amber-300 rounded-lg px-3 py-2 text-xs font-medium outline-none focus:border-orange-500">
+                  ${plagOptions.map(p => `<option value="${p}" ${plagVal === p ? 'selected' : ''}>${p}</option>`).join('')}
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 mb-1">2. Peer Review Decision</label>
+                <select id="status-${m.id}" class="w-full bg-[#091124] border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-xs font-medium outline-none focus:border-orange-500">
+                  <option value="${statusVal}" selected>${statusVal}</option>
+                  ${statusOptions.filter(s => s !== statusVal).map(s => `<option value="${s}">${s}</option>`).join('')}
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 mb-1">Reviewer Remarks / Similarity %</label>
+                <input type="text" id="notes-${m.id}" value="${safeNotes}" placeholder="e.g. Plagiarism 8%, Approved"
+                  class="w-full bg-[#091124] border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-orange-500 placeholder-slate-500" />
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function updateManuscript(id) {
+      const plagiarism_status = document.getElementById(`plag-${id}`).value;
+      const status = document.getElementById(`status-${id}`).value;
+      const review_notes = document.getElementById(`notes-${id}`).value;
+
+      const updates = { plagiarism_status, status, review_notes };
+
+      const revSelect = document.getElementById(`rev-${id}`);
+      if (revSelect) {
+        if (revSelect.value) {
+          const [revEmail, revName] = revSelect.value.split('|');
+          updates.assigned_reviewer_email = revEmail;
+          updates.assigned_reviewer_name = revName;
+        } else {
+          updates.assigned_reviewer_email = null;
+          updates.assigned_reviewer_name = 'Unassigned';
+        }
+      }
+
+      const { error } = await supabaseClient
+        .from('manuscripts')
+        .update(updates)
+        .eq('id', id);
+
+      if (error) alert('Update failed: ' + error.message);
+      else {
+        alert('Plagiarism & Review status saved successfully!');
+        loadManuscripts();
+      }
+    }
+
+    async function deleteManuscript(id) {
+      const typed = prompt('To prevent accidental deletion, type DELETE to confirm removing this manuscript:');
+      if (typed !== 'DELETE') return;
+      const { error } = await supabaseClient.from('manuscripts').delete().eq('id', id);
+      if (error) alert(error.message);
+      else loadManuscripts();
+    }
+
+    // SUPER ADMIN: TEAM, PARTNERS & REVIEWERS
+    async function loadRoles() {
+      const { data } = await supabaseClient.from('user_roles').select('*').order('created_at', { ascending: false });
+      if (!data) return;
+      cachedRoles = data;
+      document.getElementById('rolesTableBody').innerHTML = data.map(r => {
+        const isProtectedAdmin = r.role === 'super_admin' || r.email === currentUserRole.email;
+        return `
+          <tr class="hover:bg-[#142242]/60 transition">
+            <td class="p-4 font-semibold text-white">${r.full_name}</td>
+            <td class="p-4 text-slate-300">${r.email}</td>
+            <td class="p-4"><span class="px-2.5 py-0.5 rounded bg-orange-500/15 text-orange-400 border border-orange-500/30 text-xs font-semibold">${r.role}</span></td>
+            <td class="p-4 text-xs text-slate-300">${r.assigned_track}</td>
+            <td class="p-4 text-xs font-semibold ${r.is_active ? 'text-emerald-400' : 'text-red-400'}">${r.is_active ? 'Active' : 'Disabled'}</td>
+            <td class="p-4 text-right space-x-1.5 whitespace-nowrap">
+              <button onclick="openEditModal('user_roles', '${r.id}')" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border border-blue-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Edit</button>
+              ${isProtectedAdmin
+                ? `<span class="inline-block px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-semibold">Protected</span>`
+                : `<button onclick="deleteAdminRecord('user_roles', '${r.id}', '${r.full_name.replace(/'/g, "\\'")}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Delete</button>`
+              }
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('addRoleForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const full_name = document.getElementById('newRoleName').value.trim();
+      const email = document.getElementById('newRoleEmail').value.trim().toLowerCase();
+      const role = document.getElementById('newRoleType').value;
+      const assigned_track = document.getElementById('newRoleTrack').value;
+
+      const { error } = await supabaseClient.from('user_roles').insert([{ full_name, email, role, assigned_track, is_active: true }]);
+      if (error) alert(error.message);
+      else {
+        alert('Role assigned successfully!');
+        e.target.reset();
+        await loadRoles();
+        loadManuscripts();
       }
     });
+
+    async function loadPartners() {
+      const { data } = await supabaseClient.from('campus_partners').select('*').order('created_at', { ascending: false });
+      if (!data) return;
+      cachedPartners = data;
+      document.getElementById('partnersTableBody').innerHTML = data.map(p => `
+        <tr class="hover:bg-[#142242]/60 transition">
+          <td class="p-4 font-bold text-orange-400">${p.partner_code || '-'}</td>
+          <td class="p-4 text-white font-medium">${p.full_name}<div class="text-xs text-slate-400">${p.college || ''}</div></td>
+          <td class="p-4 text-xs text-slate-300">${p.phone || ''}<div class="text-emerald-400 font-semibold mt-0.5">UPI: ${p.upi_id || ''}</div></td>
+          <td class="p-4 text-xs text-emerald-400 font-semibold">${p.status || 'Active'}</td>
+          <td class="p-4 text-right space-x-1.5 whitespace-nowrap">
+            <button onclick="openEditModal('campus_partners', '${p.id}')" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border border-blue-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Edit</button>
+            <button onclick="deleteAdminRecord('campus_partners', '${p.id}', '${p.full_name.replace(/'/g, "\\'")}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadReviewers() {
+      const { data } = await supabaseClient.from('peer_reviewers').select('*').order('created_at', { ascending: false });
+      if (!data) return;
+      cachedReviewers = data;
+      document.getElementById('reviewersTableBody').innerHTML = data.map(r => {
+        const safeName = (r.full_name || 'Applicant').replace(/'/g, "\\'");
+        const isOfficialVerified = r.official_verified === true;
+        return `
+        <tr class="hover:bg-[#142242]/60 transition">
+          <td class="p-4 font-semibold text-white">
+            ${r.full_name}
+            <div class="text-xs text-slate-400">${r.institution || ''}</div>
+            <div class="text-xs text-slate-300 mt-1">Phone: ${r.phone || '-'}</div>
+            ${r.upi_id ? `<div class="text-xs text-amber-300 font-semibold">UPI: ${r.upi_id}</div>` : ''}
+          </td>
+          <td class="p-4 text-xs text-slate-300">
+            ${r.qualification || ''} ${r.designation ? `(${r.designation}, ${r.experience_years || ''} Yrs)` : ''}
+            <div class="text-orange-300 mt-0.5">${r.specialization || ''}</div>
+          </td>
+          <td class="p-4 text-xs text-slate-300 space-y-0.5">
+            <div>Login: <span class="text-white">${r.email || ''}</span></div>
+            ${r.official_email ? `<div>Official: <span class="text-emerald-400">${r.official_email}</span></div>` : ''}
+            <div>
+              ${isOfficialVerified
+                ? `<span class="inline-block px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold">✓ Official Email Accepted</span>`
+                : `<span class="inline-block px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-bold">⏳ Awaiting Official Email Accept</span>`
+              }
+            </div>
+          </td>
+          <td class="p-4 text-xs font-semibold ${r.status === 'Approved' ? 'text-emerald-400' : 'text-orange-400'}">${r.status || 'Pending'}</td>
+          <td class="p-4 text-right space-x-1.5 whitespace-nowrap">
+            ${r.cv_url
+              ? `<button onclick="openCvPreview('${r.cv_url}', 'CV / Resume — ${safeName}')" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">👁 View CV</button>
+                 <a href="${r.cv_url}" download target="_blank" class="inline-block bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition" title="Download CV">⬇</a>`
+              : `<span class="inline-block text-[11px] text-slate-500 px-2">No CV</span>`
+            }
+            ${isOfficialVerified
+              ? `<button onclick="openEditModal('peer_reviewers', '${r.id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-lg transition shadow">✓ Approve / Edit</button>`
+              : `<button disabled title="Applicant must click Accept on their Official Email first" class="bg-slate-800 text-slate-500 border border-slate-700 text-xs font-semibold px-2.5 py-1 rounded-lg cursor-not-allowed">🔒 Approve Locked</button>`
+            }
+            <button onclick="deleteAdminRecord('peer_reviewers', '${r.id}', '${safeName}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Delete</button>
+          </td>
+        </tr>
+      `}).join('');
+    }
+
+    async function deleteAdminRecord(tableName, id, name) {
+      if (tableName === 'user_roles') {
+        const targetUser = cachedRoles.find(x => String(x.id) === String(id));
+        if (targetUser && (targetUser.role === 'super_admin' || targetUser.email === currentUserRole.email)) {
+          alert('Action blocked: Super Admin account cannot be deleted!');
+          return;
+        }
+      }
+
+      const typed = prompt(`To permanently delete "${name}", type DELETE below:`);
+      if (typed !== 'DELETE') return;
+
+      let partnerEmail = null;
+      if (tableName === 'campus_partners') {
+        const partnerObj = cachedPartners.find(x => String(x.id) === String(id));
+        if (partnerObj) partnerEmail = partnerObj.email;
+      }
+
+      const { error } = await supabaseClient.from(tableName).delete().eq('id', id);
+      if (error) {
+        alert('Delete failed: ' + error.message);
+      } else {
+        if (partnerEmail) {
+          await supabaseClient.from('user_roles').delete().eq('email', partnerEmail).eq('role', 'campus_partner');
+        }
+        alert(`"${name}" deleted successfully!`);
+        if (tableName === 'user_roles') { await loadRoles(); loadManuscripts(); }
+        if (tableName === 'campus_partners') { loadPartners(); loadRoles(); }
+        if (tableName === 'peer_reviewers') loadReviewers();
+      }
+    }
+
+    function openEditModal(tableName, id) {
+      document.getElementById('editTable').value = tableName;
+      document.getElementById('editRecordId').value = id;
+      const container = document.getElementById('editFieldsContainer');
+
+      if (tableName === 'user_roles') {
+        const item = cachedRoles.find(x => String(x.id) === String(id));
+        const isSuperAdmin = item.role === 'super_admin' || item.email === currentUserRole.email;
+        document.getElementById('editModalTitle').textContent = 'Edit Team Member / Role';
+        container.innerHTML = `
+          <div><label class="text-xs text-slate-400">Full Name</label>
+            <input type="text" name="full_name" value="${item.full_name || ''}" required class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          ${isSuperAdmin ? `<input type="hidden" name="role" value="super_admin" /><input type="hidden" name="is_active" value="true" />` : `
+          <div><label class="text-xs text-slate-400">Role</label>
+            <select name="role" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
+              <option value="peer_reviewer" ${item.role === 'peer_reviewer' ? 'selected' : ''}>Peer Reviewer</option>
+              <option value="chief_editor" ${item.role === 'chief_editor' ? 'selected' : ''}>Chief Editor</option>
+              <option value="associate_editor" ${item.role === 'associate_editor' ? 'selected' : ''}>Associate Editor</option>
+              <option value="campus_partner" ${item.role === 'campus_partner' ? 'selected' : ''}>Campus Partner</option>
+            </select></div>`}
+          <div><label class="text-xs text-slate-400">Assigned Track</label>
+            <select name="assigned_track" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
+              <option value="ALL" ${item.assigned_track === 'ALL' ? 'selected' : ''}>ALL Tracks</option>
+              <option value="Engineering & Polytechnic" ${item.assigned_track === 'Engineering & Polytechnic' ? 'selected' : ''}>Engineering & Polytechnic</option>
+              <option value="Computer Science, AI & Data Science" ${item.assigned_track === 'Computer Science, AI & Data Science' ? 'selected' : ''}>Computer Science, AI & Data Science</option>
+              <option value="Pure & Applied Sciences" ${item.assigned_track === 'Pure & Applied Sciences' ? 'selected' : ''}>Pure & Applied Sciences</option>
+              <option value="Education (B.Ed & M.Ed)" ${item.assigned_track === 'Education (B.Ed & M.Ed)' ? 'selected' : ''}>Education (B.Ed & M.Ed)</option>
+              <option value="Commerce & Management" ${item.assigned_track === 'Commerce & Management' ? 'selected' : ''}>Commerce & Management</option>
+              <option value="Arts & Humanities" ${item.assigned_track === 'Arts & Humanities' ? 'selected' : ''}>Arts & Humanities</option>
+              <option value="Medical & Pharmacy" ${item.assigned_track === 'Medical & Pharmacy' ? 'selected' : ''}>Medical & Pharmacy</option>
+            </select></div>
+          ${isSuperAdmin ? '' : `
+          <div><label class="text-xs text-slate-400">Account Status</label>
+            <select name="is_active" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
+              <option value="true" ${item.is_active ? 'selected' : ''}>Active</option>
+              <option value="false" ${!item.is_active ? 'selected' : ''}>Disabled</option>
+            </select></div>`}
+        `;
+      } else if (tableName === 'campus_partners') {
+        const item = cachedPartners.find(x => String(x.id) === String(id));
+        document.getElementById('editModalTitle').textContent = 'Edit Campus Partner';
+        container.innerHTML = `
+          <div><label class="text-xs text-slate-400">Full Name</label>
+            <input type="text" name="full_name" value="${item.full_name || ''}" required class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          <div><label class="text-xs text-slate-400">College / Institution</label>
+            <input type="text" name="college" value="${item.college || ''}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          <div><label class="text-xs text-slate-400">Phone / WhatsApp</label>
+            <input type="text" name="phone" value="${item.phone || ''}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          <div><label class="text-xs text-slate-400">UPI ID</label>
+            <input type="text" name="upi_id" value="${item.upi_id || ''}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          <div><label class="text-xs text-slate-400">Status</label>
+            <select name="status" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
+              <option value="Active" ${item.status === 'Active' ? 'selected' : ''}>Active</option>
+              <option value="Suspended" ${item.status === 'Suspended' ? 'selected' : ''}>Suspended</option>
+            </select></div>
+        `;
+      } else if (tableName === 'peer_reviewers') {
+        const item = cachedReviewers.find(x => String(x.id) === String(id));
+        if (!item.official_verified) {
+          alert('Action blocked: Applicant must confirm and accept via their Official Institutional Email first.');
+          return;
+        }
+        const safeName = (item.full_name || 'Applicant').replace(/'/g, "\\'");
+        document.getElementById('editModalTitle').textContent = 'Verify & Approve Reviewer Application';
+        container.innerHTML = `
+          ${item.cv_url ? `<div class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs">
+            <span class="text-amber-300 font-semibold">Uploaded CV / Faculty Proof:</span>
+            <button type="button" onclick="openCvPreview('${item.cv_url}', 'CV / Resume — ${safeName}')" class="underline font-bold text-white hover:text-orange-400">Preview CV Here</button>
+          </div>` : ''}
+          <div><label class="text-xs text-slate-400">Full Name</label>
+            <input type="text" name="full_name" value="${item.full_name || ''}" required class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          <div><label class="text-xs text-slate-400">Institution</label>
+            <input type="text" name="institution" value="${item.institution || ''}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          <div><label class="text-xs text-slate-400">Qualification</label>
+            <input type="text" name="qualification" value="${item.qualification || ''}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          <div><label class="text-xs text-slate-400">Official Institutional Email (✓ Verified)</label>
+            <input type="text" name="official_email" value="${item.official_email || ''}" readonly class="w-full mt-1 px-3 py-2 bg-[#091124] border border-emerald-500/40 rounded-lg text-sm text-emerald-400" /></div>
+          <div><label class="text-xs text-slate-400">Specialization / Domain</label>
+            <input type="text" name="specialization" value="${item.specialization || ''}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
+          <div><label class="text-xs text-slate-400">UPI ID (For Reviewer Honorarium)</label>
+            <input type="text" name="upi_id" value="${item.upi_id || ''}" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-amber-300" /></div>
+          <div><label class="text-xs text-slate-400">Application Status (Approved grants Peer Reviewer Login)</label>
+            <select name="status" class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white">
+              <option value="Pending" ${item.status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="Approved" ${item.status === 'Approved' ? 'selected' : ''}>Approved</option>
+              <option value="Rejected" ${item.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+            </select></div>
+        `;
+      }
+
+      document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.add('hidden');
+    }
+
+    document.getElementById('universalEditForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const tableName = document.getElementById('editTable').value;
+      const id = document.getElementById('editRecordId').value;
+      const formData = new FormData(e.target);
+      const updates = {};
+
+      for (const [key, value] of formData.entries()) {
+        if (key === 'is_active') updates[key] = (value === 'true');
+        else updates[key] = value.trim();
+      }
+
+      const { error } = await supabaseClient.from(tableName).update(updates).eq('id', id);
+      if (error) {
+        alert('Update failed: ' + error.message);
+      } else {
+        if (tableName === 'peer_reviewers' && updates.status === 'Approved') {
+          const revObj = cachedReviewers.find(x => String(x.id) === String(id));
+          if (revObj && revObj.email) {
+            await supabaseClient.from('user_roles').upsert([{
+              full_name: updates.full_name || revObj.full_name,
+              email: revObj.email.toLowerCase(),
+              role: 'peer_reviewer',
+              assigned_track: updates.specialization || revObj.specialization || 'ALL',
+              is_active: true
+            }], { onConflict: 'email' });
+          }
+        }
+
+        alert('Record updated successfully!');
+        closeEditModal();
+        if (tableName === 'user_roles') { await loadRoles(); loadManuscripts(); }
+        if (tableName === 'campus_partners') loadPartners();
+        if (tableName === 'peer_reviewers') { loadReviewers(); await loadRoles(); loadManuscripts(); }
+      }
+    });
+
+    document.getElementById('issueCertForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        cert_id: document.getElementById('certIdInput').value.trim().toUpperCase(),
+        paper_id: document.getElementById('certPaperIdInput').value.trim().toUpperCase(),
+        author_name: document.getElementById('certAuthorInput').value.trim(),
+        paper_title: document.getElementById('certTitleInput').value.trim(),
+        issue_details: document.getElementById('certIssueInput').value.trim()
+      };
+      const { error } = await supabaseClient.from('certificates').insert([payload]);
+      if (error) alert(error.message);
+      else {
+        alert('Certificate published! It can now be verified live on verify.html.');
+        e.target.reset();
+      }
+    });
+
+    async function logoutUser() {
+      localStorage.removeItem('ijmrst_user_role');
+      await supabaseClient.auth.signOut();
+      window.location.href = 'login.html';
+    }
+
+    initDashboard();
   </script>
 </body>
 </html>
