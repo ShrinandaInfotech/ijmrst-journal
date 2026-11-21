@@ -199,7 +199,7 @@
     <!-- TAB 4: PEER REVIEWER APPLICATIONS -->
     <section id="section-reviewers" class="tab-section hidden space-y-3">
       <div class="bg-[#0F1A34] border border-slate-800 rounded-xl p-4 text-xs text-slate-300 flex flex-wrap items-center justify-between gap-2">
-        <span><strong class="text-orange-400">Verification Checklist:</strong> Inspect the applicant's uploaded CV/Resume and Official Institutional Email before setting status to <strong>Approved</strong>.</span>
+        <span><strong class="text-orange-400">Verification Checklist:</strong> Inspect the applicant's uploaded CV/Resume in the preview window and verify Official Institutional Email before setting status to <strong>Approved</strong>.</span>
         <button onclick="loadReviewers()" class="bg-[#091124] border border-slate-700 hover:border-orange-500 text-slate-200 px-3 py-1.5 rounded-lg font-semibold transition">↻ Refresh</button>
       </div>
 
@@ -211,7 +211,7 @@
               <th class="p-4">Qualification & Domain</th>
               <th class="p-4">Login & Official Email</th>
               <th class="p-4">Status</th>
-              <th class="p-4 text-right">Verification & Actions</th>
+              <th class="p-4 text-right">CV & Actions</th>
             </tr>
           </thead>
           <tbody id="reviewersTableBody" class="divide-y divide-slate-800/80 text-sm"></tbody>
@@ -242,6 +242,31 @@
     </section>
 
   </main>
+
+  <!-- IN-PAGE CV PREVIEW MODAL -->
+  <div id="cvPreviewModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-[#0F1A34] border border-slate-700 rounded-2xl max-w-4xl w-full h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="flex flex-wrap items-center justify-between gap-2 px-5 py-3.5 bg-[#060B19] border-b border-slate-800">
+        <div>
+          <h3 id="cvPreviewTitle" class="text-sm font-bold text-orange-400">Applicant CV / Resume Preview</h3>
+          <p class="text-[11px] text-slate-400">Review credentials directly below or click Download to save locally.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a id="cvDownloadDirectBtn" href="#" download target="_blank"
+            class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg transition shadow">
+            ⬇ Download CV
+          </a>
+          <button onclick="closeCvPreview()"
+            class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3 py-1.5 rounded-lg transition">
+            ✕ Close
+          </button>
+        </div>
+      </div>
+      <div class="flex-grow bg-slate-900 relative">
+        <iframe id="cvPreviewFrame" src="" class="w-full h-full border-0"></iframe>
+      </div>
+    </div>
+  </div>
 
   <!-- UNIVERSAL EDIT MODAL -->
   <div id="editModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
@@ -278,6 +303,28 @@
     let cachedRoles = [];
     let cachedPartners = [];
     let cachedReviewers = [];
+
+    function openCvPreview(url, applicantName) {
+      if (!url) return;
+      document.getElementById('cvPreviewTitle').textContent = `CV / Resume — ${applicantName}`;
+      document.getElementById('cvDownloadDirectBtn').href = url;
+
+      const lowerUrl = url.toLowerCase();
+      const frame = document.getElementById('cvPreviewFrame');
+      // Use Google Docs Viewer for .doc/.docx so it previews inline instead of forcing download
+      if (lowerUrl.endsWith('.doc') || lowerUrl.endsWith('.docx')) {
+        frame.src = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+      } else {
+        frame.src = url;
+      }
+
+      document.getElementById('cvPreviewModal').classList.remove('hidden');
+    }
+
+    function closeCvPreview() {
+      document.getElementById('cvPreviewModal').classList.add('hidden');
+      document.getElementById('cvPreviewFrame').src = '';
+    }
 
     async function initDashboard() {
       const { data: { session } } = await supabaseClient.auth.getSession();
@@ -572,7 +619,9 @@
       const { data } = await supabaseClient.from('peer_reviewers').select('*').order('created_at', { ascending: false });
       if (!data) return;
       cachedReviewers = data;
-      document.getElementById('reviewersTableBody').innerHTML = data.map(r => `
+      document.getElementById('reviewersTableBody').innerHTML = data.map(r => {
+        const safeName = (r.full_name || 'Applicant').replace(/'/g, "\\'");
+        return `
         <tr class="hover:bg-[#142242]/60 transition">
           <td class="p-4 font-semibold text-white">
             ${r.full_name}
@@ -590,14 +639,15 @@
           <td class="p-4 text-xs font-semibold ${r.status === 'Approved' ? 'text-emerald-400' : 'text-orange-400'}">${r.status || 'Pending'}</td>
           <td class="p-4 text-right space-x-1.5 whitespace-nowrap">
             ${r.cv_url
-              ? `<a href="${r.cv_url}" target="_blank" class="inline-block bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">📄 View CV</a>`
+              ? `<button onclick="openCvPreview('${r.cv_url}', '${safeName}')" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">👁 View CV</button>
+                 <a href="${r.cv_url}" download target="_blank" class="inline-block bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition" title="Download CV">⬇</a>`
               : `<span class="inline-block text-[11px] text-slate-500 px-2">No CV</span>`
             }
             <button onclick="openEditModal('peer_reviewers', '${r.id}')" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border border-blue-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Edit / Approve</button>
-            <button onclick="deleteAdminRecord('peer_reviewers', '${r.id}', '${r.full_name.replace(/'/g, "\\'")}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Delete</button>
+            <button onclick="deleteAdminRecord('peer_reviewers', '${r.id}', '${safeName}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-semibold px-2.5 py-1 rounded-lg transition">Delete</button>
           </td>
         </tr>
-      `).join('');
+      `}).join('');
     }
 
     async function deleteAdminRecord(tableName, id, name) {
@@ -690,11 +740,12 @@
         `;
       } else if (tableName === 'peer_reviewers') {
         const item = cachedReviewers.find(x => String(x.id) === String(id));
+        const safeName = (item.full_name || 'Applicant').replace(/'/g, "\\'");
         document.getElementById('editModalTitle').textContent = 'Verify & Approve Reviewer Application';
         container.innerHTML = `
           ${item.cv_url ? `<div class="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs">
             <span class="text-amber-300 font-semibold">Uploaded CV / Faculty Proof:</span>
-            <a href="${item.cv_url}" target="_blank" class="underline font-bold text-white hover:text-orange-400">Open CV in New Tab ↗</a>
+            <button type="button" onclick="openCvPreview('${item.cv_url}', '${safeName}')" class="underline font-bold text-white hover:text-orange-400">Preview CV Here</button>
           </div>` : ''}
           <div><label class="text-xs text-slate-400">Full Name</label>
             <input type="text" name="full_name" value="${item.full_name || ''}" required class="w-full mt-1 px-3 py-2 bg-[#091124] border border-slate-700 rounded-lg text-sm text-white" /></div>
@@ -738,7 +789,6 @@
       if (error) {
         alert('Update failed: ' + error.message);
       } else {
-        // Auto-sync user_roles when Peer Reviewer is Approved
         if (tableName === 'peer_reviewers' && updates.status === 'Approved') {
           const revObj = cachedReviewers.find(x => String(x.id) === String(id));
           if (revObj && revObj.email) {
