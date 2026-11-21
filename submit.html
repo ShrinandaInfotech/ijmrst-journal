@@ -28,7 +28,7 @@
     .badge-pill { background: rgba(255, 107, 0, 0.15); color: var(--accent-orange); padding: 2px 10px; border-radius: 12px; border: 1px solid var(--border-color); font-size: 0.8rem; font-weight: 600; }
 
     header { background-color: rgba(10, 25, 47, 0.95); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px); }
-    .nav-container { max-w-width: 1250px; margin: auto; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+    .nav-container { max-width: 1250px; margin: auto; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
     .logo-area { display: flex; align-items: center; gap: 12px; }
     .logo-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-orange), #FF9E44); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: #0A192F; box-shadow: 0 0 15px rgba(255, 107, 0, 0.4); }
     .logo-text h1 { font-size: 1.5rem; letter-spacing: 1px; color: var(--text-white); line-height: 1.1; }
@@ -175,7 +175,7 @@
           <div class="form-group" style="margin-bottom:0;">
             <label>Upload Complete Manuscript (.doc, .docx, .pdf) <span class="req">*</span></label>
             <input type="file" id="manuscriptFile" accept=".doc,.docx,.pdf" required />
-            <span class="helper-text">Upload one complete file. Author names & affiliations are automatically masked for reviewers.</span>
+            <span class="helper-text">Upload one complete file (Max 15 MB). Author names are masked for reviewers.</span>
           </div>
         </div>
 
@@ -223,12 +223,12 @@
           </label>
         </div>
 
-        <button type="submit" id="submitBtn" class="btn-submit">Submit Manuscript for Free Peer Review</button>
+        <button type="submit" id="submitBtn" class="btn-submit">Upload Paper & Submit for Free Peer Review</button>
       </form>
 
       <div id="successBox">
-        <h3>✓ Manuscript Submitted & Routed to Peer Reviewer!</h3>
-        <p style="color:#E2E8F0;">Your paper has been automatically assigned to our subject peer review panel (author details masked for double-blind evaluation). Save your unique Paper Tracking ID:</p>
+        <h3>✓ Manuscript Uploaded & Routed to Peer Reviewer!</h3>
+        <p style="color:#E2E8F0;">Your paper file has been securely uploaded and automatically assigned to our subject peer review panel. Save your unique Paper Tracking ID:</p>
         <div class="paper-id-badge" id="generatedPaperId">IJMRST-2026-1001</div>
         <p id="refConfirmText" style="color:#4ADE80; font-size:0.88rem; font-weight:600;"></p>
         <p style="color:#94A3B8; font-size:0.9rem; margin-top:8px;">
@@ -352,44 +352,28 @@
 
       if (!reviewers || reviewers.length === 0) return null;
 
-      // Match exact branch/track or 'ALL'
       const matched = reviewers.filter(r =>
         (r.assigned_track || '').toLowerCase() === subjectTrack.toLowerCase() ||
         (r.assigned_track || '').toUpperCase() === 'ALL'
       );
 
       const pool = matched.length > 0 ? matched : reviewers;
-      // Distribute evenly at random among matching subject reviewers
       return pool[Math.floor(Math.random() * pool.length)];
     }
 
-    // 4. Send Notification Email to Assigned Reviewer (via FormSubmit silent webhook)
-    async function notifyReviewerByEmail(reviewer, paperDetails) {
-      if (!reviewer || !reviewer.email) return;
-      try {
-        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(reviewer.email)}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({
-            _subject: `[IJMRST New Paper Assigned] ${paperDetails.paper_id} - ${paperDetails.subject_track}`,
-            Reviewer_Name: reviewer.full_name,
-            Paper_ID: paperDetails.paper_id,
-            Subject_Track: paperDetails.subject_track,
-            Manuscript_Title: paperDetails.title,
-            Action_Required: 'Please login to IJMRST Editorial Dashboard (https://ijmrst.shrinandainfotech.com/login.html) within 24-48 hours to verify Plagiarism & complete Double-Blind Peer Review.'
-          })
-        });
-      } catch (err) {
-        console.warn('Email notification skipped:', err);
-      }
-    }
-
-    // 5. Handle Submission
+    // 4. Handle Submission (Upload File to Supabase Storage + Save file_url)
     document.getElementById('submissionForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('submitBtn');
+      const paperFile = document.getElementById('manuscriptFile').files[0];
+
+      if (!paperFile) {
+        alert('Please select your manuscript file (.pdf, .doc, or .docx).');
+        return;
+      }
+
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Assigning Subject Reviewer & Submitting...';
+      submitBtn.textContent = 'Uploading Manuscript File & Routing to Reviewer...';
 
       const currentRef = document.getElementById('campusPartnerRef').value;
       const verifiedRef = await validateReferralCode(currentRef);
@@ -398,11 +382,31 @@
       const paperId = `IJMRST-2026-${randomNum}`;
       const selectedTrack = document.getElementById('subjectTrack').value;
 
+      // Upload Manuscript File to Supabase Storage ('manuscripts' bucket)
+      const safeFileName = paperFile.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const filePath = `${paperId}_${Date.now()}_${safeFileName}`;
+
+      const { error: uploadError } = await supabaseClient.storage
+        .from('manuscripts')
+        .upload(filePath, paperFile);
+
+      if (uploadError) {
+        alert('Manuscript file upload failed: ' + uploadError.message + '\n(Please make sure the "manuscripts" storage bucket exists and is public in Supabase)');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Upload Paper & Submit for Free Peer Review';
+        return;
+      }
+
+      const { data: publicUrlData } = supabaseClient.storage
+        .from('manuscripts')
+        .getPublicUrl(filePath);
+
+      const uploadedFileUrl = publicUrlData?.publicUrl || '';
+
       const authorNames = Array.from(document.getElementsByName('authorName[]')).map(i => i.value.trim());
       const authorEmails = Array.from(document.getElementsByName('authorEmail[]')).map(i => i.value.trim());
       const authorPhones = Array.from(document.getElementsByName('authorPhone[]')).map(i => i.value.trim());
 
-      // Auto-assign matching branch reviewer
       const assignedReviewer = await findAutoReviewer(selectedTrack);
 
       const payload = {
@@ -412,6 +416,7 @@
         article_type: document.getElementById('articleType').value,
         abstract: document.getElementById('abstract').value.trim(),
         keywords: document.getElementById('keywords').value.trim(),
+        file_url: uploadedFileUrl,
         corresponding_email: authorEmails[0] || '',
         authors: authorNames.join(', '),
         authors_info: authorNames.join(', '),
@@ -428,13 +433,8 @@
       if (error) {
         alert('Submission failed: ' + error.message);
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Manuscript for Free Peer Review';
+        submitBtn.textContent = 'Upload Paper & Submit for Free Peer Review';
         return;
-      }
-
-      // Send email alert to assigned reviewer
-      if (assignedReviewer) {
-        notifyReviewerByEmail(assignedReviewer, payload);
       }
 
       document.getElementById('generatedPaperId').textContent = paperId;
