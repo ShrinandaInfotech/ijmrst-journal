@@ -431,6 +431,13 @@
           ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded bg-slate-800 text-slate-400 text-xs italic">🔒 Author Identity Hidden (Double-Blind Review)</span>`
           : `<div class="text-xs text-slate-400"><span class="text-slate-300 font-medium">Author:</span> ${m.authors || m.authors_info || '-'} (${m.corresponding_email || ''})</div>`;
 
+        const abstractBlock = m.abstract
+          ? `<div class="bg-[#091124]/90 border border-slate-800 rounded-lg p-3 text-xs text-slate-300 leading-relaxed">
+               <strong class="text-orange-400">Abstract:</strong> ${m.abstract}
+               ${m.keywords ? `<div class="mt-1.5 text-[11px] text-slate-400"><strong class="text-slate-300">Keywords:</strong> ${m.keywords}</div>` : ''}
+             </div>`
+          : '';
+
         const manuscriptActionHtml = paperFileUrl
           ? `<div class="flex flex-wrap items-center gap-2 pt-1">
                <button type="button" onclick="openCvPreview('${paperFileUrl}', '${safePaperTitle}')"
@@ -501,9 +508,10 @@
               </div>
             </div>
 
-            <div class="space-y-1.5">
+            <div class="space-y-2">
               <h3 class="text-base font-bold text-white leading-snug">${m.title}</h3>
               ${authorBlock}
+              ${abstractBlock}
               ${manuscriptActionHtml}
             </div>
 
